@@ -1,0 +1,74 @@
+import { Injectable } from '@angular/core';
+import {Response, ResponseContentType, RequestOptions, Http, Headers} from '@angular/http';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import {Observable} from 'rxjs/Observable';
+import {tokenNotExpired} from 'angular2-jwt';
+
+
+@Injectable()
+export class AuthService {
+  isDev:boolean;
+  authToken:any;
+  user:any;
+
+  constructor(
+    private http:Http,
+    ) {
+    this.isDev = true; // Change to false before deployment
+  }
+
+//sends username and password to api for authentication
+  authenticateUser(user){
+     let headers = new Headers();
+     headers.append('Content-Type','application/json');
+     let ep = this.prepEndpoint('http://localhost:3000/users/authenticate');
+     return this.http.post(ep, user,{headers: headers})
+       .map(res => res.json());
+   }
+
+//stores user data in local storage
+  storeUserData(token, user){
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    this.authToken = token;
+    this.user = user;
+  }
+
+//gets user info from local storage
+  loadToken(){
+    const token = localStorage.getItem('token');
+    this.authToken = token;
+  }
+
+//sets headers for http requests that require authorization
+setHeaders(){
+  let headers = new Headers();
+  this.loadToken();
+  headers.append('Authorization', this.authToken);
+  headers.append('Content-Type', 'application/json');
+  return headers;
+}
+
+//checks to see if user is currently logged in
+  loggedIn(){
+    return tokenNotExpired();
+  }
+
+
+//clears local storage on logout
+  logout(){
+    this.authToken = null;
+    this.user = null;
+    localStorage.clear();
+  }
+
+//changes url of al requests in production environment
+  prepEndpoint(ep){
+    if(this.isDev){
+      return ep;
+    } else {
+      return 'http://localhost:8080/'+ep;
+    }
+  }
+}

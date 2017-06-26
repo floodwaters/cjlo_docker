@@ -1,0 +1,24 @@
+{
+  "name": "express-server",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "bcryptjs": "*",
+    "body-parser": "*",
+    "cors": "*",
+    "express": "*",
+    "fs-extra": "*",
+    "jsonwebtoken": "*",
+    "mongoose": "*",
+    "multer": "^1.3.0",
+    "passport": "*",
+    "passport-jwt": "*"
+
+  },
+
+  "author": "Charles Desbiens",
+  "license": "ISC"
+}

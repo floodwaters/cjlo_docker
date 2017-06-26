@@ -1,0 +1,41 @@
+<div class="row">
+  <h3 class="page-header">Create New Article</h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+
+    <form (submit)="articleSubmit()">
+
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" [(ngModel)]="title" name="title" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label>Article Body</label>
+        <div [froalaEditor]='options' [(froalaModel)]="editorContent"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Publication date</label>
+        <ng2-datepicker  [(ngModel)]="publish_on" name="publish_on"></ng2-datepicker>
+      </div>
+
+      <div class="form-group">
+        <label>Unpublish date</label>
+        <ng2-datepicker  [(ngModel)]="unpublish_on" name="unpublish_on"></ng2-datepicker>
+      </div>
+
+      <div class="form-group">
+        <label>Highlighted:</label>
+        <input type="checkbox" name="highlighted" [(ngModel)]="highlighted" [checked]="false" >
+      </div>
+
+      <input type="submit" class="btn btn-primary" value="Save">
+    </form>
+
+  </div>
+
+
+</div>
