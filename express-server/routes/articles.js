@@ -12,27 +12,48 @@ router.post('/create', passport.authenticate('jwt', {session: false}), (req, res
   let newArticle = new Article({
     title: req.body.title,
     author: req.user._id,
-    body: req.body.articleBody,
+    articleBody: req.body.articleBody,
     created_at: Date.now(),
-    published: req.body.published,
-    publish_on: req.body.publish_on,
-    unpublish_on: req.body.unpublish_on,
-    highlighted: req.body.highlighted
+    status: 'draft'
   });
 
   newArticle.save((err, article) => {
     if(err){
       res.json({success: false, msg: 'Failed to save article'})
+      console.log(err)
     } else {
-      res.json({success: true, msg: 'Article saved!'})
+      res.json({success: true, msg: 'Article saved!', articleId: article._id})
     }
   });
 });
 
-//delete an article
-router.delete('/delete/:id', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+//edit articles
+router.put('/edit/:id', passport.authenticate('jwt', {session:false}), (req, res, next) => {
+  Article.findOneAndUpdate({_id: req.params.id}, {$set: {"title": req.body.title, "articleBody": req.body.articleBody}})
+    .then( (article) => {
+      res.send(article)
+    });
+});
+
+//change article status
+router.put('/edit/status/:id', passport.authenticate('jwt', {session:false}), (req, res, next) => {
+  Article.findOneAndUpdate({_id: req.params.id}, {$set: {"status": req.body.status}})
+    .then( (article, err) => {
+      if(err){
+        res.json({success: false, msg: 'could not update status'});
+      } else {
+        res.json({success: true, msg: 'Status successfully updated!'});
+      }
+
+    });
+});
+
+//delete articles
+router.delete('/delete/:id', passport.authenticate('jwt', {session:false}), (req, res, next) => {
   Article.findByIdAndRemove({_id:req.params.id})
-    .then(article) => {
+    .then(function(article){
       res.send(article);
     });
-})
+});
+
+module.exports = router;

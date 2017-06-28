@@ -31,6 +31,7 @@ mongoose.connection.on('error', (err) => {
 // Get our API routes
 const api = require('./routes/api');
 const users = require('./routes/users');
+const articles = require('./routes/articles');
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Set our api routes
 app.use('/', api);
 app.use('/users', users);
+app.use('/articles', articles);
 
 //passport Middleware
 app.use(passport.initialize());

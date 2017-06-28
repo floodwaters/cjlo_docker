@@ -5,8 +5,7 @@ const config = require('../config/database');
 //defines the database schema for articles
 const ArticleSchema = mongoose.Schema({
   title: {
-    type: String,
-    required: true
+    type: String
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
@@ -14,8 +13,7 @@ const ArticleSchema = mongoose.Schema({
   },
 
   articleBody: {
-    type: String,
-    required: true
+    type: String
   },
 
   created_at: {
@@ -23,8 +21,9 @@ const ArticleSchema = mongoose.Schema({
     required: true
   },
 
-  published: {
-    type: Boolean,
+  status: {
+    type: String,
+    enum: ['draft', 'published', 'unpublished', 'review'],
     required: true
   },
 
@@ -45,7 +44,7 @@ const ArticleSchema = mongoose.Schema({
 });
 
 //exports the model for articles
-const Article = module.exports = mongoose.model('article', ArticleSchema);
+const Article = module.exports = mongoose.model('Article', ArticleSchema);
 
 //enables seaerching for articles by ID
 module.exports.getArticleById = (id, callback) => {
