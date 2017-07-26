@@ -20,10 +20,14 @@
             </div>
 
             <div class="nav navbar-nav navbar-left dropdown" dropdown>
-              <li [routerLinkActive]="['active']" [routerLinkActiveOptions] = "{exact:true}" *ngIf="this.roleService.checkRole('admin') || this.roleService.checkRole('author') || this.roleService.checkRole('editor')"><a dropdown-open>Manage Articles</a></li>
+              <li [routerLinkActive]="['active']" [routerLinkActiveOptions] = "{exact:true}" *ngIf="this.roleService.checkRole('admin') || this.roleService.checkRole('author') || this.roleService.checkRole('editor')"><a dropdown-open>Articles</a></li>
                 <ul class="dropdown-menu">
-                  <li><a [routerLink]="['/new-article']">New Article</a></li>
-                  <li><a [routerLink]="['/edit-articles']">Edit Articles</a></li>
+                  <li><a *ngIf="this.roleService.checkRole('admin') || this.roleService.checkRole('author')" [routerLink]="['/new-article']">New Article</a></li>
+                  <li><a *ngIf="this.roleService.checkRole('admin') || this.roleService.checkRole('author')" [routerLink]="['/my-drafts']">My Drafts</a></li>
+                  <li><a *ngIf="this.roleService.checkRole('admin') || this.roleService.checkRole('editor')" [routerLink]="['/articles/review']">Under Review</a></li>
+                  <li><a *ngIf="this.roleService.checkRole('admin') || this.roleService.checkRole('editor')" [routerLink]="['/articles/manage-published']">Manage Published</a></li>
+                  <li><a *ngIf="this.roleService.checkRole('admin') || this.roleService.checkRole('editor')" [routerLink]="['/articles/manage-unpublished']">Manage Unpublished</a></li>
+
                 </ul>
             </div>
 

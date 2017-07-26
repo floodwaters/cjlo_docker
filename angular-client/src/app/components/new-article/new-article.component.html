@@ -13,11 +13,29 @@
       </div>
 
       <div class="form-group">
+          <label>Thumbnail Image</label>
+          <input type="file" class="form-control" name="file" ng2FileSelect [uploader]="uploader"/>
+          <button type="button" (click)="this.uploadImage()">Upload Image</button>
+      </div>
+
+      <div *ngIf="thumbnailPath" class="thumbnail">
+        <label>Current Thumbnail</label>
+        <img src="{{thumbnailPath}}">
+      </div>
+
+      <div class="form-group">
+        <label>Article Preview</label>
+        <div [froalaEditor]='options2' [(froalaModel)]="previewContent"></div>
+      </div>
+
+      <div class="form-group">
         <label>Article Body</label>
         <div [froalaEditor]='options' [(froalaModel)]="editorContent" (ngModelChange)="keypress($event)"></div>
       </div>
 
-      <input type="submit" class="btn btn-primary" value="Submit Article">
+      <button type="button" class="btn btn-primary" (click)="openWindow(articleId)">Preview Article</button>
+      <button type="button" class="btn btn-primary" (click)="keypress()">Save Article</button>
+      <input type="submit" class="btn btn-primary" value="Submit Article for Review">
     </form>
 
   </div>

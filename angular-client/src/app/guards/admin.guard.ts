@@ -11,6 +11,7 @@ export class AdminGuard implements CanActivate{
   }
 
   canActivate(){
+    this.rolesService.setRoles();
     if(this.rolesService.checkRole('admin')){
       return true;
     } else {

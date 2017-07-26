@@ -35,7 +35,7 @@ export class GetRolesService {
 
   }
 
-//sends request to api to retrieve for the specified user
+//sends request to api to retrieve roles for the specified user id
   getRoles(id){
     let headers = this.authService.setHeaders();
     let ep = this.authService.prepEndpoint('http://localhost:3000/users/get-roles/' + id);

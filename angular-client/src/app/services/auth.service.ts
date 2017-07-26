@@ -20,11 +20,11 @@ export class AuthService {
 
 //sends username and password to api for authentication
   authenticateUser(user){
-     let headers = new Headers();
-     headers.append('Content-Type','application/json');
-     let ep = this.prepEndpoint('http://localhost:3000/users/authenticate');
-     return this.http.post(ep, user,{headers: headers})
-       .map(res => res.json());
+    let headers = new Headers();
+    headers.append('Content-Type','application/json');
+    let ep = this.prepEndpoint('http://localhost:3000/users/authenticate');
+    return this.http.post(ep, user,{headers: headers})
+      .map(res => res.json());
    }
 
 //stores user data in local storage

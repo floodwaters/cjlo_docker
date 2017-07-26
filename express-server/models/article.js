@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const config = require('../config/database');
+const User = require('./user');
 
 
 //defines the database schema for articles
@@ -9,10 +10,15 @@ const ArticleSchema = mongoose.Schema({
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
 
   articleBody: {
+    type: String
+  },
+
+  preview: {
     type: String
   },
 
@@ -39,6 +45,11 @@ const ArticleSchema = mongoose.Schema({
     type: Boolean,
     required:true,
     default: false
+  },
+
+  thumbnailPath: {
+    type: String,
+    required: false
   }
 
 });

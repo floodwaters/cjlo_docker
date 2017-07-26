@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const router = express.Router;
 const cors = require('cors');
 const passport = require('passport');
+const cron = require('cron');
 
 
 
@@ -44,7 +45,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Set Static Folder
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Set our api routes
 app.use('/', api);
@@ -56,6 +57,40 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 require('./config/passport')(passport);
+
+const articleModel = require('./models/article');
+
+var cronJob = cron.job("* */60 * * * *", function(){
+    let cut = Date.now();
+    let query1 = {status: 'published', unpublish_on: {$lt: cut}}
+
+    articleModel.update(
+      query1,
+      { $set: {status: 'unpublished'}},
+      {multi: true},
+      (err, num) => {
+        if(err){
+          console.log(err);
+        }
+      }
+    );
+
+    let query2 = {publish_on: {$lt: cut}, $or: [{unpublish_on: {$gt: cut}}, {unpublish_on: null}]};
+
+    articleModel.update(
+      query2,
+      { $set: {status: 'published'}},
+      {multi: true},
+      (err, num) => {
+        if(err){
+          console.log(err);
+        }
+      }
+    );
+
+    console.log('article cleanup completed');
+});
+cronJob.start();
 
 /**
  * Get port from environment and store in Express.
