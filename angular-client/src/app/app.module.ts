@@ -15,12 +15,14 @@ import {AuthService} from './services/auth.service';
 import {ValidateService} from './services/validate.service';
 import {GetRolesService} from './services/get-roles.service';
 import {DateToStringService} from './services/date-to-string.service';
+import {ShowService} from './services/show.service';
 
 
 import {AuthGuard} from './guards/auth.guard';
 import {AdminGuard} from './guards/admin.guard';
 import {AuthorGuard} from './guards/author.guard';
 import {EditorGuard} from './guards/editor.guard';
+import {ShowAdminGuard} from './guards/show-admin.guard';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -38,6 +40,9 @@ import { ManagePublishedComponent } from './components/manage-published/manage-p
 import { ManageUnpublishedComponent } from './components/manage-unpublished/manage-unpublished.component';
 import { ArticlePreviewComponent } from './components/article-preview/article-preview.component';
 import { SafeHtmlPipe } from './safe-html.pipe';
+import { NewShowComponent } from './components/new-show/new-show.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
+import { ManageShowsComponent } from './components/manage-shows/manage-shows.component';
 
 
 const appRoutes: Routes =  [
@@ -53,6 +58,9 @@ const appRoutes: Routes =  [
   {path: 'articles/manage-published', component: ManagePublishedComponent, canActivate: [AuthGuard, EditorGuard]},
   {path: 'articles/manage-unpublished', component: ManageUnpublishedComponent, canActivate: [AuthGuard, EditorGuard]},
   {path: 'articles/preview/:id', component: ArticlePreviewComponent, canActivate: [AuthGuard]},
+  {path: 'calendar', component: CalendarComponent},
+  {path: 'new-show', component: NewShowComponent, canActivate: [ShowAdminGuard, AuthGuard]},
+  {path: 'manage-shows', component: ManageShowsComponent, canActivate: [ShowAdminGuard, AuthGuard]},
 
 
 
@@ -76,7 +84,10 @@ const appRoutes: Routes =  [
     ManagePublishedComponent,
     ManageUnpublishedComponent,
     ArticlePreviewComponent,
-    SafeHtmlPipe
+    SafeHtmlPipe,
+    NewShowComponent,
+    CalendarComponent,
+    ManageShowsComponent
   ],
   imports: [
     BrowserModule,
@@ -92,7 +103,7 @@ const appRoutes: Routes =  [
 
 
   ],
-  providers: [AuthService, ValidateService, GetRolesService, AuthGuard, AdminGuard, AuthorGuard, EditorGuard, DateToStringService],
+  providers: [AuthService, ShowService, ValidateService, GetRolesService, AuthGuard, AdminGuard, AuthorGuard, ShowAdminGuard, EditorGuard, DateToStringService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

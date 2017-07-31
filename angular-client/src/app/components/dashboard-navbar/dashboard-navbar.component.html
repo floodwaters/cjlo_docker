@@ -31,6 +31,15 @@
                 </ul>
             </div>
 
+            <div class="nav navbar-nav navbar-left dropdown" dropdown>
+              <li [routerLinkActive]="['active']" [routerLinkActiveOptions] = "{exact:true}" *ngIf="this.roleService.checkRole('admin') || this.roleService.checkRole('show admin') || this.roleService.checkRole('dj')"><a dropdown-open>Shows</a></li>
+                <ul class="dropdown-menu">
+                  <li><a *ngIf="this.roleService.checkRole('admin') || this.roleService.checkRole('show-admin')" [routerLink]="['/new-show']">New Show</a></li>
+                  <li><a *ngIf="this.roleService.checkRole('admin') || this.roleService.checkRole('show-admin')" [routerLink]="['/manage-shows']">Manage Shows</a></li>
+                </ul>
+            </div>
+
+
           </ul>
 
           <ul class="nav navbar-nav navbar-right">

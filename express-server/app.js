@@ -60,7 +60,7 @@ require('./config/passport')(passport);
 
 const articleModel = require('./models/article');
 
-var cronJob = cron.job("* */60 * * * *", function(){
+var cronJob = cron.job(" 00 00 */1 * * *", function(){
     let cut = Date.now();
     let query1 = {status: 'published', unpublish_on: {$lt: cut}}
 

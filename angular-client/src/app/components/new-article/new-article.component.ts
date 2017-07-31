@@ -20,7 +20,7 @@ export class NewArticleComponent implements OnInit {
   articleExists:boolean = false;
   articleId:String;
   thumbnailPath:String;
-  token:string = localStorage.getItem('token')
+  token:string = localStorage.getItem('token');
   public uploader:FileUploader = new FileUploader({url:'http://localhost:3000/articles/images/thumbnail', authToken: this.token});
   public options: Object = {
     height: 300,
