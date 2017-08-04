@@ -133,6 +133,7 @@ router.delete('/delete/:id', passport.authenticate('jwt', {session:false}), (req
     });
 });
 
+//multer disk storage for images
 var storage = multer.diskStorage({
   // destination folder
   destination: function (req, file, cb) {
@@ -144,6 +145,7 @@ var storage = multer.diskStorage({
   }
 });
 
+//memory storage to allow processing of image
 var thumbnailStorage = multer.memoryStorage();
 
 

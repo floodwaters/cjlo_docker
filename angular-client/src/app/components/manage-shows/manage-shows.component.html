@@ -1,3 +1,35 @@
-<p>
-  manage-shows works!
-</p>
+<div class="row">
+  <div class="col-md-12">
+
+    <h3 class="page-header">Manage Shows</h3>
+
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Days</th>
+          <th>Time Slots</th>
+          <th>On Air</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let show of shows" [routerLink]="['/shows/edit', show._id]">
+          <td>{{show?.name}}</td>
+          <td>{{displayDays(show)}}</td>
+          <td>{{displaySlots(show)}}</td>
+          <td><input type="radio" [(ngModel)]="show.onAir" name="{{show.name}}" [value]="true" (click)="onAir(show); $event.stopPropagation()">True<br />
+              <input type="radio" [(ngModel)]="show.onAir" name="{{show.name}}" [value]="false" (click)="offAir(show); $event.stopPropagation()">False</td>
+
+          <td><button class="btn btn-danger" (click)= "this.deleteShow(show._id); $event.stopPropagation()">Delete show</button></td>
+        </tr>
+      </table>
+
+
+  </div>
+</div>

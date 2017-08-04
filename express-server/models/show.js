@@ -10,11 +10,17 @@ const ShowSchema = mongoose.Schema({
     required: true
   },
 
+  tags: [{
+    type: String
+  }],
+
+  timeslots: [{
+      type: Number
+  }],
+
   djs: [{
-    dj: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
-    }
   }],
 
   description: {
@@ -26,14 +32,14 @@ const ShowSchema = mongoose.Schema({
     type: String
   },
 
-  imagePath: {
+  bannerPath: {
     type: String
-  }
-
-  day: {
-    type: String,
-    enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
   },
+
+  days: [{
+      type: Number,
+
+  }],
 
   time: {
     type: String
@@ -50,21 +56,22 @@ const ShowSchema = mongoose.Schema({
 
   duration: {
     type: String,
-    enum: ['1 hr', '1/2 hr', '2 hr']
+    enum: ['1 hr', '1/2 hr', '2 hr', '3 hr']
   },
 
   type: {
     type: String,
-    enum: ['Weekly', 'Bi-Weekly', 'One-off']
+    enum: ['Daily', 'Weekdays','Weekly', 'Bi-Weekly', 'One-off']
   },
-
-  tags: [{
-    type: String
-  }],
 
   onAir: {
     type: Boolean,
-    required: true
+    required: true,
+    default: false
+  },
+
+  timeString: {
+    type: String
   }
 });
 

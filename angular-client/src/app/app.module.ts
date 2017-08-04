@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import {RouterModule, Routes} from '@angular/router';
 import {FlashMessagesModule} from 'angular2-flash-messages';
@@ -9,6 +9,10 @@ import {Ng2PaginationModule} from 'ng2-pagination';
 import { FroalaEditorModule, FroalaViewModule } from 'angular2-froala-wysiwyg';
 import { FileSelectDirective } from 'ng2-file-upload';
 import {DpDatePickerModule} from 'ng2-date-picker';
+import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
+import { TagInputModule } from 'ng2-tag-input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 
 import {AuthService} from './services/auth.service';
@@ -16,6 +20,8 @@ import {ValidateService} from './services/validate.service';
 import {GetRolesService} from './services/get-roles.service';
 import {DateToStringService} from './services/date-to-string.service';
 import {ShowService} from './services/show.service';
+import {UserService} from './services/user.service';
+import {DateTimeService} from './services/date-time.service';
 
 
 import {AuthGuard} from './guards/auth.guard';
@@ -43,6 +49,7 @@ import { SafeHtmlPipe } from './safe-html.pipe';
 import { NewShowComponent } from './components/new-show/new-show.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { ManageShowsComponent } from './components/manage-shows/manage-shows.component';
+import { EditShowComponent } from './components/edit-show/edit-show.component';
 
 
 const appRoutes: Routes =  [
@@ -61,6 +68,7 @@ const appRoutes: Routes =  [
   {path: 'calendar', component: CalendarComponent},
   {path: 'new-show', component: NewShowComponent, canActivate: [ShowAdminGuard, AuthGuard]},
   {path: 'manage-shows', component: ManageShowsComponent, canActivate: [ShowAdminGuard, AuthGuard]},
+  {path: 'shows/edit/:id', component: EditShowComponent, canActivate: [AuthGuard, ShowAdminGuard]}
 
 
 
@@ -87,11 +95,13 @@ const appRoutes: Routes =  [
     SafeHtmlPipe,
     NewShowComponent,
     CalendarComponent,
-    ManageShowsComponent
+    ManageShowsComponent,
+    EditShowComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     RouterModule.forRoot(appRoutes),
     FroalaEditorModule.forRoot(),
@@ -99,11 +109,15 @@ const appRoutes: Routes =  [
     FlashMessagesModule,
     DropdownModule,
     Ng2PaginationModule,
-    DpDatePickerModule
+    DpDatePickerModule,
+    MultiselectDropdownModule,
+    TagInputModule,
+    BrowserAnimationsModule,
+
 
 
   ],
-  providers: [AuthService, ShowService, ValidateService, GetRolesService, AuthGuard, AdminGuard, AuthorGuard, ShowAdminGuard, EditorGuard, DateToStringService],
+  providers: [AuthService, ShowService, DateTimeService, UserService, ValidateService, GetRolesService, AuthGuard, AdminGuard, AuthorGuard, ShowAdminGuard, EditorGuard, DateToStringService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

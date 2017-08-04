@@ -80,13 +80,21 @@ router.put('/update-roles/:id', passport.authenticate('jwt', {session:false}), (
   res.json({user: req.user});
 });
 
-//find user by id
+//find user roles by id
 router.get('/get-roles/:id', passport.authenticate('jwt', {session:false}), (req, res, next) => {
   User.findOne({_id: req.params.id})
     .then((user) => {
       res.send(user.roles);
     });
 });
+
+//find users by role
+router.post('/find-by-role', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+  User.find({roles: req.body.role})
+    .then((users) => {
+      res.json(users)
+    })
+})
 
 // User list
 router.get('/userlist', (req, res, next) => {

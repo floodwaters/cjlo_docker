@@ -33,8 +33,13 @@ mongoose.connection.on('error', (err) => {
 const api = require('./routes/api');
 const users = require('./routes/users');
 const articles = require('./routes/articles');
+const shows = require('./routes/shows');
 
 const app = express();
+
+//passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 // CORS Middleware
@@ -51,10 +56,8 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/', api);
 app.use('/users', users);
 app.use('/articles', articles);
+app.use('/shows', shows);
 
-//passport Middleware
-app.use(passport.initialize());
-app.use(passport.session());
 
 require('./config/passport')(passport);
 

@@ -1,5 +1,7 @@
 <div class="row">
-  <h3 class="page-header">Published Articles</h3>
+  <div class="col-md-12">
+    <h3 class="page-header">Published Articles</h3>
+  </div>
 </div>
 
 <input type="text" class="form-control" [(ngModel)]=queryUsername
@@ -10,26 +12,28 @@
 
 
 <div class="row">
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Date Created</th>
-        <th>Highlighted</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let article of getData()" [routerLink]="['/articles/edit', article._id]">
-        <td>{{article?.title}}</td>
-        <td>{{article?.author?.username}}</td>
-        <td>{{this.dateString.formatDate(article?.created_at)}}</td>
-        <td><input type="radio" [(ngModel)]="article.highlighted"  name="highlighted" [value]="true" (click)="highlight(article); $event.stopPropagation()">True<br />
-            <input type="radio" [(ngModel)]="article.highlighted"  name="highlighted" [value]="false"(click)="unHighlight(article); $event.stopPropagation()">False</td>
-        <td><button class="btn btn-primary" (click)="openWindow(article._id); $event.stopPropagation()">Preview Article</button></td>
-        <td><button class="btn btn-warning" (click)="unpublishArticle(article._id); $event.stopPropagation()">Unpublish Article</button></td>
-        <td><button class="btn btn-danger" (click)= "this.deleteArticle(article._id); $event.stopPropagation()">Delete article</button></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="col-md-12">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Date Created</th>
+          <th>Highlighted</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let article of getData()" [routerLink]="['/articles/edit', article._id]">
+          <td>{{article?.title}}</td>
+          <td>{{article?.author?.username}}</td>
+          <td>{{this.dateString.formatDate(article?.created_at)}}</td>
+          <td><input type="radio" [(ngModel)]="article.highlighted"  name="{{article.title}}" [value]="true" (click)="highlight(article); $event.stopPropagation()">True<br />
+              <input type="radio" [(ngModel)]="article.highlighted"  name="{{article.title}}" [value]="false"(click)="unHighlight(article); $event.stopPropagation()">False</td>
+          <td><button class="btn btn-primary" (click)="openWindow(article._id); $event.stopPropagation()">Preview Article</button></td>
+          <td><button class="btn btn-warning" (click)="unpublishArticle(article._id); $event.stopPropagation()">Unpublish Article</button></td>
+          <td><button class="btn btn-danger" (click)= "this.deleteArticle(article._id); $event.stopPropagation()">Delete article</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
