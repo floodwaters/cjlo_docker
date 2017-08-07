@@ -39,7 +39,7 @@ export class ManageShowsComponent implements OnInit {
     let str = '';
     let len = show.days.length;
     for(let i = 0; i < len; i++) {
-      str = str + this.dateTime.days[show.days[i] - 1] + ' ';
+      str = str + this.dateTime.days[show.days[i]] + ' ';
     }
     return str
   }
@@ -49,7 +49,7 @@ export class ManageShowsComponent implements OnInit {
     let str = '';
     let len = show.timeslots.length;
     for(let i = 0; i < len; i++){
-      str = str + this.dateTime.times[show.timeslots[i] - 1] + ' ';
+      str = str + this.dateTime.times[show.timeslots[i]] + ' ';
     }
     return str
   }

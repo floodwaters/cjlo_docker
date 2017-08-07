@@ -50,6 +50,8 @@ import { NewShowComponent } from './components/new-show/new-show.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { ManageShowsComponent } from './components/manage-shows/manage-shows.component';
 import { EditShowComponent } from './components/edit-show/edit-show.component';
+import { CalendarDisplayComponent } from './components/calendar-display/calendar-display.component';
+import { ShowPageComponent } from './components/show-page/show-page.component';
 
 
 const appRoutes: Routes =  [
@@ -68,7 +70,8 @@ const appRoutes: Routes =  [
   {path: 'calendar', component: CalendarComponent},
   {path: 'new-show', component: NewShowComponent, canActivate: [ShowAdminGuard, AuthGuard]},
   {path: 'manage-shows', component: ManageShowsComponent, canActivate: [ShowAdminGuard, AuthGuard]},
-  {path: 'shows/edit/:id', component: EditShowComponent, canActivate: [AuthGuard, ShowAdminGuard]}
+  {path: 'shows/edit/:id', component: EditShowComponent, canActivate: [AuthGuard, ShowAdminGuard]},
+  {path: 'show/:id', component: ShowPageComponent}
 
 
 
@@ -96,7 +99,9 @@ const appRoutes: Routes =  [
     NewShowComponent,
     CalendarComponent,
     ManageShowsComponent,
-    EditShowComponent
+    EditShowComponent,
+    CalendarDisplayComponent,
+    ShowPageComponent
   ],
   imports: [
     BrowserModule,

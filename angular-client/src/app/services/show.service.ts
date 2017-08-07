@@ -36,14 +36,24 @@ export class ShowService {
     let ep = this.authService.prepEndpoint('http://localhost:3000/shows/delete/' + id);
     return this.http.delete(ep, {headers: headers})
       .map(res => res.json())
-      .toPromise()
+      .toPromise();
   }
 
   getShowById(id){
     let headers = this.authService.setHeaders();
     let ep = this.authService.prepEndpoint('http://localhost:3000/shows/get/' + id);
     return this.http.get(ep, {headers: headers})
-      .map(res => res.json())
+      .map(res => res.json());
+  }
+
+  getShowsForDay(d){
+    let day = {
+      day: d
+    }
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/shows/get-by-day');
+    return this.http.post(ep, day, {headers: headers})
+      .map(res => res.json());
   }
 
 

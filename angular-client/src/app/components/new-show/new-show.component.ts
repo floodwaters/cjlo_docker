@@ -129,7 +129,7 @@ export class NewShowComponent implements OnInit {
               let r = JSON.parse(response)
               this.bannerPath = 'http://localhost:3000/' + r.path;
               this.bPath = r.path;
-              this.flashMessage.show('Thumbnail has been uploaded', {cssClass: 'alert-success', timeout: 5000})
+              this.flashMessage.show('Banner has been uploaded', {cssClass: 'alert-success', timeout: 5000})
 
           };
     }

@@ -61,7 +61,7 @@ const ShowSchema = mongoose.Schema({
 
   type: {
     type: String,
-    enum: ['Daily', 'Weekdays','Weekly', 'Bi-Weekly', 'One-off']
+    enum: ['Weekly', 'Bi-weekly', 'One-off']
   },
 
   onAir: {

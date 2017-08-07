@@ -71,9 +71,11 @@ export class EditShowComponent implements OnInit {
       this.show = data;
       if(data.thumbnailPath){
         this.thumbnailPath = 'http://localhost:3000/' + data.thumbnailPath;
+        this.tPath = data.thumbnailPath;
       }
       if(data.bannerPath){
         this.bannerPath = 'http://localhost:3000/' + data.bannerPath;
+        this.bPath = data.bannerPath;
       }
       this.descriptionContent = data.description
       this.fillInData(this.show);
@@ -136,14 +138,20 @@ export class EditShowComponent implements OnInit {
       type: show.type,
       duration: show.duration,
       days: show.days,
-      time: show.time,
+      time: show.timeString,
       timeSlots: show.timeslots,
       startDate: moment(show.startDate),
       endDate: moment(show.endDate),
 
     });
 
-    
+    if (show.tags != null){
+      ef.patchValue({
+        tags:show.tags
+      })
+    }
+
+
 
     const control = <FormArray>ef.controls['djs'];
 
@@ -154,7 +162,6 @@ export class EditShowComponent implements OnInit {
         control.removeAt(control['controls'].length - 1);
       }
     });
-
   }
 
   //saves show to the database
@@ -165,7 +172,7 @@ export class EditShowComponent implements OnInit {
     for(var i = 0; i < len; i++){
       ta.push(t[i].value);
     }
-    console.log(ta)
+
     const show = {
       name: this.myForm.controls['name'].value,
       type: this.myForm.controls['type'].value,
@@ -196,6 +203,33 @@ export class EditShowComponent implements OnInit {
         }
       });
   }
+
+  //uploads image to the server, then saves the path to the article to thumnbnailPath variable
+  uploadThumbnail(){
+
+    this.uploader1.uploadAll();
+    this.uploader1.onCompleteItem = (item:any, response:any, status:any, headers:any) => {
+            let r = JSON.parse(response)
+            this.thumbnailPath = 'http://localhost:3000/' + r.path
+            this.tPath = r.path
+            this.flashMessage.show('Thumbnail has been uploaded', {cssClass: 'alert-success', timeout: 5000})
+
+        };
+  }
+
+  //uploads image to the server, then saves the path to the article to bannerPath variable
+  uploadBanner(){
+
+    this.uploader2.uploadAll();
+    this.uploader2.onCompleteItem = (item:any, response:any, status:any, headers:any) => {
+            let r = JSON.parse(response)
+            this.bannerPath = 'http://localhost:3000/' + r.path;
+            this.bPath = r.path;
+            this.flashMessage.show('Banner has been uploaded', {cssClass: 'alert-success', timeout: 5000})
+
+        };
+  }
+
 
 
 }

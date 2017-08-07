@@ -45,27 +45,12 @@ router.post('/create', passport.authenticate('jwt', {session: false}), (req, res
   });
 });
 
+//edit a show in the database
 router.put('/edit/:id', passport.authenticate('jwt', {session: false}), (req, res, next) => {
-  var timeSlots = req.body.timeSlots
-  var Djs = req.body.djs
-  var Days = req.body.days
-
-
-  let newShow = new Show({
-    name: req.body.name,
-    timeslots: timeSlots,
-    djs: Djs,
-    description: req.body.description,
-    startDate: req.body.startDate,
-    endDate: req.body.endDate,
-    days: Days,
-    timeString: req.body.timeString,
-    type: req.body.type,
-    duration: req.body.duration,
-    tags: req.body.tags,
-    thumbnailPath: req.body.thumbnailPath,
-    bannerPath: req.body.bannerPath
-  });
+  var timeSlots = req.body.timeSlots;
+  var Djs = req.body.djs;
+  var Days = req.body.days;
+  var tags = req.body.tags;
 
   Show.findByIdAndUpdate({_id: req.params.id}, {$set: {
     'name': req.body.name,
@@ -78,7 +63,7 @@ router.put('/edit/:id', passport.authenticate('jwt', {session: false}), (req, re
     'timeString': req.body.timeString,
     'type': req.body.type,
     'duration': req.body.duration,
-    'tags': req.body.tags,
+    'tags': tags,
     'thumbnailPath': req.body.thumbnailPath,
     'bannerPath': req.body.bannerPath
   }})
@@ -166,7 +151,7 @@ router.post('/images/thumbnail', thumbnailUpload.single('file'), passport.authen
 //delete show
 router.delete('/delete/:id', passport.authenticate('jwt', {session:false}), (req, res, next) => {
   Show.findByIdAndRemove({_id:req.params.id})
-    .then(function(show){
+    .then((show) => {
       res.send(show);
     });
 });
@@ -176,8 +161,15 @@ router.get('/get/:id', (req, res, next) => {
   Show.findOne({_id: req.params.id})
     .then(show => {
       res.send(show)
-    })
-})
+    });
+});
+
+router.post('/get-by-day', (req, res, next) => {
+  Show.find({days: req.body.day, onAir: true})
+    .then(shows => {
+      res.send(shows)
+    });
+});
 
 
 module.exports = router;

@@ -50,7 +50,7 @@
           <div [formGroupName]="i">
               <select formControlName="_id" name="_id" class="ui fluid search selection dropdown">
                 <option selected="true"> -- select an option -- </option>
-                <option *ngFor="let dj of djs" [attr.value]="dj._id">{{dj.username}}</option>
+                <option *ngFor="let dj of djs" [ngValue]="dj._id">{{dj.username}}</option>
               </select>
 
             <div class="margin-20">
