@@ -37,8 +37,12 @@ router.post('/create', passport.authenticate('jwt', {session: false}), (req, res
 router.put('/edit/:id', passport.authenticate('jwt', {session:false}), (req, res, next) => {
   Article.findOneAndUpdate({_id: req.params.id},
     {$set: {"title": req.body.title, "articleBody": req.body.articleBody, "preview": req.body.preview, "publish_on": req.body.publish_on, "unpublish_on": req.body.unpublish_on}})
-    .then( (article) => {
-      res.send(article)
+    .then( (article, err) => {
+      if(err){
+        res.json({success: false, msg: 'Could not edit article'})
+      } else {
+        res.json({success: true, msg: 'Article successfully edited'})
+      }
     });
 });
 
@@ -56,7 +60,6 @@ router.put('/edit/status/:id', passport.authenticate('jwt', {session:false}), (r
 
 //change highlight staatus
 router.put('/highlight/:id', (req, res, next) => {
-  console.log('hi')
   Article.findOneAndUpdate({_id: req.params.id}, {$set: {"highlighted": req.body.highlighted}})
     .then((article, err) => {
       if(err){
@@ -66,6 +69,45 @@ router.put('/highlight/:id', (req, res, next) => {
       }
     });
 })
+
+//change magazine staatus
+router.put('/magazine/:id', (req, res, next) => {
+  Article.findOneAndUpdate({_id: req.params.id}, {$set: {"magazine": req.body.magazine}})
+    .then((article, err) => {
+      if(err){
+        res.json({success: false, msg: 'could not change status'});
+      } else {
+        res.json({success: true, msg: 'Status successfully changed!'})
+      }
+    });
+})
+
+//change news and events staatus
+router.put('/news-and-events/:id', (req, res, next) => {
+
+  Article.findOneAndUpdate({_id: req.params.id}, {$set: {"newsAndEvents": req.body.newsAndEvents}})
+    .then((article, err) => {
+      if(err){
+        res.json({success: false, msg: 'could not change status'});
+      } else {
+        res.json({success: true, msg: 'Status successfully changed!'})
+      }
+    });
+})
+
+//change video staatus
+router.put('/video/:id', (req, res, next) => {
+  Article.findOneAndUpdate({_id: req.params.id}, {$set: {"video": req.body.video}})
+    .then((article, err) => {
+      if(err){
+        res.json({success: false, msg: 'could not change status'});
+      } else {
+        res.json({success: true, msg: 'Status successfully changed!'})
+      }
+    });
+})
+
+
 
 //get article drafts based on user id
 router.get('/get-drafts/:id', passport.authenticate('jwt', {session:false}), (req, res, next) => {
@@ -161,7 +203,8 @@ router.post('/images', upload.single('file'), passport.authenticate('jwt', {sess
 });
 
 //post article thumbnail
-router.post('/images/thumbnail', thumbnailUpload.single('file'), passport.authenticate('jwt', {session:false}), (req, res, next) => {
+router.post('/thumbnail', thumbnailUpload.single('file'), passport.authenticate('jwt', {session:false}), (req, res, next) => {
+  console.log('hi')
   Jimp.read(req.file.buffer, (err, image) => {
     image.resize(150, 150);
     image.write('./public/thumbnails/' + req.file.originalname)

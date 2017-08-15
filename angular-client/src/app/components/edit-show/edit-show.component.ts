@@ -131,7 +131,7 @@ export class EditShowComponent implements OnInit {
 
   fillInData(show){
     var dJs = show.djs;
-    let ef = this.myForm;
+    var ef = this.myForm;
 
     ef.patchValue({
       name: show.name,
@@ -146,8 +146,15 @@ export class EditShowComponent implements OnInit {
     });
 
     if (show.tags != null){
+      let t = []
+      show.tags.forEach(el => {
+        if (el != null ){
+          t.push(el)
+        }
+      })
+
       ef.patchValue({
-        tags:show.tags
+        tags:t
       })
     }
 
@@ -170,7 +177,11 @@ export class EditShowComponent implements OnInit {
     var ta = []
     let len = t.length
     for(var i = 0; i < len; i++){
-      ta.push(t[i].value);
+      if (typeof t[i] === 'string') {
+        ta.push(t[i])
+      } else if (typeof t[i] === 'object'){
+        ta.push(t[i].value);
+      }
     }
 
     const show = {

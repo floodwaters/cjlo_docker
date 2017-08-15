@@ -47,6 +47,24 @@ const ArticleSchema = mongoose.Schema({
     default: false
   },
 
+  magazine: {
+    type: Boolean,
+    required:true,
+    default: false
+  },
+
+  newsAndEvents: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+
+  video: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+
   thumbnailPath: {
     type: String,
     required: false

@@ -1,0 +1,116 @@
+<div class="row">
+  <div class="col-md-12">
+    <h3 class="page-header">Create a new episode for {{show?.name}}</h3>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-6 date-select">
+    <h3 class="page-header">Select a date</h3>
+
+    <input
+          [(ngModel)]="date"
+          ngui-datetime-picker
+          [disabled-dates]="disabledDates"
+          (ngModelChange)="setHours()"
+          [min-date]="minDate"
+          [max-date]="maxDate"
+          [show-close-layer]="true"
+          [is-draggable]="false"
+          />
+
+  </div>
+
+  <div class="col-md-6 socan">
+    <div class=form-group>
+      <label>Socan</label>
+      <input type="checkbox" [(ngModel)]="socan"/>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <br />
+    <button *ngIf="episodeCreated === false" class="btn btn-primary" (click)="createEpisode()">Create Episode</button>
+  </div>
+</div>
+
+<div class="row" *ngIf="episodeCreated">
+  <div class="col-md-12">
+    <div class="form-group">
+      <label>Episode Description</label>
+      <div [froalaEditor]='options' [(froalaModel)]="editorContent"></div>
+      <button class="btn btn-primary" (click)="saveBody()">Save Description</button>
+    </div>
+  </div>
+</div>
+
+<div class="row" *ngIf="episodeCreated">
+  <div class="col-md-12">
+
+    <form [formGroup]="myForm">
+
+      <div class="page-header">
+        <h3>Tracks</h3>
+      </div>
+
+      <div formArrayName="tracks">
+
+        <div *ngFor="let track of myForm.controls.tracks.controls; let i=index">
+
+          <div [formGroupName]="i">
+
+            <div>
+              <span>Track {{i + 1}}</span>
+              <span class="glyphicon glyphicon-remove pull-right" *ngIf="myForm.controls.tracks.controls.length > 1" (click)="removeTrack(i)"></span>
+            </div>
+
+            <div class="row">
+
+              <div class="col-md-3 type-select">
+                <select formControlName="classification" name="classification" class="ui fluid search selection dropdown">
+                  <option selected="true" value="Theme">Theme</option>
+                  <option *ngFor="let type of types" [attr.value]="type">{{type}}</option>
+                </select>
+              </div>
+
+              <div class="col-md-3 start-select">
+                <div class="form-group">
+                  <label>Start time (hours and minutes):</label>
+                  <input formControlName="startDate" ngui-datetime-picker [min-date]="minDate" [max-date]="maxDate" [disabled-dates]="disabledDates" />
+                  <label>Start time (seconds):</label>
+                  <input type="number" formControlName="startSecond" />
+                </div>
+              </div>
+
+              <div class="col-md-3 start-select">
+                <div class="form-group">
+                  <label>End time (hours and minutes):</label>
+                  <input formControlName="endDate" ngui-datetime-picker [min-date]="minDate" [max-date]="maxDate"[disabled-dates]="disabledDates"/>
+                  <label>End time (seconds):</label>
+                  <input type="number" formControlName="endSecond" />
+                </div>
+              </div>
+
+              <div *ngFor="let choice of contentTypes" class="col-md-3">
+                <label>
+                  <input type="checkbox" [value]="choice" (change)="onCheckChange($event, i)">
+                  {{choice}}
+                </label>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </form>
+
+
+  </div>
+</div>

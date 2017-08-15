@@ -10,8 +10,9 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular2-froala-wysiwyg';
 import { FileSelectDirective } from 'ng2-file-upload';
 import {DpDatePickerModule} from 'ng2-date-picker';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
-import { TagInputModule } from 'ng2-tag-input';
+import { TagInputModule } from 'ngx-chips';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NguiDatetimePickerModule } from '@ngui/datetime-picker';
 
 
 
@@ -22,6 +23,7 @@ import {DateToStringService} from './services/date-to-string.service';
 import {ShowService} from './services/show.service';
 import {UserService} from './services/user.service';
 import {DateTimeService} from './services/date-time.service';
+import {EpisodeService} from './services/episode.service';
 
 
 import {AuthGuard} from './guards/auth.guard';
@@ -29,6 +31,7 @@ import {AdminGuard} from './guards/admin.guard';
 import {AuthorGuard} from './guards/author.guard';
 import {EditorGuard} from './guards/editor.guard';
 import {ShowAdminGuard} from './guards/show-admin.guard';
+import {DjGuard} from './guards/dj.guard';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -52,6 +55,10 @@ import { ManageShowsComponent } from './components/manage-shows/manage-shows.com
 import { EditShowComponent } from './components/edit-show/edit-show.component';
 import { CalendarDisplayComponent } from './components/calendar-display/calendar-display.component';
 import { ShowPageComponent } from './components/show-page/show-page.component';
+import { MyShowsComponent } from './components/my-shows/my-shows.component';
+import { ManageEpisodesComponent } from './components/manage-episodes/manage-episodes.component';
+import { NewEpisodeComponent } from './components/new-episode/new-episode.component';
+import { EditEpisodeComponent } from './components/edit-episode/edit-episode.component';
 
 
 const appRoutes: Routes =  [
@@ -71,7 +78,11 @@ const appRoutes: Routes =  [
   {path: 'new-show', component: NewShowComponent, canActivate: [ShowAdminGuard, AuthGuard]},
   {path: 'manage-shows', component: ManageShowsComponent, canActivate: [ShowAdminGuard, AuthGuard]},
   {path: 'shows/edit/:id', component: EditShowComponent, canActivate: [AuthGuard, ShowAdminGuard]},
-  {path: 'show/:id', component: ShowPageComponent}
+  {path: 'show/:id', component: ShowPageComponent},
+  {path: 'my-shows', component: MyShowsComponent, canActivate: [AuthGuard, DjGuard]},
+  {path: 'manage-episodes/:id', component: ManageEpisodesComponent, canActivate: [AuthGuard, DjGuard]},
+  {path: 'new-episode/:id', component: NewEpisodeComponent, canActivate: [AuthGuard, DjGuard]},
+  {path: 'edit-episode/:id', component: EditEpisodeComponent, canActivate: [AuthGuard, DjGuard]}
 
 
 
@@ -101,11 +112,16 @@ const appRoutes: Routes =  [
     ManageShowsComponent,
     EditShowComponent,
     CalendarDisplayComponent,
-    ShowPageComponent
+    ShowPageComponent,
+    MyShowsComponent,
+    ManageEpisodesComponent,
+    NewEpisodeComponent,
+    EditEpisodeComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    NguiDatetimePickerModule,
     ReactiveFormsModule,
     HttpModule,
     RouterModule.forRoot(appRoutes),
@@ -122,7 +138,7 @@ const appRoutes: Routes =  [
 
 
   ],
-  providers: [AuthService, ShowService, DateTimeService, UserService, ValidateService, GetRolesService, AuthGuard, AdminGuard, AuthorGuard, ShowAdminGuard, EditorGuard, DateToStringService],
+  providers: [AuthService, ShowService, EpisodeService, DateTimeService, UserService, ValidateService, GetRolesService, AuthGuard, DjGuard, AdminGuard, AuthorGuard, ShowAdminGuard, EditorGuard, DateToStringService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

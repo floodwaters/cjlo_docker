@@ -11,6 +11,13 @@ export class UserService {
     private http:Http
   ) { }
 
+  getCurrentUser(){
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/users/profile');
+    return this.http.get(ep, {headers: headers})
+      .map(res => res.json());
+  }
+
   getUsersByRole(r){
     let role = {role: r}
     let headers = this.authService.setHeaders();

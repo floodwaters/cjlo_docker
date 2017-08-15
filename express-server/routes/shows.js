@@ -51,6 +51,7 @@ router.put('/edit/:id', passport.authenticate('jwt', {session: false}), (req, re
   var Djs = req.body.djs;
   var Days = req.body.days;
   var tags = req.body.tags;
+  console.log(tags)
 
   Show.findByIdAndUpdate({_id: req.params.id}, {$set: {
     'name': req.body.name,
@@ -164,6 +165,14 @@ router.get('/get/:id', (req, res, next) => {
     });
 });
 
+router.get('/get-by-user/:id', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+  Show.find({djs: req.params.id})
+    .then(shows => {
+      res.send(shows)
+    });
+});
+
+//find shows that occur on a given day and are on the air
 router.post('/get-by-day', (req, res, next) => {
   Show.find({days: req.body.day, onAir: true})
     .then(shows => {

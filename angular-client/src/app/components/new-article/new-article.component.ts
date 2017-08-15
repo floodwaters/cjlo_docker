@@ -21,7 +21,7 @@ export class NewArticleComponent implements OnInit {
   articleId:String;
   thumbnailPath:String;
   token:string = localStorage.getItem('token');
-  public uploader:FileUploader = new FileUploader({url:'http://localhost:3000/articles/images/thumbnail', authToken: this.token});
+  public uploader:FileUploader = new FileUploader({url:'http://localhost:3000/articles/thumbnail', authToken: this.token});
   public options: Object = {
     height: 300,
     placeholderText: 'Enter article body here',
@@ -46,7 +46,8 @@ export class NewArticleComponent implements OnInit {
   constructor(
     private flashMessage:FlashMessagesService,
     private authService:AuthService,
-    private http:Http
+    private http:Http,
+    private router:Router
   ) { }
 
   ngOnInit() {
@@ -109,10 +110,10 @@ export class NewArticleComponent implements OnInit {
     let article = {
       articleId: this.articleId
     }
-
     this.prepareUploader(article);
     this.uploader.uploadAll();
     this.uploader.onCompleteItem = (item:any, response:any, status:any, headers:any) => {
+            console.log(response)
             let r = JSON.parse(response)
             this.thumbnailPath = 'http://localhost:3000/' + r.path
             this.flashMessage.show('Thumbnail has been uploaded', {cssClass: 'alert-success', timeout: 5000})
@@ -122,6 +123,7 @@ export class NewArticleComponent implements OnInit {
 
 //adds multipart data to file upload
   prepareUploader(data) {
+
   this.uploader.onBuildItemForm = (item, form) => {
   for (let key in data) {
   form.append(key, data[key])}};
@@ -140,6 +142,11 @@ export class NewArticleComponent implements OnInit {
     return this.http.put(ep, article, {headers: headers})
       .map(res => res.json())
       .subscribe(data => {
+        if(data.success){
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.flashMessage.show('Something went wrong on the server', {cssClass: 'alert-danger', timeout: 5000})
+        }
       },
     err => {
       console.log(err);

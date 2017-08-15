@@ -20,6 +20,9 @@
           <th>Author</th>
           <th>Date Created</th>
           <th>Highlighted</th>
+          <th>Magazine</th>
+          <th>News and Events</th>
+          <th>Video</th>
         </tr>
       </thead>
       <tbody>
@@ -27,8 +30,14 @@
           <td>{{article?.title}}</td>
           <td>{{article?.author?.username}}</td>
           <td>{{this.dateString.formatDate(article?.created_at)}}</td>
-          <td><input type="radio" [(ngModel)]="article.highlighted"  name="{{article.title}}" [value]="true" (click)="highlight(article); $event.stopPropagation()">True<br />
-              <input type="radio" [(ngModel)]="article.highlighted"  name="{{article.title}}" [value]="false"(click)="unHighlight(article); $event.stopPropagation()">False</td>
+          <td><input type="radio" [(ngModel)]="article.highlighted"  name="{{article.title}}-highlighted" [value]="true" (click)="highlight(article); $event.stopPropagation()">True<br />
+              <input type="radio" [(ngModel)]="article.highlighted"  name="{{article.title}}-highlighted" [value]="false"(click)="unHighlight(article); $event.stopPropagation()">False</td>
+          <td><input type="radio" [(ngModel)]="article.magazine"  name="{{article.title}}-magazine" [value]="true" (click)="inMagazine(article); $event.stopPropagation()">True<br />
+              <input type="radio" [(ngModel)]="article.magazine"  name="{{article.title}}-magazine" [value]="false"(click)="outMagazine(article); $event.stopPropagation()">False</td>
+          <td><input type="radio" [(ngModel)]="article.newsAndEvents"  name="{{article.title}}-news" [value]="true" (click)="inNandE(article); $event.stopPropagation()">True<br />
+              <input type="radio" [(ngModel)]="article.newsAndEvents"  name="{{article.title}}-news" [value]="false"(click)="outNandE(article); $event.stopPropagation()">False</td>
+          <td><input type="radio" [(ngModel)]="article.video"  name="{{article.title}}-video" [value]="true" (click)="inVideo(article); $event.stopPropagation()">True<br />
+              <input type="radio" [(ngModel)]="article.video"  name="{{article.title}}-video" [value]="false"(click)="outVideo(article); $event.stopPropagation()">False</td>
           <td><button class="btn btn-primary" (click)="openWindow(article._id); $event.stopPropagation()">Preview Article</button></td>
           <td><button class="btn btn-warning" (click)="unpublishArticle(article._id); $event.stopPropagation()">Unpublish Article</button></td>
           <td><button class="btn btn-danger" (click)= "this.deleteArticle(article._id); $event.stopPropagation()">Delete article</button></td>

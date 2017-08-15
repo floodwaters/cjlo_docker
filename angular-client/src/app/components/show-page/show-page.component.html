@@ -1,3 +1,23 @@
-<p>
-  show-page works!
-</p>
+<div class="row">
+  <div class="header-image col-md-12">
+    <img src="{{bannerPath}}">
+  </div>
+</div>
+
+<div class="row">
+  <div class="title-time col-md-12">
+    <h2 class="page-header">{{show?.name}}</h2>
+    <h4>{{show?.timeString}}</h4>
+  </div>
+</div>
+
+<div class="row">
+  <div class="fr-view description col-md-12">
+    <p class="fr-view" [innerHtml]="show?.description | safeHtml"></p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="episodes col-md-12">
+  </div>
+</div>

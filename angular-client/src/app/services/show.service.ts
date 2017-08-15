@@ -56,5 +56,11 @@ export class ShowService {
       .map(res => res.json());
   }
 
+  getShowsByUser(user){
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/shows/get-by-user/' + user._id);
+    return this.http.get(ep, {headers: headers})
+      .map(res => res.json());
+  }
 
 }

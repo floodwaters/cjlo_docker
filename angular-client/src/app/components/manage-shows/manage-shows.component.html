@@ -19,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let show of shows" [routerLink]="['/shows/edit', show._id]">
+        <tr *ngFor="let show of shows | orderBy: 'name'" [routerLink]="['/shows/edit', show._id]">
           <td>{{show?.name}}</td>
           <td>{{displayDays(show)}}</td>
           <td>{{displaySlots(show)}}</td>

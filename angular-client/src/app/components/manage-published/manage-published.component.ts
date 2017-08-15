@@ -76,6 +76,114 @@ export class ManagePublishedComponent implements OnInit {
         }
       });
   }
+
+  inMagazine(article){
+    let magazine = {
+      magazine: true
+    }
+
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/articles/magazine/' + article._id);
+    return this.http.put(ep, magazine, {headers:headers})
+      .map(res => res.json())
+      .subscribe(data => {
+        if (data.success){
+          console.log("Article added to the magazine")
+        } else {
+          console.log("Failed to change status")
+        }
+      });
+  }
+
+  outMagazine(article){
+    let magazine = {
+      magazine: false
+    }
+
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/articles/magazine/' + article._id);
+    return this.http.put(ep, magazine, {headers:headers})
+      .map(res => res.json())
+      .subscribe(data => {
+        if (data.success){
+          console.log("Article is now in the magazine")
+        } else {
+          console.log("Failed to change status")
+        }
+      });
+  }
+
+  inNandE(article){
+    let newsAndEvents = {
+      newsAndEvents: true
+    }
+
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/articles/news-and-events/' + article._id);
+    return this.http.put(ep, newsAndEvents, {headers:headers})
+      .map(res => res.json())
+      .subscribe(data => {
+        if (data.success){
+          console.log("Article will now appear in the news and events")
+        } else {
+          console.log("Failed to change status")
+        }
+      });
+  }
+
+  outNandE(article){
+    let newsAndEvents = {
+      newsAndEvents: false
+    }
+
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/articles/news-and-events/' + article._id);
+    return this.http.put(ep, newsAndEvents, {headers:headers})
+      .map(res => res.json())
+      .subscribe(data => {
+        if (data.success){
+          console.log("Article removed from the news and events")
+        } else {
+          console.log("Failed to change status")
+        }
+      });
+  }
+
+  inVideo(article){
+    let video = {
+      video: true
+    }
+
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/articles/video/' + article._id);
+    return this.http.put(ep, video, {headers:headers})
+      .map(res => res.json())
+      .subscribe(data => {
+        if (data.success){
+          console.log("Article will now appear in the videos section")
+        } else {
+          console.log("Failed to change status")
+        }
+      });
+  }
+
+    outVideo(article){
+    let video = {
+      video: false
+    }
+
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/articles/video/' + article._id);
+    return this.http.put(ep, video, {headers:headers})
+      .map(res => res.json())
+      .subscribe(data => {
+        if (data.success){
+          console.log("Article will no longer appear in the videos section")
+        } else {
+          console.log("Failed to change status")
+        }
+      });
+  }
   //unhighlights the article
   unHighlight(article){
     let highlighted = {
@@ -152,7 +260,7 @@ export class ManagePublishedComponent implements OnInit {
         return this.articles;
       }
     }
-    
+
   //opens a new tab with the article preview in it
   openWindow(id){
     window.open('articles/preview/' + id)

@@ -27,7 +27,7 @@ export class EditArticleComponent implements OnInit {
   publish_on:any;
   unpublish_on:any;
   token:string = localStorage.getItem('token')
-  public uploader:FileUploader = new FileUploader({url:'http://localhost:3000/articles/images/thumbnail', authToken: this.token});
+  public uploader:FileUploader = new FileUploader({url:'http://localhost:3000/articles/thumbnail', authToken: this.token});
   public options: Object = {
     height: 300,
     placeholderText: 'Enter article body here',

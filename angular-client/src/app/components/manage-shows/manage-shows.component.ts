@@ -4,6 +4,8 @@ import {ShowService} from '../../services/show.service';
 import {DateTimeService} from '../../services/date-time.service';
 import {Http, Headers} from '@angular/http';
 import {FlashMessagesService} from 'angular2-flash-messages';
+import {OrderByPipe} from '../../order-by.pipe';
+
 
 
 @Component({

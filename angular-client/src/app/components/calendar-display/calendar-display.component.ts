@@ -23,11 +23,13 @@ export class CalendarDisplayComponent implements OnInit {
   ngOnInit() {
     this.showService.getShowsForDay(this.selectedDate).subscribe(data => {
       this.allShows = data
+      console.log(data)
+
     },
     err => {
       console.log(err);
       return false
-    })
+    });
   }
 
   ngOnChanges(changes:SimpleChanges){
@@ -35,6 +37,7 @@ export class CalendarDisplayComponent implements OnInit {
     if(chng){
       this.showService.getShowsForDay(chng.currentValue.getDay()).subscribe(data => {
         this.allShows = data
+        console.log(this.getShowsInSlot(6))
 
       },
       err => {
@@ -74,6 +77,8 @@ export class CalendarDisplayComponent implements OnInit {
           } else {
             return this.display(f)
           }
+        } else {
+          return this.displayPlaceholder();
         }
       }
     }
@@ -95,7 +100,7 @@ export class CalendarDisplayComponent implements OnInit {
 
   //displays a placeholder show in a slot if no show is assigned to that slot
   displayPlaceholder(){
-
+    return '<div class="half-hour">Placeholder</div>'
   }
   //filters list of all shows for a day and returns the ones in a slot
   getShowsInSlot(slot){
@@ -158,11 +163,27 @@ export class CalendarDisplayComponent implements OnInit {
 
   linkToShow(slot){
     let shows = this.getShowsInSlot(slot)
+
     let s = this.findByType('One-off', shows);
+    let w = this.findByType('Weekly', shows);
+    let b = this.findByType('Bi-weekly', shows);
+
     if (s.length === 1){
       this.router.navigate(['/show', s[0]._id])
-    } else if (s.length === 0) {
-
+    } else if ((s.length === 0) && (w.length === 1)) {
+      this.router.navigate(['/show', w[0]._id])
+    } else if ((s.length === 0) && (w.length > 1)){
+      this.router.navigate(['/show', w[0]._id])
+    } else if ((s.length === 0 ) && (w.length === 0) && (b.length > 0)){
+      let f = this.calculateBiWeekly(b)
+      this.router.navigate(['/show', f[0]._id])
+    } else {
+      this.navigateToPlaceholder()
     }
+  }
+
+  //navigates to the placeholder show
+  navigateToPlaceholder(){
+
   }
 }
