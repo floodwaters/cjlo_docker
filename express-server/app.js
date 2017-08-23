@@ -35,6 +35,7 @@ const users = require('./routes/users');
 const articles = require('./routes/articles');
 const shows = require('./routes/shows');
 const episodes = require('./routes/episodes');
+const plays = require('./routes/plays');
 
 const app = express();
 
@@ -59,6 +60,7 @@ app.use('/users', users);
 app.use('/articles', articles);
 app.use('/shows', shows);
 app.use('/episodes', episodes);
+app.use('/plays', plays);
 
 
 require('./config/passport')(passport);

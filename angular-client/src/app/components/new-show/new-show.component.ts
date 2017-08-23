@@ -83,7 +83,8 @@ export class NewShowComponent implements OnInit {
       startDate: ['', [Validators.required]],
       timeString: [''],
       endDate: [''],
-      tags: [[]]
+      tags: [[]],
+      placeholder: [false, [Validators.required]]
 
     })
   }
@@ -153,6 +154,7 @@ export class NewShowComponent implements OnInit {
         endDate: this.myForm.controls['endDate'].value,
         days: this.myForm.controls['days'].value,
         duration: this.myForm.controls['duration'].value,
+        placeholder: this.myForm.controls['placeholder'].value,
         tags: ta,
         thumbnailPath: this.tPath,
         bannerPath: this.bPath

@@ -1,0 +1,14 @@
+.main-wrapper {
+  height: 150px;
+  border: solid 2px black;
+}
+
+.image-box {
+  height: 100%;
+  display: inline-block;
+}
+.show-image {
+  display: inline-block;
+  margin-top: 20px;
+  float: right;
+}

@@ -25,6 +25,7 @@ export class NewEpisodeComponent implements OnInit {
   minDate: Date = new Date(Date.now());
   maxDate: Date = new Date(Date.now());
   endDate: Date;
+  tracks:Array<number> = [];
   disabledDates:Array<Date>;
   startHour:number;
   startMinute:number;
@@ -83,11 +84,27 @@ export class NewEpisodeComponent implements OnInit {
     var dates = []
     for (var d = new Date(this.minDate); d <= new Date(this.maxDate); new Date(d.setDate(d.getDate() + 1))){
 
-      if (show.days.indexOf(d.getDay()) === -1){
+      if (show.days.indexOf(d.getDay() ) === -1){
         let s = d.getFullYear().toString();
         let f = d.getDate().toString();
         let q = (d.getMonth() +1).toString();
       dates.push(new Date(s + '/' + q + '/' + f));
+      }
+
+      if (show.days.indexOf((d.getDay()) === 1) && (show.type === 'Bi-weekly')){
+
+        const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+        let d2 = new Date(show.startDate)
+        let d3 = Date.UTC(d2.getFullYear(), d2.getMonth(), d2.getDate())
+        let d4 = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())
+
+        if(!((Math.floor(((d4 - d3)) / _MS_PER_DAY) % 14) === 0)){
+          let x = d.getFullYear().toString();
+          let y = d.getDate().toString();
+          let z = (d.getMonth() +1).toString();
+
+          dates.push(new Date(x + '/' + z + '/' + y));
+        }
       }
     }
 
@@ -119,7 +136,7 @@ export class NewEpisodeComponent implements OnInit {
     this.myForm.controls['tracks']['controls'][0]['controls']['endSecond'].patchValue(0)
 
 
-    this.episodeService.createEpisode(this.date, this.showId, this.endDate).subscribe(data => {
+    this.episodeService.createEpisode(this.date, this.showId, this.endDate, this.socan).subscribe(data => {
       if (data.success){
         this.episodeId = data.id;
         this.episodeCreated = true;
@@ -160,36 +177,77 @@ export class NewEpisodeComponent implements OnInit {
   initTrack(){
     if(!this.socan){
       return this._fb.group({
+        index:[],
+        saved: [false, [Validators.required]],
         classification: ['Theme', [Validators.required]],
         startDate: [null, [Validators.required]],
         startSecond: [null, [Validators.required]],
         endDate:[null, [Validators.required]],
         endSecond:[null, [Validators.required]],
-        contentTypes: new FormArray([])
+        composer:[null, [Validators.required]],
+        canCon:[false, [Validators.required]],
+        lgbtq:[false, [Validators.required]],
+        indigenous:[false, [Validators.required]],
+        artist: [],
+        title: [],
+        album: [],
+        year: [],
+        label: [],
       })
     } else {
       return this._fb.group({
+        index: [],
+        saved: [false, [Validators.required]],
         classification: ['Theme', [Validators.required]],
         startDate: [null, [Validators.required]],
         startSecond: [null, [Validators.required]],
         endDate:[null, [Validators.required]],
         endSecond:[null, [Validators.required]],
-        composer:['', [Validators.required]],
-        contentTypes: new FormArray([])
+        composer:[null, [Validators.required]],
+        canCon:[false, [Validators.required]],
+        lgbtq:[false, [Validators.required]],
+        indigenous:[false, [Validators.required]],
+        artist: [],
+        title: [],
+        album: [],
+        year: [],
+        label:[]
       });
     }
   }
 
   removeTrack(i: number) {
-      // remove track from the list
-      const control = <FormArray>this.myForm.controls['tracks'];
-      control.removeAt(i);
+
+    this.episodeService.deleteTrack(i, this.episodeId).subscribe(data =>{
+      if(data.success){
+        // remove track from the list
+        const control = <FormArray>this.myForm.controls['tracks'];
+        control.removeAt(i);
+      } else {
+        this.flashMessage.show('Something went wrong, did you try to delete a track that has not been saved yet?', {cssClass: 'alert-danger', timeout: 5000})
+      }
+    })
+
+  }
+
+  newTrack(){
+    const control = <FormArray>this.myForm.controls['tracks'];
+    control.push(this.initTrack());
+
+    let len = this.myForm.controls['tracks']['controls'].length
+
+    let prev = this.myForm.controls['tracks']['controls'][len - 2]
+
+    this.myForm.controls['tracks']['controls'][len - 1]['controls']['startDate'].patchValue(prev.controls.endDate.value)
+    this.myForm.controls['tracks']['controls'][len - 1]['controls']['startSecond'].patchValue(prev.controls.endSecond.value)
+
+    this.myForm.controls['tracks']['controls'][len - 1]['controls']['endDate'].patchValue(prev.controls.endDate.value)
+    this.myForm.controls['tracks']['controls'][len - 1]['controls']['endSecond'].patchValue(prev.controls.endSecond.value)
   }
 
   onCheckChange(event, i) {
 
   const formArray: FormArray = this.myForm.controls['tracks']['controls'][i].get('contentTypes') as FormArray;
-  console.log(formArray)
 
   /* Selected */
   if(event.target.checked){
@@ -212,5 +270,99 @@ export class NewEpisodeComponent implements OnInit {
       });
     }
   }
+
+  saveTrack(i){
+    let tr = this.myForm.controls['tracks']['controls'][i]['controls']
+    let start = new Date(tr['startDate'].value)
+    let end = new Date(tr['endDate'].value)
+    let start2 = new Date(start.setSeconds(tr['startSecond'].value))
+    let end2 = new Date(end.setSeconds(tr['endSecond'].value))
+
+    var track = {}
+
+
+    if (tr['composer'].value != null){
+      track = {
+        index: i,
+        episode: this.episodeId,
+        show: this.showId,
+        startTime: start2,
+        endTime: end2,
+        artist: tr['artist'].value,
+        title: tr['title'].value,
+        classification: tr['classification'].value,
+        canCon: tr['canCon'].value,
+        lgbtq: tr['lgbtq'].value,
+        indigenous: tr['indigenous'].value,
+        composer: tr['composer'].value,
+        album: tr['album'].value,
+        year: tr['year'].value,
+        label: tr['label'].value,
+      }
+
+
+    } else if ((tr['composer'].value == null) && (tr['artist'].value == null) && (tr['title'].value == null)){
+      track = {
+        index: i,
+        episode: this.episodeId,
+        show: this.showId,
+        startTime: start2,
+        endTime: end2,
+        classification: tr['classification'].value,
+        canCon: tr['canCon'].value,
+        lgbtq: tr['lgbtq'].value,
+        indigenous: tr['indigenous'].value,
+      }
+    } else {
+      track = {
+        index: i,
+        episode: this.episodeId,
+        show: this.showId,
+        startTime: start2,
+        endTime: end2,
+        artist: tr['artist'].value,
+        title: tr['title'].value,
+        classification: tr['classification'].value,
+        canCon: tr['canCon'].value,
+        lgbtq: tr['lgbtq'].value,
+        indigenous: tr['indigenous'].value,
+        album: tr['album'].value,
+        year: tr['year'].value,
+        label: tr['label'].value,
+      }
+    }
+
+    if (tr['saved'].value === false){
+      this.episodeService.saveTrack(track).subscribe(data => {
+        if(data.success){
+          tr['saved'].patchValue(true);
+          this.flashMessage.show('Track Saved Successfully', {cssClass:'alert-success', timeout: 5000})
+        } else {
+          this.flashMessage.show('Something went wrong', {cssClass: 'alert-danger', timeout: 5000})
+        }
+      },
+      err => {
+        console.log(err)
+        return false
+      })
+    } else if (tr['saved'].value === true){
+      this.episodeService.editTrack(track).subscribe(data => {
+        if(data.success){
+          tr['saved'].patchValue(true);
+          this.flashMessage.show('Track Saved Successfully', {cssClass:'alert-success', timeout: 5000})
+        } else {
+          this.flashMessage.show('Something went wrong', {cssClass: 'alert-danger', timeout: 5000})
+        }
+      },
+      err => {
+        console.log(err)
+        return false
+      })
+    }
+
+
+  }
+
+
 
 }

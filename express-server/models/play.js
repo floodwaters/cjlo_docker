@@ -29,9 +29,54 @@ const PlaySchema = mongoose.Schema({
     required: true
   },
 
-  track: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Track'
+  composer: {
+    type: String
+  },
+
+  duration: {
+    type: String
+  },
+
+  artist: {
+    type: String
+  },
+
+  title: {
+    type: String
+  },
+
+  index: {
+    type: Number
+  },
+
+  album: {
+    type: String
+  },
+
+  year: {
+    type: String
+  },
+
+  label: {
+    type: String
+  },
+
+  canCon: {
+    type: Boolean,
+    default: false,
+    required: true
+  },
+
+  lgbtq: {
+    type: Boolean,
+    default: false,
+    required: true
+  },
+
+  indigenous: {
+    type: Boolean,
+    default: false,
+    required: true
   }
 })
 

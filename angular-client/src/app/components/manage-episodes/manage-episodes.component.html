@@ -21,6 +21,7 @@
       <tbody>
         <tr *ngFor="let episode of upcomingEpisodes" [routerLink]="['/edit-episode/', episode._id]">
           <td>{{this.dateString.formatDate(episode.airDate)}}</td>
+          <td><button class="btn btn-danger" (click)="deleteEpisode(episode, 'upcoming'); $event.stopPropagation()">Delete Episode</button>
         </tr>
       </tbody>
     </table>
@@ -37,6 +38,7 @@
       <tbody>
         <tr *ngFor="let episode of pastEpisodes" [routerLink]="['/edit-episode/', episode._id]">
           <td>{{this.dateString.formatDate(episode.airDate)}}</td>
+          <td><button class="btn btn-danger" (click)="deleteEpisode(episode, 'past'); $event.stopPropagation()">Delete Episode</button>
         </tr>
       </tbody>
     </table>

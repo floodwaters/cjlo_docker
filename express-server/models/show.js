@@ -72,6 +72,12 @@ const ShowSchema = mongoose.Schema({
 
   timeString: {
     type: String
+  },
+
+  placeholder: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 });
 

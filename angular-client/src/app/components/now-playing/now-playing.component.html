@@ -1,0 +1,13 @@
+<div class="row main-wrapper">
+  <div class="col-md-3 image-box">
+    <img class="show-image" src="http://localhost:3000/{{currentShow?.thumbnailPath}}">
+  </div>
+  <div class="col-md-3 now-playing">
+    <h3 class="page-header">{{currentShow?.name}}</h3>
+    <div *ngIf="currentTrack && (currentTrack.classification == ('Theme' || 'Background'))">
+      <p><strong>Now Playing:</strong> {{currentTrack?.artist}} - {{currentTrack?.title}}</p>
+      <p>{{currentTrack?.album}} - {{currentTrack?.year}}</p>
+
+    </div>
+  </div>
+</div>

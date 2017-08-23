@@ -31,6 +31,12 @@ const EpisodeSchema = mongoose.Schema({
 
   filePath: {
     type: String
+  },
+
+  socan: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 })
 

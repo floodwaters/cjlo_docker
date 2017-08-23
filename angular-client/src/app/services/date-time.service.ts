@@ -124,7 +124,7 @@ export class DateTimeService {
     } else if (dur === '3 hr') {
       return new Date(d.setHours(d.getHours() + 3));
     }
-
-
   }
+
+
 }

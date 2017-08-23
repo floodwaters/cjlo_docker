@@ -22,7 +22,7 @@
 
   </div>
 
-  <div class="col-md-6 socan">
+  <div class="col-md-6 socan" *ngIf="episodeCreated === false">
     <div class=form-group>
       <label>Socan</label>
       <input type="checkbox" [(ngModel)]="socan"/>
@@ -64,7 +64,7 @@
 
             <div>
               <span>Track {{i + 1}}</span>
-              <span class="glyphicon glyphicon-remove pull-right" *ngIf="myForm.controls.tracks.controls.length > 1" (click)="removeTrack(i)"></span>
+              <span class="glyphicon glyphicon-remove pull-right" *ngIf="(myForm.controls.tracks.controls.length > 1) && (i === myForm.controls.tracks.controls.length - 1)" (click)="removeTrack(i)"></span>
             </div>
 
             <div class="row">
@@ -94,19 +94,99 @@
                 </div>
               </div>
 
-              <div *ngFor="let choice of contentTypes" class="col-md-3">
-                <label>
-                  <input type="checkbox" [value]="choice" (change)="onCheckChange($event, i)">
-                  {{choice}}
-                </label>
+              <div class="col-md-3 type-select">
+                <label>Cancon:</label>
+                <input type="checkbox" formControlName="canCon" />
+                <br />
+                <label>LGBTQ:</label>
+                <input type='checkbox' formControlName="lgbtq" />
+                <br />
+                <label>Indigenous:</label>
+                <input type="checkbox" formControlName="indigenous" />
               </div>
 
             </div>
+
+            <div class="row track-info" *ngIf="(this.myForm.controls['tracks']['controls'][i]['controls']['classification'].value == 'Theme') || (this.myForm.controls['tracks']['controls'][i]['controls']['classification'].value == 'Background')">
+
+              <div class="col-md-3">
+
+                <div class="form-group">
+                  <label>Artist:</label>
+                  <br />
+                  <input type="text" formControlName="artist" name="artist" />
+                </div>
+
+                <div class="form-group">
+                  <label>Title:</label>
+                  <br />
+                  <input type="text" formControlName="title" name="title" />
+                </div>
+
+              </div>
+
+              <div class="col-md-3">
+
+                <div class="form-group">
+                  <label>Album:</label>
+                  <br />
+                  <input type="text" formControlName="album" name="album" />
+                </div>
+
+                <div class="form-group">
+                  <label>Year:</label>
+                  <br />
+                  <input type="text" formControlName="year" name="year" />
+                </div>
+
+              </div>
+
+              <div class="col-md-3">
+
+                <div class="form-group">
+                  <label>Label:</label>
+                  <br />
+                  <input type="text" formControlName="label" name="label" />
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="row socan-fields"
+            *ngIf="(this.socan) && ((this.myForm.controls['tracks']['controls'][i]['controls']['classification'].value == 'Theme') || (this.myForm.controls['tracks']['controls'][i]['controls']['classification'].value == 'Background')) && (this.myForm.controls['tracks']['controls'][i]['controls']['composer']) ">
+
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>Composer</label>
+                  <input type="text" formControlName="composer" />
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <button class="btn btn-primary" (click)="saveTrack(i)">Save track</button>
+                <br />
+                <br />
+              </div>
+            </div>
+
+
 
           </div>
 
         </div>
 
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <button class="btn btn-primary" (click)="newTrack()">Add New Track</button>
+          <br />
+          <br />
+        </div>
       </div>
 
     </form>

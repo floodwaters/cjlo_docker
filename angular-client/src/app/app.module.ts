@@ -24,6 +24,8 @@ import {ShowService} from './services/show.service';
 import {UserService} from './services/user.service';
 import {DateTimeService} from './services/date-time.service';
 import {EpisodeService} from './services/episode.service';
+import {NowPlayingService} from './services/now-playing.service';
+import {PlaylistAndChartsService} from './services/playlist-and-charts.service'
 
 
 import {AuthGuard} from './guards/auth.guard';
@@ -49,6 +51,7 @@ import { ManagePublishedComponent } from './components/manage-published/manage-p
 import { ManageUnpublishedComponent } from './components/manage-unpublished/manage-unpublished.component';
 import { ArticlePreviewComponent } from './components/article-preview/article-preview.component';
 import { SafeHtmlPipe } from './safe-html.pipe';
+import {ReversePipe} from './reverse.pipe'
 import { NewShowComponent } from './components/new-show/new-show.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { ManageShowsComponent } from './components/manage-shows/manage-shows.component';
@@ -59,6 +62,9 @@ import { MyShowsComponent } from './components/my-shows/my-shows.component';
 import { ManageEpisodesComponent } from './components/manage-episodes/manage-episodes.component';
 import { NewEpisodeComponent } from './components/new-episode/new-episode.component';
 import { EditEpisodeComponent } from './components/edit-episode/edit-episode.component';
+import { NowPlayingComponent } from './components/now-playing/now-playing.component';
+import { NewPlaylistComponent } from './components/new-playlist/new-playlist.component';
+import { NewChartComponent } from './components/new-chart/new-chart.component';
 
 
 const appRoutes: Routes =  [
@@ -82,7 +88,9 @@ const appRoutes: Routes =  [
   {path: 'my-shows', component: MyShowsComponent, canActivate: [AuthGuard, DjGuard]},
   {path: 'manage-episodes/:id', component: ManageEpisodesComponent, canActivate: [AuthGuard, DjGuard]},
   {path: 'new-episode/:id', component: NewEpisodeComponent, canActivate: [AuthGuard, DjGuard]},
-  {path: 'edit-episode/:id', component: EditEpisodeComponent, canActivate: [AuthGuard, DjGuard]}
+  {path: 'edit-episode/:id', component: EditEpisodeComponent, canActivate: [AuthGuard, DjGuard]},
+  {path: 'new-playlist', component: NewPlaylistComponent, canActivate: [AuthGuard, ShowAdminGuard]},
+  {path: 'new-chart', component: NewChartComponent, canActivate: [AuthGuard, ShowAdminGuard]}
 
 
 
@@ -107,6 +115,7 @@ const appRoutes: Routes =  [
     ManageUnpublishedComponent,
     ArticlePreviewComponent,
     SafeHtmlPipe,
+    ReversePipe,
     NewShowComponent,
     CalendarComponent,
     ManageShowsComponent,
@@ -116,7 +125,10 @@ const appRoutes: Routes =  [
     MyShowsComponent,
     ManageEpisodesComponent,
     NewEpisodeComponent,
-    EditEpisodeComponent
+    EditEpisodeComponent,
+    NowPlayingComponent,
+    NewPlaylistComponent,
+    NewChartComponent
   ],
   imports: [
     BrowserModule,
@@ -138,7 +150,7 @@ const appRoutes: Routes =  [
 
 
   ],
-  providers: [AuthService, ShowService, EpisodeService, DateTimeService, UserService, ValidateService, GetRolesService, AuthGuard, DjGuard, AdminGuard, AuthorGuard, ShowAdminGuard, EditorGuard, DateToStringService],
+  providers: [AuthService, ShowService, PlaylistAndChartsService, NowPlayingService, EpisodeService, DateTimeService, UserService, ValidateService, GetRolesService, AuthGuard, DjGuard, AdminGuard, AuthorGuard, ShowAdminGuard, EditorGuard, DateToStringService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

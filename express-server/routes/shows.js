@@ -31,7 +31,8 @@ router.post('/create', passport.authenticate('jwt', {session: false}), (req, res
     duration: req.body.duration,
     tags: req.body.tags,
     thumbnailPath: req.body.thumbnailPath,
-    bannerPath: req.body.bannerPath
+    bannerPath: req.body.bannerPath,
+    placeholder: req.body.placeholder
   });
 
 
@@ -66,7 +67,8 @@ router.put('/edit/:id', passport.authenticate('jwt', {session: false}), (req, re
     'duration': req.body.duration,
     'tags': tags,
     'thumbnailPath': req.body.thumbnailPath,
-    'bannerPath': req.body.bannerPath
+    'bannerPath': req.body.bannerPath,
+    'placeholder': req.body.placeholder
   }})
     .then((show, err) => {
       if(err) {
@@ -179,6 +181,14 @@ router.post('/get-by-day', (req, res, next) => {
       res.send(shows)
     });
 });
+
+//get placeholder show
+router.get('/get-placeholder', (req, res, next) => {
+  Show.findOne({placeholder: true})
+    .then(show => {
+      res.send(show)
+    })
+})
 
 
 module.exports = router;

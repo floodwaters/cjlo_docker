@@ -102,7 +102,8 @@ export class EditShowComponent implements OnInit {
       timeSlots: [[], [Validators.required]],
       startDate: ['', [Validators.required]],
       endDate: [''],
-      tags: [[]]
+      tags: [[]],
+      placeholder: [false, [Validators.required]]
 
     });
 
@@ -140,6 +141,7 @@ export class EditShowComponent implements OnInit {
       days: show.days,
       time: show.timeString,
       timeSlots: show.timeslots,
+      placeholder: show.placeholder,
       startDate: moment(show.startDate),
       endDate: moment(show.endDate),
 
@@ -197,7 +199,8 @@ export class EditShowComponent implements OnInit {
       duration: this.myForm.controls['duration'].value,
       tags: ta,
       thumbnailPath: this.tPath,
-      bannerPath: this.bPath
+      bannerPath: this.bPath,
+      placeholder: this.myForm.controls['placeholder'].value
     }
 
     let headers = this.authService.setHeaders();

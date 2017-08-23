@@ -40,6 +40,14 @@
                 </ul>
             </div>
 
+            <div class="nav navbar-nav navbar-left dropdown" dropdown>
+              <li [routerLinkActive]="['active']" [routerLinkActiveOptions] = "{exact:true}" *ngIf="this.roleService.checkRole('admin') || this.roleService.checkRole('show admin')"><a dropdown-open>Playlists and Charts</a></li>
+                <ul class="dropdown-menu">
+                  <li><a *ngIf="this.roleService.checkRole('admin') || this.roleService.checkRole('show-admin')" [routerLink]="['/new-playlist']">New Playlist</a></li>
+                  <li><a *ngIf="this.roleService.checkRole('admin') || this.roleService.checkRole('show-admin')" [routerLink]="['/new-chart']">New Chart</a></li>
+                </ul>
+            </div>
+
 
           </ul>
 
