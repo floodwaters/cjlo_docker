@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { ShowService } from '../../services/show.service';
 import { Router, ActivatedRoute, Params} from '@angular/router';
-
+import {DateToStringService} from '../../services/date-to-string.service';
 
 @Component({
   selector: 'app-show-page',
@@ -14,12 +14,14 @@ export class ShowPageComponent implements OnInit {
   thumbnailPath:string;
   bannerPath:string;
   show:any;
+  episodes:any;
 
   constructor(
     private route:ActivatedRoute,
     private authService:AuthService,
     private showService:ShowService,
-    private router:Router
+    private router:Router,
+    private ds: DateToStringService
 
   ) { }
 
@@ -39,8 +41,19 @@ export class ShowPageComponent implements OnInit {
     err => {
       console.log(err)
       return false
+    });
+
+    this.showService.getPastEpisodes(this.id).subscribe(data => {
+      this.episodes = data;
+    }, err => {
+      console.log(err);
+      return false
     })
 
+  }
+
+  linkToEpisode(episode){
+    this.router.navigate(['/episode', episode._id])
   }
 
 }

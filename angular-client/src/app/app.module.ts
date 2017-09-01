@@ -65,6 +65,9 @@ import { EditEpisodeComponent } from './components/edit-episode/edit-episode.com
 import { NowPlayingComponent } from './components/now-playing/now-playing.component';
 import { NewPlaylistComponent } from './components/new-playlist/new-playlist.component';
 import { NewChartComponent } from './components/new-chart/new-chart.component';
+import { ShowsComponent } from './components/shows/shows.component';
+import { ArchivedShowsComponent } from './components/archived-shows/archived-shows.component';
+import { EpisodeComponent } from './components/episode/episode.component';
 
 
 const appRoutes: Routes =  [
@@ -90,7 +93,10 @@ const appRoutes: Routes =  [
   {path: 'new-episode/:id', component: NewEpisodeComponent, canActivate: [AuthGuard, DjGuard]},
   {path: 'edit-episode/:id', component: EditEpisodeComponent, canActivate: [AuthGuard, DjGuard]},
   {path: 'new-playlist', component: NewPlaylistComponent, canActivate: [AuthGuard, ShowAdminGuard]},
-  {path: 'new-chart', component: NewChartComponent, canActivate: [AuthGuard, ShowAdminGuard]}
+  {path: 'new-chart', component: NewChartComponent, canActivate: [AuthGuard, ShowAdminGuard]},
+  {path: 'shows', component: ShowsComponent},
+  {path: 'old-shows', component: ArchivedShowsComponent},
+  {path: 'episode/:id', component: EpisodeComponent}
 
 
 
@@ -128,7 +134,10 @@ const appRoutes: Routes =  [
     EditEpisodeComponent,
     NowPlayingComponent,
     NewPlaylistComponent,
-    NewChartComponent
+    NewChartComponent,
+    ShowsComponent,
+    ArchivedShowsComponent,
+    EpisodeComponent
   ],
   imports: [
     BrowserModule,

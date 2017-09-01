@@ -61,7 +61,7 @@ export class NewEpisodeComponent implements OnInit {
   ngOnInit() {
 
     this.minDate.setDate(this.minDate.getDate() - 8)
-    this.maxDate.setMonth(this.minDate.getMonth() + 1);
+    this.maxDate.setMonth(this.minDate.getMonth() + 2);
 
     this.showId = this.route.snapshot.params['id'];
 
@@ -189,10 +189,7 @@ export class NewEpisodeComponent implements OnInit {
         lgbtq:[false, [Validators.required]],
         indigenous:[false, [Validators.required]],
         artist: [],
-        title: [],
-        album: [],
-        year: [],
-        label: [],
+        title: []
       })
     } else {
       return this._fb.group({
@@ -208,10 +205,7 @@ export class NewEpisodeComponent implements OnInit {
         lgbtq:[false, [Validators.required]],
         indigenous:[false, [Validators.required]],
         artist: [],
-        title: [],
-        album: [],
-        year: [],
-        label:[]
+        title: []
       });
     }
   }
@@ -294,10 +288,7 @@ export class NewEpisodeComponent implements OnInit {
         canCon: tr['canCon'].value,
         lgbtq: tr['lgbtq'].value,
         indigenous: tr['indigenous'].value,
-        composer: tr['composer'].value,
-        album: tr['album'].value,
-        year: tr['year'].value,
-        label: tr['label'].value,
+        composer: tr['composer'].value
       }
 
 
@@ -325,10 +316,7 @@ export class NewEpisodeComponent implements OnInit {
         classification: tr['classification'].value,
         canCon: tr['canCon'].value,
         lgbtq: tr['lgbtq'].value,
-        indigenous: tr['indigenous'].value,
-        album: tr['album'].value,
-        year: tr['year'].value,
-        label: tr['label'].value,
+        indigenous: tr['indigenous'].value
       }
     }
 

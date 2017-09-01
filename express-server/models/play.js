@@ -49,18 +49,6 @@ const PlaySchema = mongoose.Schema({
     type: Number
   },
 
-  album: {
-    type: String
-  },
-
-  year: {
-    type: String
-  },
-
-  label: {
-    type: String
-  },
-
   canCon: {
     type: Boolean,
     default: false,

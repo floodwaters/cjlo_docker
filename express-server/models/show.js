@@ -70,6 +70,12 @@ const ShowSchema = mongoose.Schema({
     default: false
   },
 
+  archive: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+
   timeString: {
     type: String
   },

@@ -202,6 +202,7 @@ router.delete('/delete/:id', passport.authenticate('jwt', {session: false}), (re
 
 router.get('/get-episode/:id', (req, res, next) => {
   Episode.findOne({_id: req.params.id})
+    .populate('show')
     .populate('plays')
     .then((episode, err) => {
       if (err){

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {ShowService} from '../../services/show.service';
+import {GetRolesService} from '../../services/get-roles.service';
 import {DateTimeService} from '../../services/date-time.service';
 import {Http, Headers} from '@angular/http';
 import {FlashMessagesService} from 'angular2-flash-messages';
@@ -21,6 +22,7 @@ export class ManageShowsComponent implements OnInit {
     private authService:AuthService,
     private showService:ShowService,
     private http:Http,
+    private rs:GetRolesService,
     private flashMessage:FlashMessagesService,
     private dateTime:DateTimeService
   ) { }
@@ -56,35 +58,67 @@ export class ManageShowsComponent implements OnInit {
     return str
   }
 
-  //sets the on air status of a show to true
-  onAir(show){
-    this.showService.changeOnAirStatus(show, true).subscribe(data => {
-      if (data.success){
-        this.flashMessage.show('Show will now air as scheduled', {cssClass: 'alert-success', timeout: 5000});
-        return true
-      }
-    },
-    err => {
-      this.flashMessage.show('Something went wrong', {cssClass: 'alert-danger', timeout: 5000});
-      console.log(err)
-      return false
-    });
+  //sets the on air status of a show
+  onAir(e, show){
+    if(e.target.checked){
+      this.showService.changeOnAirStatus(show, true).subscribe(data => {
+        if (data.success){
+          this.flashMessage.show('Show will now air as scheduled', {cssClass: 'alert-success', timeout: 5000});
+          return true
+        }
+      },
+      err => {
+        this.flashMessage.show('Something went wrong', {cssClass: 'alert-danger', timeout: 5000});
+        console.log(err)
+        return false
+      });
+    } else if (!e.target.checked){
+      this.showService.changeOnAirStatus(show, false).subscribe(data => {
+        if (data.success){
+          this.flashMessage.show('Show will no longer air', {cssClass: 'alert-success', timeout: 5000});
+          return true
+        }
+      },
+      err => {
+        this.flashMessage.show('Something went wrong', {cssClass: 'alert-danger', timeout: 5000});
+        console.log(err)
+        return false
+      });
+    }
+
   }
 
-  //sets the on air status of a show to false
-  offAir(show){
-    this.showService.changeOnAirStatus(show, false).subscribe(data => {
-      if (data.success){
-        this.flashMessage.show('Show will no longer air', {cssClass: 'alert-success', timeout: 5000});
-        return true
-      }
-    },
-    err => {
-      this.flashMessage.show('Something went wrong', {cssClass: 'alert-danger', timeout: 5000});
-      console.log(err)
-      return false
-    });
+
+//sets the archive status of a show
+  archive(e, show){
+    if (e.target.checked){
+      this.showService.changeArchiveStatus(show, true).subscribe(data => {
+        if (data.success){
+          this.flashMessage.show('Show will now appear in the archives', {cssClass: 'alert-success', timeout: 5000});
+          return true
+        }
+      },
+      err => {
+        this.flashMessage.show('Something went wrong', {cssClass: 'alert-danger', timeout: 5000});
+        console.log(err)
+        return false
+      });
+    } else if (!e.target.checked){
+      this.showService.changeArchiveStatus(show, false).subscribe(data => {
+        if (data.success){
+          this.flashMessage.show('Show will no longer appear in the archives', {cssClass: 'alert-success', timeout: 5000});
+          return true
+        }
+      },
+      err => {
+        this.flashMessage.show('Something went wrong', {cssClass: 'alert-danger', timeout: 5000});
+        console.log(err)
+        return false
+      });
+    }
+
   }
+
 
   //filters the local array of shows to remove the deleted show
   filterShows(id) {

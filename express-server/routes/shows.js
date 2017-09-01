@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/database');
 const User = require('../models/user');
 const Article = require('../models/article');
+const Episode = require('../models/episode');
 const Show = require('../models/show');
 const multer = require('multer');
 const Jimp = require('jimp');
@@ -101,6 +102,51 @@ router.get('/showlist', (req, res, next) => {
     })
     .catch(next);
 });
+
+//returns the episodes for a show
+router.get('/episodes/:id', (req, res, next) => {
+  Episode.find({show: req.params.id, endDate: {$lt: Date.now()}})
+    .then((episodes, err) => {
+      if(err){
+        console.log(err)
+        res.json({success: false, msg: 'Something went wrong'})
+      } else if (episodes === null){
+        res.json({success: false, msg: 'There were no episodes'})
+      } else {
+        res.send(episodes)
+      }
+    })
+})
+
+//returns all shows that are listed as on air
+router.get('/get-on-air', (req, res, next) => {
+  Show.find({onAir: true})
+    .then(shows => {
+      res.send(shows)
+    });
+});
+
+//returns all shows that are listed as archived
+router.get('/get-archive', (req, res, next) => {
+  Show.find({archive: true})
+    .then(shows => {
+      res.send(shows)
+    });
+});
+
+//change the archive status of a show
+router.put('/change-archive', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+  Show.findByIdAndUpdate({_id: req.body.id}, {$set: {archive: req.body.status}})
+    .then((show, err) => {
+      if(err) {
+        res.json({success: false, msg: 'Something went wrong'});
+        return false
+      } else {
+        res.json({success: true, msg: 'Status updated!'});
+        return true
+      }
+    })
+})
 
 //change the on air status of a show
 router.put('/change-status', passport.authenticate('jwt', {session: false}), (req, res, next) => {

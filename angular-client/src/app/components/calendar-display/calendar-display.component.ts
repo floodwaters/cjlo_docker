@@ -36,8 +36,7 @@ export class CalendarDisplayComponent implements OnInit {
     let chng = changes['selectedDate']
     if(chng){
       this.showService.getShowsForDay(chng.currentValue.getDay()).subscribe(data => {
-        this.allShows = data
-        console.log(this.getShowsInSlot(6))
+        this.allShows = data;
 
       },
       err => {

@@ -10,11 +10,47 @@ export class ShowService {
     private http:Http
   ) { }
 
+
+  //gets all past episodes for a show
+  getPastEpisodes(id){
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/shows/episodes/' + id);
+    return this.http.get(ep, {headers: headers})
+      .map(res => res.json());
+  }
+  //get all shows listed as on air7
+  getOnAir(){
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/shows/get-on-air');
+    return this.http.get(ep, {headers: headers})
+      .map(res => res.json());
+  }
+
+  //get all shows listed as archived
+  getArchived(){
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/shows/get-archive');
+    return this.http.get(ep, {headers: headers})
+      .map(res => res.json());
+  }
+
   // retrieves list of all shows from the api
   getShows(){
     let headers = this.authService.setHeaders();
     let ep = this.authService.prepEndpoint('http://localhost:3000/shows/showlist');
     return this.http.get(ep, {headers: headers})
+      .map(res => res.json());
+  }
+
+  //changes the archive status of a show
+  changeArchiveStatus(show, status){
+    let body = {
+      id: show._id,
+      status: status
+    }
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/shows/change-archive');
+    return this.http.put(ep, body, {headers: headers})
       .map(res => res.json());
   }
 

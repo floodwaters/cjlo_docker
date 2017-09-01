@@ -5,4 +5,14 @@
 .type-select {
   display: inline-block;
   float: left;
+  margin-top: 15px;
+}
+
+.start-select {
+  border: solid 1px black;
+  margin-right: 5px;
+}
+
+.end-select {
+  border: solid 1px black;
 }

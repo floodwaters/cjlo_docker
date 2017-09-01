@@ -16,6 +16,7 @@
           <th>Days</th>
           <th>Time Slots</th>
           <th>On Air</th>
+          <th>Archive</th>
         </tr>
       </thead>
       <tbody>
@@ -23,10 +24,11 @@
           <td>{{show?.name}}</td>
           <td>{{displayDays(show)}}</td>
           <td>{{displaySlots(show)}}</td>
-          <td><input type="radio" [(ngModel)]="show.onAir" name="{{show.name}}" [value]="true" (click)="onAir(show); $event.stopPropagation()">True<br />
-              <input type="radio" [(ngModel)]="show.onAir" name="{{show.name}}" [value]="false" (click)="offAir(show); $event.stopPropagation()">False</td>
+          <td><input type="checkbox" [(ngModel)]="show.onAir" name="{{show.name}}" (click)="onAir($event, show); $event.stopPropagation()">
+          <td><input type="checkbox" [(ngModel)]="show.archive" name="archive - {{show.name}}" (click)="archive($event, show); $event.stopPropagation()">
 
-          <td><button class="btn btn-danger" (click)= "this.deleteShow(show._id); $event.stopPropagation()">Delete show</button></td>
+
+          <td><button *ngIf="this.rs.checkRole('admin')" class="btn btn-danger" (click)= "this.deleteShow(show._id); $event.stopPropagation()">Delete show</button></td>
         </tr>
       </table>
 

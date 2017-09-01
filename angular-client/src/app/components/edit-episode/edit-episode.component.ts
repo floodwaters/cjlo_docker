@@ -110,9 +110,6 @@ export class EditEpisodeComponent implements OnInit {
       con['endSecond'].patchValue(new Date(e[key].endTime).getSeconds());
       con['artist'].patchValue(e[key].artist);
       con['title'].patchValue(e[key].title);
-      con['album'].patchValue(e[key].album);
-      con['year'].patchValue(e[key].year);
-      con['label'].patchValue(e[key].label);
       con['index'].patchValue(e[key].index);
       con['saved'].patchValue(true);
       con['classification'].patchValue(e[key].classification);
@@ -195,10 +192,7 @@ export class EditEpisodeComponent implements OnInit {
         lgbtq:[false, [Validators.required]],
         indigenous:[false, [Validators.required]],
         artist: [],
-        title: [],
-        album: [],
-        year: [],
-        label:[]
+        title: []
       })
     } else {
       return this._fb.group({
@@ -214,10 +208,7 @@ export class EditEpisodeComponent implements OnInit {
         lgbtq:[false, [Validators.required]],
         indigenous:[false, [Validators.required]],
         artist: [],
-        title: [],
-        album: [],
-        year: [],
-        label:[]
+        title: []
       });
     }
   }
@@ -299,10 +290,7 @@ export class EditEpisodeComponent implements OnInit {
         canCon: tr['canCon'].value,
         lgbtq: tr['lgbtq'].value,
         indigenous: tr['indigenous'].value,
-        composer: tr['composer'].value,
-        album: tr['album'].value,
-        year: tr['year'].value,
-        label: tr['label'].value
+        composer: tr['composer'].value
       }
 
 
@@ -330,10 +318,7 @@ export class EditEpisodeComponent implements OnInit {
         classification: tr['classification'].value,
         canCon: tr['canCon'].value,
         lgbtq: tr['lgbtq'].value,
-        indigenous: tr['indigenous'].value,
-        album: tr['album'].value,
-        year: tr['year'].value,
-        label: tr['label'].value
+        indigenous: tr['indigenous'].value
       }
     }
 
