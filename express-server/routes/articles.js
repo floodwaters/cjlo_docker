@@ -9,6 +9,8 @@ const multer = require('multer');
 const Jimp = require('jimp');
 const Promise = require('bluebird');
 const fileType = require('file-type');
+const fs = require('fs-extra');
+
 
 
 
@@ -18,6 +20,8 @@ router.post('/create', passport.authenticate('jwt', {session: false}), (req, res
     title: req.body.title,
     author: req.user._id,
     articleBody: req.body.articleBody,
+    articleBody2: req.body.articleBody2,
+    articleBody3: req.body.articleBody3,
     preview: req.body.preview,
     created_at: Date.now(),
     status: 'draft'
@@ -36,7 +40,7 @@ router.post('/create', passport.authenticate('jwt', {session: false}), (req, res
 //edit articles
 router.put('/edit/:id', passport.authenticate('jwt', {session:false}), (req, res, next) => {
   Article.findOneAndUpdate({_id: req.params.id},
-    {$set: {"title": req.body.title, "articleBody": req.body.articleBody, "preview": req.body.preview, "publish_on": req.body.publish_on, "unpublish_on": req.body.unpublish_on}})
+    {$set: {"title": req.body.title, "articleBody2": req.body.articleBody2, "articleBody3": req.body.articleBody3, "articleBody": req.body.articleBody, "preview": req.body.preview, "publish_on": req.body.publish_on, "unpublish_on": req.body.unpublish_on}})
     .then( (article, err) => {
       if(err){
         res.json({success: false, msg: 'Could not edit article'})
@@ -59,8 +63,20 @@ router.put('/edit/status/:id', passport.authenticate('jwt', {session:false}), (r
 });
 
 //change highlight staatus
-router.put('/highlight/:id', (req, res, next) => {
+router.put('/highlight/:id', passport.authenticate('jwt', {session:false}), (req, res, next) => {
   Article.findOneAndUpdate({_id: req.params.id}, {$set: {"highlighted": req.body.highlighted}})
+    .then((article, err) => {
+      if(err){
+        res.json({success: false, msg: 'could not change status'});
+      } else {
+        res.json({success: true, msg: 'Status successfully changed!'})
+      }
+    });
+})
+
+//change spotlight staatus
+router.put('/spotlight/:id', passport.authenticate('jwt', {session:false}), (req, res, next) => {
+  Article.findOneAndUpdate({_id: req.params.id}, {$set: {"spotlight": req.body.spotlight}})
     .then((article, err) => {
       if(err){
         res.json({success: false, msg: 'could not change status'});
@@ -190,21 +206,121 @@ var storage = multer.diskStorage({
 //memory storage to allow processing of image
 var thumbnailStorage = multer.memoryStorage();
 
-
-
+var imageStorage = multer.memoryStorage();
 
 var upload = multer({storage: storage});
 
 var thumbnailUpload = multer({storage: thumbnailStorage});
+
+var imageUpload = multer({storage: imageStorage});
 
 //post images for articles
 router.post('/images', upload.single('file'), passport.authenticate('jwt', {session:false}), (req, res, next) => {
   res.json({link: 'http://localhost:3000/' + req.file.path});
 });
 
+//post image 1
+router.post('/image1', imageUpload.single('file'), passport.authenticate('jwt', {session: false}), (req, res, next) => {
+  var rand = Math.floor(Math.random() * 200000).toString()
+
+  Jimp.read(req.file.buffer, (err, image) => {
+    image.resize(450, 450);
+    image.write('./public/article-images/' + rand + req.file.originalname);
+  });
+
+  let id = req.body.articleId;
+  Article.findOneAndUpdate({_id: id}, {$set: {"image1Path": 'public/article-images/' + rand + req.file.originalname}})
+    .then((article, err) => {
+      if (err) {
+        res.json({success: false, msg: 'failed to upload image'})
+      } else {
+        console.log(req.body.articleId)
+        res.json({success: true, msg: 'Image Uploaded!', path: 'public/article-images/' + rand + req.file.originalname})
+      }
+    })
+})
+
+//post image 2
+router.post('/image2', imageUpload.single('file'), passport.authenticate('jwt', {session: false}), (req, res, next) => {
+  var rand = Math.floor(Math.random() * 200000).toString()
+
+  Jimp.read(req.file.buffer, (err, image) => {
+    image.resize(450, 450);
+    image.write('./public/article-images/' + rand + req.file.originalname);
+  });
+
+  let id = req.body.articleId;
+  Article.findOneAndUpdate({_id: id}, {$set: {"image2Path": 'public/article-images/' + rand + req.file.originalname}})
+    .then((article, err) => {
+      if (err) {
+        res.json({success: false, msg: 'failed to upload image'})
+      } else {
+        res.json({success: true, msg: 'Image Uploaded!', path: 'public/article-images/' + rand + req.file.originalname})
+      }
+    })
+})
+
+//post image 3
+router.post('/image3', imageUpload.single('file'), passport.authenticate('jwt', {session: false}), (req, res, next) => {
+  var rand = Math.floor(Math.random() * 200000).toString()
+
+  Jimp.read(req.file.buffer, (err, image) => {
+    image.resize(450, 450);
+    image.write('./public/article-images/' + rand + req.file.originalname);
+  });
+
+  let id = req.body.articleId;
+  Article.findOneAndUpdate({_id: id}, {$set: {"image3Path": 'public/article-images/' + rand + req.file.originalname}})
+    .then((article, err) => {
+      if (err) {
+        res.json({success: false, msg: 'failed to upload image'})
+      } else {
+        res.json({success: true, msg: 'Image Uploaded!', path: 'public/article-images/' + rand + req.file.originalname})
+      }
+    })
+})
+
+//delete image 1
+router.post('/delete-image1', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+  Article.findOneAndUpdate({_id: req.body.articleId}, {$set: {"image1Path": null}})
+    .then((article, err) => {
+      if (err){
+        res.json({success: false, msg: 'Failed to delete Image'})
+      } else {
+        fs.unlink(req.body.path)
+        res.json({success: true, msg: 'Image has been deleted'})
+      }
+    })
+})
+
+//delete image 2
+router.post('/delete-image2', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+  Article.findOneAndUpdate({_id: req.body.articleId}, {$set: {"image2Path": null}})
+    .then((article, err) => {
+      if (err){
+        res.json({success: false, msg: 'Failed to delete Image'})
+      } else {
+        fs.unlink(req.body.path)
+        res.json({success: true, msg: 'Image has been deleted'})
+      }
+    })
+})
+
+//delete image 3
+router.post('/delete-image3', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+  Article.findOneAndUpdate({_id: req.body.articleId}, {$set: {"image3Path": null}})
+    .then((article, err) => {
+      if (err){
+        res.json({success: false, msg: 'Failed to delete Image'})
+      } else {
+        fs.unlink(req.body.path)
+        res.json({success: true, msg: 'Image has been deleted'})
+      }
+    })
+})
+
 //post article thumbnail
 router.post('/thumbnail', thumbnailUpload.single('file'), passport.authenticate('jwt', {session:false}), (req, res, next) => {
-  console.log('hi')
   Jimp.read(req.file.buffer, (err, image) => {
     image.resize(150, 150);
     image.write('./public/thumbnails/' + req.file.originalname)

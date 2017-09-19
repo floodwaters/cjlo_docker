@@ -111,7 +111,7 @@ export class NewShowComponent implements OnInit {
 
   //uploads image to the server, then saves the path to the article to thumnbnailPath variable
   uploadThumbnail(){
-
+    
     this.uploader1.uploadAll();
     this.uploader1.onCompleteItem = (item:any, response:any, status:any, headers:any) => {
             let r = JSON.parse(response)

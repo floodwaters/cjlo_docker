@@ -19,6 +19,7 @@
           <th>Title</th>
           <th>Author</th>
           <th>Date Created</th>
+          <th>Spotlight</th>
           <th>Highlighted</th>
           <th>Magazine</th>
           <th>News and Events</th>
@@ -30,6 +31,7 @@
           <td>{{article?.title}}</td>
           <td>{{article?.author?.username}}</td>
           <td>{{this.dateString.formatDate(article?.created_at)}}</td>
+          <td><input type="checkbox" [(ngModel)]="article.spotlight" name="{{article.title}}-spotlight" (click)="spotlight($event, article); $event.stopPropagation()">
           <td><input type="checkbox" [(ngModel)]="article.highlighted"  name="{{article.title}}-highlighted" (click)="highlight($event, article); $event.stopPropagation()">
           <td><input type="checkbox" [(ngModel)]="article.magazine"  name="{{article.title}}-magazine" (click)="inMagazine($event, article); $event.stopPropagation()">
           <td><input type="checkbox" [(ngModel)]="article.newsAndEvents"  name="{{article.title}}-news" (click)="inNandE($event, article); $event.stopPropagation()">

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {ShowService} from '../../services/show.service';
 import {AuthService} from '../../services/auth.service';
 import {EpisodeService} from '../../services/episode.service';
@@ -6,7 +6,15 @@ import {DateTimeService} from '../../services/date-time.service';
 import {FlashMessagesService} from 'angular2-flash-messages';
 import { Router, ActivatedRoute, Params} from '@angular/router';
 import { Validators, FormGroup, FormArray, FormBuilder, FormControl } from '@angular/forms';
+import { Overlay, overlayConfigFactory } from 'angular2-modal';
+import { Modal, BSModalContext } from 'angular2-modal/plugins/bootstrap';
+import { CustomModalContext, EpisodeImportModalComponent } from '../episode-import-modal/episode-import-modal.component';
+import {Subscription} from 'rxjs/Subscription';
+
+
 import * as moment from 'moment';
+
+
 
 const Moment: any = (<any>moment).default || moment;
 
@@ -14,17 +22,23 @@ const Moment: any = (<any>moment).default || moment;
 @Component({
   selector: 'app-new-episode',
   templateUrl: './new-episode.component.html',
-  styleUrls: ['./new-episode.component.css']
+  styleUrls: ['./new-episode.component.css'],
+  providers: [Modal]
 })
-export class NewEpisodeComponent implements OnInit {
+
+export class NewEpisodeComponent implements OnInit, OnDestroy {
 
   episodeId:number;
+  subscription:Subscription;
   showId:number;
   show:any;
   date:Date;
+  episodeImport:any;
   minDate: Date = new Date(Date.now());
   maxDate: Date = new Date(Date.now());
   endDate: Date;
+  canconPercent:string = '0';
+  newPercent:string = '0';
   tracks:Array<number> = [];
   disabledDates:Array<Date>;
   startHour:number;
@@ -32,8 +46,7 @@ export class NewEpisodeComponent implements OnInit {
   episodeCreated:boolean = false;
   editorContent:string;
   socan:boolean = false;
-  types:Array<string> = ['Talk', 'News', 'Ad', 'Weather', 'Background', 'Station Id'];
-  contentTypes:Array<string> = ['CanCon', 'LGBTQ', 'Indigenous'];
+  types:Array<string> = ['Talk', 'News', 'Ad', 'Show Promo', 'Station Id'];
   day:number;
   year:number;
   month:number;
@@ -42,7 +55,8 @@ export class NewEpisodeComponent implements OnInit {
 
 
   public options: Object = {
-    height: 300,
+    height: 100,
+    charCounterMax: 250,
     placeholderText: 'Enter episode description here'
   }
 
@@ -54,11 +68,18 @@ export class NewEpisodeComponent implements OnInit {
     private router:Router,
     private dateTime:DateTimeService,
     private flashMessage:FlashMessagesService,
-    private _fb:FormBuilder
+    private _fb:FormBuilder,
+    public modal: Modal
 
-  ) { }
+  ) {}
 
   ngOnInit() {
+
+    this.subscription = this.episodeService.importEpisode$.subscribe(
+      item => {this.episodeImport = item;
+        console.log(item)
+
+  })
 
     this.minDate.setDate(this.minDate.getDate() - 8)
     this.maxDate.setMonth(this.minDate.getMonth() + 2);
@@ -78,6 +99,16 @@ export class NewEpisodeComponent implements OnInit {
     });
 
 
+  }
+
+  ngOnDestroy() {
+   // prevent memory leak when component is destroyed
+   this.subscription.unsubscribe();
+ }
+
+
+  selectImport() {
+    return this.modal.open(EpisodeImportModalComponent,  overlayConfigFactory({id: this.showId}, BSModalContext));
   }
 
   disableDates(show){
@@ -140,6 +171,22 @@ export class NewEpisodeComponent implements OnInit {
       if (data.success){
         this.episodeId = data.id;
         this.episodeCreated = true;
+        this.episodeService.getCanconPercent(data.id).subscribe(data => {
+          if(data[0]){
+            this.canconPercent = Math.floor(data[0].CanconPercent * 100).toString();
+          }
+        }, err =>{
+          console.log(err);
+          return false;
+        });
+        this.episodeService.getNewPercent(data.id).subscribe(data => {
+          if (data[0]){
+            this.newPercent = Math.floor(data[0].newPercent * 100).toString();
+          }
+        }, err =>{
+          console.log(err);
+          return false;
+        })
         this.flashMessage.show('Episode Created', {cssClass: 'alert-success', timeout: 5000})
       } else {
         this.flashMessage.show('Something went wrong', {cssClass: 'alert-danger', timeout: 5000})
@@ -188,6 +235,7 @@ export class NewEpisodeComponent implements OnInit {
         canCon:[false, [Validators.required]],
         lgbtq:[false, [Validators.required]],
         indigenous:[false, [Validators.required]],
+        new:[false, [Validators.required]],
         artist: [],
         title: []
       })
@@ -204,6 +252,7 @@ export class NewEpisodeComponent implements OnInit {
         canCon:[false, [Validators.required]],
         lgbtq:[false, [Validators.required]],
         indigenous:[false, [Validators.required]],
+        new:[false, [Validators.required]],
         artist: [],
         title: []
       });
@@ -275,6 +324,7 @@ export class NewEpisodeComponent implements OnInit {
     var track = {}
 
 
+
     if (tr['composer'].value != null){
       track = {
         index: i,
@@ -288,6 +338,7 @@ export class NewEpisodeComponent implements OnInit {
         canCon: tr['canCon'].value,
         lgbtq: tr['lgbtq'].value,
         indigenous: tr['indigenous'].value,
+        new: tr['new'].value,
         composer: tr['composer'].value
       }
 
@@ -301,6 +352,7 @@ export class NewEpisodeComponent implements OnInit {
         endTime: end2,
         classification: tr['classification'].value,
         canCon: tr['canCon'].value,
+        new: tr['new'].value,
         lgbtq: tr['lgbtq'].value,
         indigenous: tr['indigenous'].value,
       }
@@ -316,6 +368,7 @@ export class NewEpisodeComponent implements OnInit {
         classification: tr['classification'].value,
         canCon: tr['canCon'].value,
         lgbtq: tr['lgbtq'].value,
+        new: tr['new'].value,
         indigenous: tr['indigenous'].value
       }
     }
@@ -324,6 +377,18 @@ export class NewEpisodeComponent implements OnInit {
       this.episodeService.saveTrack(track).subscribe(data => {
         if(data.success){
           tr['saved'].patchValue(true);
+          this.episodeService.getCanconPercent(this.episodeId).subscribe(data => {
+            this.canconPercent = Math.floor(data[0].CanconPercent * 100).toString();
+          }, err =>{
+            console.log(err);
+            return false;
+          });
+          this.episodeService.getNewPercent(this.episodeId).subscribe(data => {
+            this.newPercent = Math.floor(data[0].newPercent * 100).toString();
+          }, err =>{
+            console.log(err);
+            return false;
+          })
           this.flashMessage.show('Track Saved Successfully', {cssClass:'alert-success', timeout: 5000})
         } else {
           this.flashMessage.show('Something went wrong', {cssClass: 'alert-danger', timeout: 5000})
@@ -337,6 +402,18 @@ export class NewEpisodeComponent implements OnInit {
       this.episodeService.editTrack(track).subscribe(data => {
         if(data.success){
           tr['saved'].patchValue(true);
+          this.episodeService.getCanconPercent(this.episodeId).subscribe(data => {
+            this.canconPercent = Math.floor(data[0].CanconPercent * 100).toString();
+          }, err =>{
+            console.log(err);
+            return false;
+          });
+          this.episodeService.getNewPercent(this.episodeId).subscribe(data => {
+            this.newPercent = Math.floor(data[0].newPercent * 100).toString();
+          }, err =>{
+            console.log(err);
+            return false;
+          })
           this.flashMessage.show('Track Saved Successfully', {cssClass:'alert-success', timeout: 5000})
         } else {
           this.flashMessage.show('Something went wrong', {cssClass: 'alert-danger', timeout: 5000})
@@ -347,9 +424,8 @@ export class NewEpisodeComponent implements OnInit {
         return false
       })
     }
-
-
   }
+
 
 
 

@@ -165,34 +165,55 @@ router.put('/change-status', passport.authenticate('jwt', {session: false}), (re
 //memory storage to allow processing of image
 var thumbnailStorage = multer.memoryStorage();
 
-var upload = multer({storage: storage});
+var bannerStorage = multer.memoryStorage();
+
+var upload = multer({storage: bannerStorage});
 
 var thumbnailUpload = multer({storage: thumbnailStorage});
 
 //post show banner image
 router.post('/images/show-banner', upload.single('file'), passport.authenticate('jwt', {session: false}), (req, res, next) => {
-  res.json({path: req.file.path});
+  var rand = Math.floor(Math.random() * 200000).toString()
+  Jimp.read(req.file.buffer, (err, image) => {
+    image.resize(1080, 1080);
+    image.write('./public/show-banners/' + rand + req.file.originalname);
+  });
+
+
+  if(req.body.showId){
+    let id = req.body.showId;
+    Show.findOneAndUpdate({_id: id}, {$set: {"bannerPath": 'public/show-banners/' + rand + req.file.originalname}})
+      .then((article, err) => {
+        if (err) {
+          res.json({success: false, msg: 'failed to upload image'})
+        } else {
+          res.json({success: true, msg: 'Image uploaded!', path: 'public/show-banners/' + rand + req.file.originalname})
+        }
+      })
+  } else {
+    res.json({path: 'public/show-banners/' + rand + req.file.originalname})
+  }
 })
 
 //post show thumbnail
 router.post('/images/thumbnail', thumbnailUpload.single('file'), passport.authenticate('jwt', {session:false}), (req, res, next) => {
+  var rand = Math.floor(Math.random() * 200000).toString()
   Jimp.read(req.file.buffer, (err, image) => {
     image.resize(100, 100);
-    image.write('./public/show-thumbnails/' + req.file.originalname)
+    image.write('./public/show-thumbnails/' + rand + req.file.originalname)
   });
-
   if(req.body.showId){
     let id = req.body.showId;
-    Show.findOneAndUpdate({_id: id}, {$set: {"thumbnailPath": 'public/show-thumbnails/' + req.file.originalname}})
+    Show.findOneAndUpdate({_id: id}, {$set: {"thumbnailPath": 'public/show-thumbnails/' + rand + req.file.originalname}})
       .then( (article, err ) => {
         if (err) {
           res.json({success: false, msg: 'failed to upload image'})
         } else {
-          res.json({success: true, msg: 'Image Uploaded!', path: 'public/show-thumbnails/' + req.file.originalname})
+          res.json({success: true, msg: 'Image Uploaded!', path: 'public/show-thumbnails/' + rand + req.file.originalname})
         }
       });
   } else {
-    res.json({path: 'public/show-thumbnails/' + req.file.originalname})
+    res.json({path: 'public/show-thumbnails/' + rand + req.file.origninalname})
   }
 
 });

@@ -33,6 +33,24 @@ const EpisodeSchema = mongoose.Schema({
     type: String
   },
 
+  newPercent: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+
+  canconPercent: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+
+  trackCount: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+
   socan: {
     type: Boolean,
     required: true,

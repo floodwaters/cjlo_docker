@@ -22,12 +22,24 @@ export class EditArticleComponent implements OnInit {
   article:any;
   title:String;
   editorContent:String;
+  editorContent2:String;
+  editorContent3:String;
   thumbnailPath:String;
+  image1Path:String;
+  image2Path:String;
+  image3Path:String;
+  img1Path:String;
+  img2Path:String;
+  img3Path:String;
   previewContent:String;
   publish_on:any;
   unpublish_on:any;
   token:string = localStorage.getItem('token')
   public uploader:FileUploader = new FileUploader({url:'http://localhost:3000/articles/thumbnail', authToken: this.token});
+  public uploader1:FileUploader = new FileUploader({url:'http://localhost:3000/articles/image1', authToken: this.token});
+  public uploader2:FileUploader = new FileUploader({url:'http://localhost:3000/articles/image2', authToken: this.token});
+  public uploader3:FileUploader = new FileUploader({url:'http://localhost:3000/articles/image3', authToken: this.token});
+
   public options: Object = {
     height: 300,
     placeholderText: 'Enter article body here',
@@ -43,7 +55,7 @@ export class EditArticleComponent implements OnInit {
   }
 
   public options2: Object = {
-    height: 150,
+    height: 75,
     placeholderText: 'Enter article preview here',
     immediateAngularModelUpdate:true,
     charCounterMax: 140,
@@ -70,8 +82,29 @@ export class EditArticleComponent implements OnInit {
       this.article = data;
       this.title = data.title;
       this.editorContent = data.articleBody;
+      this.editorContent2 = data.articleBody2;
+      this.editorContent3 = data.articleBody3;
       this.previewContent = data.preview;
-      this.thumbnailPath = 'http://localhost:3000/' + data.thumbnailPath;
+
+      if (data.thumbnailPath){
+        this.thumbnailPath = 'http://localhost:3000/' + data.thumbnailPath;
+      }
+      if (data.image1Path){
+        this.image1Path = 'http://localhost:3000/' + data.image1Path;
+        this.img1Path = data.image1Path;
+      }
+
+      if (data.image2Path){
+        this.image2Path = 'http://localhost:3000/' + data.image2Path;
+        this.img2Path = data.image2Path;
+      }
+
+      if (data.image3Path){
+        this.image3Path = 'http://localhost:3000/' + data.image3Path;
+        this.img3Path = data.image3Path;
+
+      }
+
       this.publish_on = moment(data.publish_on);
       this.unpublish_on = moment(data.unpublish_on)
     });
@@ -104,9 +137,76 @@ export class EditArticleComponent implements OnInit {
         };
   }
 
+  //uploads image to the server, then saves the path to the article to image1Path variable
+  uploadImage1(){
+    let article = {
+      articleId: this.id
+    }
+    this.prepareUploader1(article);
+    this.uploader1.uploadAll();
+    this.uploader1.onCompleteItem = (item:any, response:any, status:any, headers:any) => {
+            let r = JSON.parse(response)
+            this.image1Path = 'http://localhost:3000/' + r.path
+            this.flashMessage.show('Image 1 has been uploaded', {cssClass: 'alert-success', timeout: 5000})
+
+        };
+    }
+
+  //uploads image to the server, then saves the path to the article to image2Path variable
+  uploadImage2(){
+    let article = {
+      articleId: this.id
+    }
+    this.prepareUploader2(article);
+    this.uploader2.uploadAll();
+    this.uploader2.onCompleteItem = (item:any, response:any, status:any, headers:any) => {
+            let r = JSON.parse(response)
+            this.image2Path = 'http://localhost:3000/' + r.path
+            this.flashMessage.show('Image 2 has been uploaded', {cssClass: 'alert-success', timeout: 5000})
+
+        };
+    }
+
+  //uploads image to the server, then saves the path to the article to image1Path variable
+  uploadImage3(){
+    let article = {
+      articleId: this.id
+    }
+    this.prepareUploader3(article);
+    this.uploader3.uploadAll();
+    this.uploader3.onCompleteItem = (item:any, response:any, status:any, headers:any) => {
+            let r = JSON.parse(response)
+            this.image3Path = 'http://localhost:3000/' + r.path
+            this.flashMessage.show('Image 3 has been uploaded', {cssClass: 'alert-success', timeout: 5000})
+
+        };
+    }
+
+
   //adds multipart fields to file upload
   prepareUploader(data) {
   this.uploader.onBuildItemForm = (item, form) => {
+  for (let key in data) {
+  form.append(key, data[key])}};
+  }
+
+  prepareUploader1(data) {
+
+  this.uploader1.onBuildItemForm = (item, form) => {
+  for (let key in data) {
+  form.append(key, data[key])}};
+  }
+
+  prepareUploader2(data) {
+
+  this.uploader2.onBuildItemForm = (item, form) => {
+  for (let key in data) {
+  form.append(key, data[key])}};
+  }
+
+  prepareUploader3(data) {
+
+  this.uploader3.onBuildItemForm = (item, form) => {
   for (let key in data) {
   form.append(key, data[key])}};
   }
@@ -119,6 +219,8 @@ export class EditArticleComponent implements OnInit {
        article = {
         title: this.title,
         articleBody: this.editorContent,
+        articleBody2: this.editorContent2,
+        articleBody3: this.editorContent3,
         preview: this.previewContent,
         publish_on: this.publish_on,
         unpublish_on: this.unpublish_on
@@ -127,6 +229,8 @@ export class EditArticleComponent implements OnInit {
        article = {
         title: this.title,
         articleBody: this.editorContent,
+        articleBody2: this.editorContent2,
+        articleBody3: this.editorContent3,
         preview: this.previewContent,
         publish_on: this.publish_on
       }
@@ -134,6 +238,8 @@ export class EditArticleComponent implements OnInit {
        article = {
         title: this.title,
         articleBody: this.editorContent,
+        articleBody2: this.editorContent2,
+        articleBody3: this.editorContent3,
         preview: this.previewContent,
         unpublish_on: this.unpublish_on
       }
@@ -141,6 +247,8 @@ export class EditArticleComponent implements OnInit {
       article = {
         title: this.title,
         articleBody: this.editorContent,
+        articleBody2: this.editorContent2,
+        articleBody3: this.editorContent3,
         preview: this.previewContent
       }
     }
@@ -208,6 +316,66 @@ export class EditArticleComponent implements OnInit {
         console.log(err);
       })
     }
+  }
+
+  deleteImage1(){
+    this.image1Path = null;
+    let b = {
+      articleId: this.id,
+      path: this.img1Path
+    }
+
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/articles/delete-image1');
+    return this.http.post(ep, b, {headers: headers})
+      .map(res => res.json())
+      .subscribe(data => {
+        if (data.success) {
+          this.flashMessage.show('Image has been deleted', {cssClass: 'alert-success', timeout: 5000});
+        } else {
+          this.flashMessage.show('Something went wrong', {cssClass: 'alert-success', timeout: 5000})
+        }
+      })
+  }
+
+  deleteImage2(){
+    this.image2Path = null;
+    let b = {
+      articleId: this.id,
+      path: this.img2Path
+    }
+
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/articles/delete-image2');
+    return this.http.post(ep, b, {headers: headers})
+      .map(res => res.json())
+      .subscribe(data => {
+        if (data.success) {
+          this.flashMessage.show('Image has been deleted', {cssClass: 'alert-success', timeout: 5000});
+        } else {
+          this.flashMessage.show('Something went wrong', {cssClass: 'alert-success', timeout: 5000})
+        }
+      })
+  }
+
+  deleteImage3(){
+    this.image3Path = null;
+    let b = {
+      articleId: this.id,
+      path: this.img3Path
+    }
+
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/articles/delete-image3');
+    return this.http.post(ep, b, {headers: headers})
+      .map(res => res.json())
+      .subscribe(data => {
+        if (data.success) {
+          this.flashMessage.show('Image has been deleted', {cssClass: 'alert-success', timeout: 5000});
+        } else {
+          this.flashMessage.show('Something went wrong', {cssClass: 'alert-success', timeout: 5000})
+        }
+      })
   }
 
   //unpublishes a published article

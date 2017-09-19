@@ -5,9 +5,26 @@
       <h3>{{article?.title}}</h3>
     </div>
 
-    <div class="fr-view" [innerHTML]="article?.articleBody | safeHtml">
-
+    <div *ngIf="article?.image1Path" class="image1">
+      <img src="http://localhost:3000/{{article?.image1Path}}">
     </div>
+
+    <div class="fr-view article-body" [innerHTML]="article?.articleBody | safeHtml"></div>
+
+    <div *ngIf="article?.image2Path" class="image2">
+      <img src="http://localhost:3000/{{article?.image2Path}}">
+    </div>
+
+    <div *ngIf="article?.articleBody2" class="fr-view article-body" [innerHTML]="article?.articleBody2 | safeHtml"></div>
+
+    <div *ngIf="article?.image3Path" class="image3">
+      <img src="http://localhost:3000/{{article?.image3Path}}">
+    </div>
+
+    <div *ngIf="article?.articleBody3" class="fr-view article-body" [innerHTML]="article?.articleBody3 | safeHtml"></div>
+
+
+
 
   </div>
 </div>

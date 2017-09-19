@@ -49,6 +49,12 @@ const PlaySchema = mongoose.Schema({
     type: Number
   },
 
+  new: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+
   canCon: {
     type: Boolean,
     default: false,

@@ -45,19 +45,53 @@ export class ManagePublishedComponent implements OnInit {
   }
 
   //makes request to api to delete an article
-    deleteArticle(id): Promise<void> {
-      let headers = this.authService.setHeaders();
-      let ep = this.authService.prepEndpoint('http://localhost:3000/articles/delete/' + id);
-      return this.http.delete(ep, {headers:headers})
-        .toPromise()
-        .then(() => this.filterArticles(id));
-    }
+  deleteArticle(id): Promise<void> {
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/articles/delete/' + id);
+    return this.http.delete(ep, {headers:headers})
+      .toPromise()
+      .then(() => this.filterArticles(id));
+  }
 
   //filters the local array of articles to remove the deleted article
-    filterArticles(id) {
-      this.articles = this.articles.filter(h => h._id != id)
-    }
+  filterArticles(id) {
+    this.articles = this.articles.filter(h => h._id != id)
+  }
 
+  //changes the spotlight status of an article
+  spotlight(e, article){
+    if(e.target.checked){
+      let spotlight = {
+        spotlight: true
+      }
+      let headers = this.authService.setHeaders();
+      let ep = this.authService.prepEndpoint('http://localhost:3000/articles/spotlight/' + article._id);
+      return this.http.put(ep, spotlight, {headers:headers})
+        .map(res => res.json())
+        .subscribe(data => {
+          if (data.success){
+            console.log("Article spotlighted")
+          } else {
+            console.log("Failed to change status")
+          }
+        });
+    } else if (!e.target.checked){
+      let spotlight = {
+        spotlight: false
+      }
+      let headers = this.authService.setHeaders();
+      let ep = this.authService.prepEndpoint('http://localhost:3000/articles/spotlight/' + article._id);
+      return this.http.put(ep, spotlight, {headers:headers})
+        .map(res => res.json())
+        .subscribe(data => {
+          if (data.success){
+            console.log("Article removed from spotlight")
+          } else {
+            console.log("Failed to change status")
+          }
+        });
+    }
+  }
   //highlihts the article
   highlight(e, article){
     if (e.target.checked){

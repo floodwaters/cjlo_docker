@@ -221,6 +221,9 @@ export class EditShowComponent implements OnInit {
   //uploads image to the server, then saves the path to the article to thumnbnailPath variable
   uploadThumbnail(){
 
+    this.uploader1.onBuildItemForm = (fileItem, form) => {
+      form.append('showId', this.id)
+    }
     this.uploader1.uploadAll();
     this.uploader1.onCompleteItem = (item:any, response:any, status:any, headers:any) => {
             let r = JSON.parse(response)
@@ -234,6 +237,9 @@ export class EditShowComponent implements OnInit {
   //uploads image to the server, then saves the path to the article to bannerPath variable
   uploadBanner(){
 
+    this.uploader2.onBuildItemForm = (fileItem, form) => {
+      form.append('showId', this.id)
+    }
     this.uploader2.uploadAll();
     this.uploader2.onCompleteItem = (item:any, response:any, status:any, headers:any) => {
             let r = JSON.parse(response)

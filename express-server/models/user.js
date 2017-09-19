@@ -17,6 +17,12 @@ const UserSchema = mongoose.Schema({
     required: true
   },
 
+  suspended: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+
   roles: {
         type: [{
             type: String,

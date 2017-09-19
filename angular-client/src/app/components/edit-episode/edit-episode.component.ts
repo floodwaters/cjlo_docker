@@ -8,6 +8,8 @@ import { Router, ActivatedRoute, Params} from '@angular/router';
 import { Validators, FormGroup, FormArray, FormBuilder, FormControl } from '@angular/forms';
 import * as moment from 'moment';
 
+
+
 const Moment: any = (<any>moment).default || moment;
 
 
@@ -22,7 +24,8 @@ export class EditEpisodeComponent implements OnInit {
   public myForm: FormGroup;
 
   public options: Object = {
-    height: 300,
+    height: 100,
+    charCounterMax: 250,
     placeholderText: 'Enter episode description here'
   }
 
@@ -31,8 +34,10 @@ export class EditEpisodeComponent implements OnInit {
   episodeId:number;
   episode:any;
   editorContent:string;
+  canconPercent:string = '0';
+  newPercent:string = '0';
   socan:boolean = false;
-  types:Array<string> = ['Talk', 'News', 'Ad', 'Weather', 'Background', 'Station Id'];
+  types:Array<string> = ['Talk', 'News', 'Ad', 'Show Promo', 'Station Id'];
   contentTypes:Array<string> = ['CanCon', 'LGBTQ', 'Indigenous'];
   date:Date;
   minDate: Date = new Date(Date.now());
@@ -51,12 +56,30 @@ export class EditEpisodeComponent implements OnInit {
     private episodeService:EpisodeService,
     private route:ActivatedRoute,
     private router:Router,
-    private _fb:FormBuilder
+    private _fb:FormBuilder,
+
 
   ) { }
 
   ngOnInit() {
     this.episodeId = this.route.snapshot.params['id'];
+
+    this.episodeService.getCanconPercent(this.episodeId).subscribe(data => {
+      if(data[0]){
+        this.canconPercent = Math.floor(data[0].CanconPercent * 100).toString();
+      }
+    }, err =>{
+      console.log(err);
+      return false;
+    });
+    this.episodeService.getNewPercent(this.episodeId).subscribe(data => {
+      if (data[0]){
+        this.newPercent = Math.floor(data[0].newPercent * 100).toString();
+      }
+    }, err =>{
+      console.log(err);
+      return false;
+    })
 
     this.myForm = new FormGroup({
       tracks: this._fb.array([])
@@ -65,9 +88,11 @@ export class EditEpisodeComponent implements OnInit {
     this.episodeService.getEpisodeById(this.episodeId).subscribe(data => {
       this.episode = data;
       this.date = data.airDate;
-      this.socan = data.socan
+      this.socan = data.socan;
       this.date = new Date(new Date(this.date).setHours(new Date(this.date).getHours()))
       this.showId = data.show
+      this.startHour = this.date.getHours();
+      this.startMinute = this.date.getMinutes();
       this.showService.getShowById(this.showId).subscribe(data => {
         this.show = data
         this.disabledDates = this.disableDates(this.show)
@@ -115,6 +140,7 @@ export class EditEpisodeComponent implements OnInit {
       con['classification'].patchValue(e[key].classification);
       con['canCon'].patchValue(e[key].canCon);
       con['lgbtq'].patchValue(e[key].lgbtq);
+      con['new'].patchValue(e[key].new);
       con['indigenous'].patchValue(e[key].indigenous);
 
       if(this.socan){
@@ -191,6 +217,7 @@ export class EditEpisodeComponent implements OnInit {
         canCon:[false, [Validators.required]],
         lgbtq:[false, [Validators.required]],
         indigenous:[false, [Validators.required]],
+        new:[false, [Validators.required]],
         artist: [],
         title: []
       })
@@ -206,6 +233,7 @@ export class EditEpisodeComponent implements OnInit {
         composer:[null, [Validators.required]],
         canCon:[false, [Validators.required]],
         lgbtq:[false, [Validators.required]],
+        new:[false, [Validators.required]],
         indigenous:[false, [Validators.required]],
         artist: [],
         title: []
@@ -235,11 +263,25 @@ export class EditEpisodeComponent implements OnInit {
 
     let prev = this.myForm.controls['tracks']['controls'][len - 2]
 
-    this.myForm.controls['tracks']['controls'][len - 1]['controls']['startDate'].patchValue(prev.controls.endDate.value)
-    this.myForm.controls['tracks']['controls'][len - 1]['controls']['startSecond'].patchValue(prev.controls.endSecond.value)
+    if(prev){
+      this.myForm.controls['tracks']['controls'][len - 1]['controls']['startDate'].patchValue(prev.controls.endDate.value)
+      this.myForm.controls['tracks']['controls'][len - 1]['controls']['startSecond'].patchValue(prev.controls.endSecond.value)
 
-    this.myForm.controls['tracks']['controls'][len - 1]['controls']['endDate'].patchValue(prev.controls.endDate.value)
-    this.myForm.controls['tracks']['controls'][len - 1]['controls']['endSecond'].patchValue(prev.controls.endSecond.value)
+      this.myForm.controls['tracks']['controls'][len - 1]['controls']['endDate'].patchValue(prev.controls.endDate.value)
+      this.myForm.controls['tracks']['controls'][len - 1]['controls']['endSecond'].patchValue(prev.controls.endSecond.value)
+    } else {
+      let day = this.date.getDate();
+      let month = this.date.getMonth();
+      let year = this.date.getFullYear();
+
+      this.myForm.controls['tracks']['controls'][0]['controls']['startDate'].patchValue(year.toString() + '-' + (month + 1).toString() + '-' + day.toString() + ' ' + this.startHour.toString() + ':00' )
+      this.myForm.controls['tracks']['controls'][0]['controls']['startSecond'].patchValue(0)
+
+      this.myForm.controls['tracks']['controls'][0]['controls']['endDate'].patchValue(year.toString() + '-' + (month + 1).toString() + '-' + day.toString() + ' ' + this.startHour.toString() + ':00')
+      this.myForm.controls['tracks']['controls'][0]['controls']['endSecond'].patchValue(0)
+
+    }
+
   }
 
   onCheckChange(event, i) {
@@ -290,6 +332,7 @@ export class EditEpisodeComponent implements OnInit {
         canCon: tr['canCon'].value,
         lgbtq: tr['lgbtq'].value,
         indigenous: tr['indigenous'].value,
+        new: tr['new'].value,
         composer: tr['composer'].value
       }
 
@@ -304,6 +347,7 @@ export class EditEpisodeComponent implements OnInit {
         classification: tr['classification'].value,
         canCon: tr['canCon'].value,
         lgbtq: tr['lgbtq'].value,
+        new: tr['new'].value,
         indigenous: tr['indigenous'].value,
       }
     } else {
@@ -318,14 +362,30 @@ export class EditEpisodeComponent implements OnInit {
         classification: tr['classification'].value,
         canCon: tr['canCon'].value,
         lgbtq: tr['lgbtq'].value,
+        new: tr['new'].value,
         indigenous: tr['indigenous'].value
       }
     }
 
     if (tr['saved'].value === false){
-      console.log('not saved')
       this.episodeService.saveTrack(track).subscribe(data => {
         if(data.success){
+          this.episodeService.getCanconPercent(this.episodeId).subscribe(data => {
+            if(data[0]){
+              this.canconPercent = Math.floor(data[0].CanconPercent * 100).toString();
+            }
+          }, err =>{
+            console.log(err);
+            return false;
+          });
+          this.episodeService.getNewPercent(this.episodeId).subscribe(data => {
+            if (data[0]){
+              this.newPercent = Math.floor(data[0].newPercent * 100).toString();
+            }
+          }, err =>{
+            console.log(err);
+            return false;
+          });
           tr['saved'].patchValue(true);
           this.flashMessage.show('Track Saved Successfully', {cssClass:'alert-success', timeout: 5000})
         } else {
@@ -337,10 +397,25 @@ export class EditEpisodeComponent implements OnInit {
         return false
       })
     } else if (tr['saved'].value === true){
-      console.log('saved')
       this.episodeService.editTrack(track).subscribe(data => {
         if(data.success){
           tr['saved'].patchValue(true);
+          this.episodeService.getCanconPercent(this.episodeId).subscribe(data => {
+            if(data[0]){
+              this.canconPercent = Math.floor(data[0].CanconPercent * 100).toString();
+            }
+          }, err =>{
+            console.log(err);
+            return false;
+          });
+          this.episodeService.getNewPercent(this.episodeId).subscribe(data => {
+            if (data[0]){
+              this.newPercent = Math.floor(data[0].newPercent * 100).toString();
+            }
+          }, err =>{
+            console.log(err);
+            return false;
+          });
           this.flashMessage.show('Track Saved Successfully', {cssClass:'alert-success', timeout: 5000})
         } else {
           this.flashMessage.show('Something went wrong', {cssClass: 'alert-danger', timeout: 5000})

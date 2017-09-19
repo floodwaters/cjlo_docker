@@ -13,6 +13,9 @@ import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import { TagInputModule } from 'ngx-chips';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NguiDatetimePickerModule } from '@ngui/datetime-picker';
+import { ModalModule } from 'angular2-modal';
+import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
+
 
 
 
@@ -68,6 +71,7 @@ import { NewChartComponent } from './components/new-chart/new-chart.component';
 import { ShowsComponent } from './components/shows/shows.component';
 import { ArchivedShowsComponent } from './components/archived-shows/archived-shows.component';
 import { EpisodeComponent } from './components/episode/episode.component';
+import { EpisodeImportModalComponent } from './components/episode-import-modal/episode-import-modal.component';
 
 
 const appRoutes: Routes =  [
@@ -137,7 +141,9 @@ const appRoutes: Routes =  [
     NewChartComponent,
     ShowsComponent,
     ArchivedShowsComponent,
-    EpisodeComponent
+    EpisodeComponent,
+    EpisodeImportModalComponent
+
   ],
   imports: [
     BrowserModule,
@@ -155,11 +161,12 @@ const appRoutes: Routes =  [
     MultiselectDropdownModule,
     TagInputModule,
     BrowserAnimationsModule,
-
-
-
+    ModalModule.forRoot(),
+    BootstrapModalModule
   ],
   providers: [AuthService, ShowService, PlaylistAndChartsService, NowPlayingService, EpisodeService, DateTimeService, UserService, ValidateService, GetRolesService, AuthGuard, DjGuard, AdminGuard, AuthorGuard, ShowAdminGuard, EditorGuard, DateToStringService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+
+ entryComponents: [ EpisodeImportModalComponent ]
 })
 export class AppModule { }

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const config = require('../config/database');
@@ -54,6 +55,7 @@ router.post('/save-track', passport.authenticate('jwt', {session: false}), (req,
       classification: b.classification,
       canCon: b.canCon,
       lgbtq: b.lgbtq,
+      new: b.new,
       indigenous: b.indigenous,
       album: b.album,
       year: b.year,
@@ -72,6 +74,7 @@ router.post('/save-track', passport.authenticate('jwt', {session: false}), (req,
       canCon: b.canCon,
       lgbtq: b.lgbtq,
       indigenous: b.indigenous,
+      new: b.new,
       album: b.album,
       year: b.year,
       label: b.label
@@ -86,7 +89,8 @@ router.post('/save-track', passport.authenticate('jwt', {session: false}), (req,
       classification: b.classification,
       canCon: b.canCon,
       lgbtq: b.lgbtq,
-      indigenous: b.indigenous
+      indigenous: b.indigenous,
+      new: b.new
     })
   }
 
@@ -96,7 +100,7 @@ router.post('/save-track', passport.authenticate('jwt', {session: false}), (req,
       console.log(err);
     } else {
 
-      Episode.findOneAndUpdate({_id: b.episode}, {$push: {plays: play._id}})
+      Episode.findOneAndUpdate({_id: b.episode}, {$push: {plays: play._id}, $inc : {trackCount: 1}})
       .exec((err, episode) => {
         if (err) {
           console.log(err)
@@ -119,6 +123,7 @@ router.put('/edit-track', passport.authenticate('jwt', {session: false}), (req, 
       "endTime": b.endTime,
       "canCon": b.canCon,
       "lgbtq": b.lgbtq,
+      "new": b.new,
       "indigenous": b.indigenous,
       "classification": b.classification,
       "composer": b.composer,
@@ -137,12 +142,18 @@ router.put('/edit-track', passport.authenticate('jwt', {session: false}), (req, 
 });
 
 router.delete('/delete-track/:episode/:index', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+  Episode.findOneAndUpdate({_id: req.params.episode}, {$inc: {trackCount: -1}})
+    .exec((err, episode) => {
+      if (err){
+        console.log(err)
+      } else {
+      }
+    })
   Play.findOneAndRemove({episode: req.params.episode, index: req.params.index}, (err, play) => {
     if (err){
       console.log(err);
       res.json({success: false, msg: "Failed to delete track"})
     } else {
-
       res.json({success: true, msg: "Track successfully deleted"})
     }
   });
@@ -180,6 +191,13 @@ router.get('/get-past-episodes/:id', (req, res, next) => {
     });
 });
 
+router.get('/get-all-episodes/:id', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+  Episode.find({show: req.params.id})
+    .then(episodes => {
+      res.send(episodes)
+    });
+});
+
 router.delete('/delete/:id', passport.authenticate('jwt', {session: false}), (req, res, next) => {
   Play.remove({episode: req.params.id}, (err, play) => {
     if (err) {
@@ -212,6 +230,54 @@ router.get('/get-episode/:id', (req, res, next) => {
         res.send(episode)
       }
     })
+})
+
+//gets the percentage of tracks per episode that were cancon
+router.get('/get-cancon/:id', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+  Play.aggregate([
+    {$match: {"classification":"Theme", "episode" :  mongoose.Types.ObjectId(req.params.id) } },
+    { $group: {
+        _id: {
+            month: { $month: "$startTime" },
+            day: { $dayOfMonth: "$startTime" },
+            year: { $year: "$startTime" },
+        },
+        Yes: { $sum: { $cond :  [{ $eq : ["$canCon", true]}, 1, 0]} },
+        Total: { $sum: 1 }
+    } },
+    {$project:{Yes:1, Total:1, CanconPercent: { $divide: [ "$Yes", "$Total" ]}}}
+  ], (err, result) => {
+    if (err) {
+      console.log(err)
+    } else {
+      res.send(result)
+
+    }
+  })
+})
+
+//gets the percentage of tracks per episode that were new
+router.get('/get-new/:id', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+  Play.aggregate([
+    {$match: {"classification":"Theme", "episode" :  mongoose.Types.ObjectId(req.params.id) } },
+    { $group: {
+        _id: {
+            month: { $month: "$startTime" },
+            day: { $dayOfMonth: "$startTime" },
+            year: { $year: "$startTime" },
+        },
+        Yes: { $sum: { $cond :  [{ $eq : ["$new", true]}, 1, 0]} },
+        Total: { $sum: 1 }
+    } },
+    {$project:{Yes:1, Total:1, newPercent: { $divide: [ "$Yes", "$Total" ]}}}
+  ], (err, result) => {
+    if (err) {
+      console.log(err)
+    } else {
+      res.send(result)
+
+    }
+  })
 })
 
 module.exports = router;

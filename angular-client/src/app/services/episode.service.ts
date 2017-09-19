@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import {AuthService} from './auth.service';
 import {Http, Headers} from '@angular/http';
+import { Subject }    from 'rxjs/Subject';
+
 
 
 @Injectable()
@@ -10,6 +12,16 @@ export class EpisodeService {
     private authService:AuthService,
     private http:Http
   ) { }
+
+  private importEpisodeSource = new Subject<any>();
+
+  importEpisode$ = this.importEpisodeSource.asObservable();
+
+  importEpisode(id){
+    this.importEpisodeSource.next(id)
+
+
+  }
 
   createEpisode(date, showId, endDate, socan){
     let body = {airDate: date, show: showId, endDate: endDate, socan: socan}
@@ -55,6 +67,13 @@ export class EpisodeService {
       .map(res => res.json());
   }
 
+  getAllEpisodes(id){
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/episodes/get-all-episodes/' + id);
+    return this.http.get(ep, {headers: headers})
+      .map(res => res.json())
+  }
+
   getUpcoming(id){
     let headers = this.authService.setHeaders();
     let ep = this.authService.prepEndpoint('http://localhost:3000/episodes/get-upcoming-episodes/' + id);
@@ -79,6 +98,20 @@ export class EpisodeService {
   getEpisodeById(id){
     let headers = this.authService.setHeaders();
     let ep = this.authService.prepEndpoint('http://localhost:3000/episodes/get-episode/' + id);
+    return this.http.get(ep, {headers: headers})
+      .map(res => res.json());
+  }
+
+  getCanconPercent(id){
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/episodes/get-cancon/' + id);
+    return this.http.get(ep, {headers: headers})
+      .map(res => res.json());
+  }
+
+  getNewPercent(id){
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/episodes/get-new/' + id);
     return this.http.get(ep, {headers: headers})
       .map(res => res.json());
   }

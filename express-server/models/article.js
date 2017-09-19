@@ -18,6 +18,14 @@ const ArticleSchema = mongoose.Schema({
     type: String
   },
 
+  articleBody2: {
+    type: String
+  },
+
+  articleBody3: {
+    type: String
+  },
+
   preview: {
     type: String
   },
@@ -65,9 +73,27 @@ const ArticleSchema = mongoose.Schema({
     default: false
   },
 
+  spotlight: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+
   thumbnailPath: {
     type: String,
     required: false
+  },
+
+  image1Path: {
+    type: String
+  },
+
+  image2Path: {
+    type: String
+  },
+
+  image3Path: {
+    type: String
   }
 
 });
