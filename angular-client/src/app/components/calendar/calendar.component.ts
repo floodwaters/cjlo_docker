@@ -13,6 +13,7 @@ const Moment: any = (<any>moment).default || moment;
 })
 export class CalendarComponent implements OnInit {
   selectedDate:Date = new Date(Date.now())
+  weeklyView: boolean = true;
 
   constructor(
     private dateTime:DateTimeService,
@@ -25,14 +26,33 @@ export class CalendarComponent implements OnInit {
 
 
   deincrementDay(){
-    this.selectedDate = new Date(this.selectedDate.setDate(this.selectedDate.getDate() - 1))
+    if(this.weeklyView == false){
+      this.selectedDate = new Date(this.selectedDate.setDate(this.selectedDate.getDate() - 1))
+    } else {
+      this.selectedDate = new Date(this.selectedDate.setDate(this.selectedDate.getDate() - 7))
+    }
   }
 
   incrementDay(){
-    this.selectedDate = new Date(this.selectedDate.setDate(this.selectedDate.getDate() + 1))
+    if(this.weeklyView == false){
+      this.selectedDate = new Date(this.selectedDate.setDate(this.selectedDate.getDate() + 1))
+    } else {
+      this.selectedDate = new Date(this.selectedDate.setDate(this.selectedDate.getDate() + 7))
+    }
 
   }
 
+  toggleWeekly(){
+    this.weeklyView = !this.weeklyView
+  }
+
+  displayToggle(){
+    if (this.weeklyView){
+      return "See Daily View"
+    } else {
+      return "See Weekly View"
+    }
+  }
 
 
 

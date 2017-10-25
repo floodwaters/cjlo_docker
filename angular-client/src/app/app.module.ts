@@ -72,6 +72,7 @@ import { ShowsComponent } from './components/shows/shows.component';
 import { ArchivedShowsComponent } from './components/archived-shows/archived-shows.component';
 import { EpisodeComponent } from './components/episode/episode.component';
 import { EpisodeImportModalComponent } from './components/episode-import-modal/episode-import-modal.component';
+import { WeeklyCalendarComponent } from './components/weekly-calendar/weekly-calendar.component';
 
 
 const appRoutes: Routes =  [
@@ -142,7 +143,8 @@ const appRoutes: Routes =  [
     ShowsComponent,
     ArchivedShowsComponent,
     EpisodeComponent,
-    EpisodeImportModalComponent
+    EpisodeImportModalComponent,
+    WeeklyCalendarComponent
 
   ],
   imports: [

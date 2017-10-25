@@ -75,9 +75,26 @@ export class NewEpisodeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.subscription = this.episodeService.importEpisode$.subscribe(
-      item => {this.episodeImport = item;
-        console.log(item)
+    this.subscription = this.episodeService.importEpisode$.subscribe(item => {
+        this.episodeImport = item;
+        this.episodeService.getEpisodeById(item).subscribe(data => {
+          this.episodeImport = data;
+
+          Object.keys(this.myForm.controls['tracks']['controls']).forEach(key1 => {
+            this.removeTrack(Number(key1));
+          });
+
+          this.myForm = new FormGroup({
+            tracks: this._fb.array([])
+          });
+          setTimeout(() => {
+            this.pV(this.episodeImport);
+          }, 1000)
+
+        }, err => {
+          console.log(err);
+          return false
+        })
 
   })
 
@@ -218,46 +235,91 @@ export class NewEpisodeComponent implements OnInit, OnDestroy {
     this.date.setMinutes(this.startMinute);
   }
 
+pV(episode){
 
+  let e = episode.plays;
 
+  Object.keys(e).forEach(key => {
+    const control = <FormArray>this.myForm.controls['tracks'];
 
-  initTrack(){
-    if(!this.socan){
-      return this._fb.group({
-        index:[],
-        saved: [false, [Validators.required]],
-        classification: ['Theme', [Validators.required]],
-        startDate: [null, [Validators.required]],
-        startSecond: [null, [Validators.required]],
-        endDate:[null, [Validators.required]],
-        endSecond:[null, [Validators.required]],
-        composer:[null, [Validators.required]],
-        canCon:[false, [Validators.required]],
-        lgbtq:[false, [Validators.required]],
-        indigenous:[false, [Validators.required]],
-        new:[false, [Validators.required]],
-        artist: [],
-        title: []
-      })
-    } else {
-      return this._fb.group({
-        index: [],
-        saved: [false, [Validators.required]],
-        classification: ['Theme', [Validators.required]],
-        startDate: [null, [Validators.required]],
-        startSecond: [null, [Validators.required]],
-        endDate:[null, [Validators.required]],
-        endSecond:[null, [Validators.required]],
-        composer:[null, [Validators.required]],
-        canCon:[false, [Validators.required]],
-        lgbtq:[false, [Validators.required]],
-        indigenous:[false, [Validators.required]],
-        new:[false, [Validators.required]],
-        artist: [],
-        title: []
-      });
+    control.push(this.initTrack());
+
+    var con = control['controls'][key]['controls']
+    con['startDate'].patchValue(this.convertToString(new Date(e[key].startTime)));
+    con['startSecond'].patchValue(new Date(e[key].startTime).getSeconds());
+    con['endDate'].patchValue(this.convertToString(new Date(e[key].endTime)));
+    con['endSecond'].patchValue(new Date(e[key].endTime).getSeconds());
+    con['artist'].patchValue(e[key].artist);
+    con['title'].patchValue(e[key].title);
+    con['index'].patchValue(e[key].index);
+    con['saved'].patchValue(true);
+    con['classification'].patchValue(e[key].classification);
+    con['canCon'].patchValue(e[key].canCon);
+    con['lgbtq'].patchValue(e[key].lgbtq);
+    con['new'].patchValue(e[key].new);
+    con['indigenous'].patchValue(e[key].indigenous);
+
+    if(this.socan){
+      con['composer'].patchValue(e[key].composer);
     }
+
+  });
+}
+
+convertToString(date){
+  let y = this.date.getFullYear();
+  let m = this.date.getMonth() + 1;
+  let d = this.date.getDate();
+  let h = date.getHours();
+  let u = date.getMinutes();
+
+  if (u < 10) {
+    u = "0" + u.toString()
   }
+
+  return y + '/' + m + '/' + d + ' ' + h + ':' + u
+}
+
+
+initTrack(){
+  if(!this.socan){
+    return this._fb.group({
+      index:[],
+      saved: [false, [Validators.required]],
+      classification: ['Theme', [Validators.required]],
+      startDate: [null, [Validators.required]],
+      startSecond: [null, [Validators.required]],
+      endDate:[null, [Validators.required]],
+      endSecond:[null, [Validators.required]],
+      composer:[null, [Validators.required]],
+      canCon:[false, [Validators.required]],
+      lgbtq:[false, [Validators.required]],
+      indigenous:[false, [Validators.required]],
+      new:[false, [Validators.required]],
+      artist: [],
+      title: []
+    })
+  } else {
+    return this._fb.group({
+      index: [],
+      saved: [false, [Validators.required]],
+      classification: ['Theme', [Validators.required]],
+      startDate: [null, [Validators.required]],
+      startSecond: [null, [Validators.required]],
+      endDate:[null, [Validators.required]],
+      endSecond:[null, [Validators.required]],
+      composer:[null, [Validators.required]],
+      canCon:[false, [Validators.required]],
+      lgbtq:[false, [Validators.required]],
+      indigenous:[false, [Validators.required]],
+      new:[false, [Validators.required]],
+      artist: [],
+      title: []
+    });
+  }
+}
+
+
 
   removeTrack(i: number) {
 

@@ -18,9 +18,7 @@ export class EpisodeService {
   importEpisode$ = this.importEpisodeSource.asObservable();
 
   importEpisode(id){
-    this.importEpisodeSource.next(id)
-
-
+    this.importEpisodeSource.next(id);
   }
 
   createEpisode(date, showId, endDate, socan){

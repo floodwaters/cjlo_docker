@@ -4,10 +4,14 @@
   </div>
   <div class="col-md-3 now-playing">
     <h3 class="page-header">{{currentShow?.name}}</h3>
-    <div *ngIf="currentTrack && (currentTrack.classification == ('Theme' || 'Background'))">
+    <div *ngIf="currentTrack && (currentTrack.classification == 'Theme')">
       <p><strong>Now Playing:</strong> {{currentTrack?.artist}} - {{currentTrack?.title}}</p>
       <p>{{currentTrack?.album}} - {{currentTrack?.year}}</p>
 
+    </div>
+
+    <div *ngIf="currentTrack && (currentTrack.classification == 'Talk')">
+      <p *ngIf="currentTrack.title"><strong>Now Discussing:</strong> {{currentTrack?.title}}</p>
     </div>
   </div>
 </div>

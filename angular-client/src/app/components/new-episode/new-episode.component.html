@@ -149,6 +149,19 @@
                 <input type="checkbox" formControlName="new" />
               </div>
 
+            </div>
+
+            <div class="row track-info" *ngIf="(this.myForm.controls['tracks']['controls'][i]['controls']['classification'].value == 'Talk')">
+
+              <div class="col-md-12">
+
+                <div class="form-group">
+                  <label>Topic:</label>
+                  <br />
+                  <input type="text" formControlName="title" name="title" />
+                </div>
+
+              </div>
 
             </div>
 

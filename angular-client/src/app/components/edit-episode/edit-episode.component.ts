@@ -145,13 +145,8 @@ export class EditEpisodeComponent implements OnInit {
 
       if(this.socan){
         con['composer'].patchValue(e[key].composer);
-
       }
-
-
-
-
-    })
+    });
   }
 
   convertToString(date){

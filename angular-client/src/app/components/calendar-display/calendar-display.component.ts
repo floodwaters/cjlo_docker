@@ -22,9 +22,7 @@ export class CalendarDisplayComponent implements OnInit {
 
   ngOnInit() {
     this.showService.getShowsForDay(this.selectedDate).subscribe(data => {
-      this.allShows = data
-      console.log(data)
-
+      this.allShows = data;
     },
     err => {
       console.log(err);
