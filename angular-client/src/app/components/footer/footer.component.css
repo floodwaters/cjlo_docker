@@ -1,0 +1,18 @@
+.wrapper {
+  width: 100%;
+  border: 1px solid black;
+  margin-top: 10px;
+  margin-bottom: 25px;
+}
+
+.link-list {
+  list-style: none;
+  -webkit-column-count: 4; /* Chrome, Safari, Opera */
+    -moz-column-count: 4; /* Firefox */
+    column-count: 4;
+    font-size: .7em;
+}
+
+.link:hover {
+  cursor: pointer;
+}

@@ -39,6 +39,7 @@ export class NewArticleComponent implements OnInit {
     placeholderText: 'Enter article body here',
     immediateAngularModelUpdate: true,
     imageUploadURL: 'http://localhost:3000/articles/images',
+    requestHeaders: {authorization: this.token},
     imageUploadMethod: 'POST',
     events: {'froalaEditor.contentChanged': (e, editor) => {
       this.keypress();
@@ -272,29 +273,29 @@ deleteImage3(){
   }
 
 //updates the article in the database
-  updateArticle(){
-    let id = this.articleId
-    let article = {
-      title: this.title,
-      articleBody: this.editorContent,
-      articleBody2: this.editorContent2,
-      articleBody3: this.editorContent3,
-      preview: this.previewContent
-    }
-    let headers = this.authService.setHeaders();
-    let ep = this.authService.prepEndpoint('http://localhost:3000/articles/edit/' + id);
-    return this.http.put(ep, article, {headers: headers})
-      .map(res => res.json())
-      .subscribe(data => {
-        if(data.success){
-        } else {
-          this.flashMessage.show('Something went wrong on the server', {cssClass: 'alert-danger', timeout: 5000})
-        }
-      },
-    err => {
-      console.log(err);
-    });
+updateArticle(){
+  let id = this.articleId
+  let article = {
+    title: this.title,
+    articleBody: this.editorContent,
+    articleBody2: this.editorContent2,
+    articleBody3: this.editorContent3,
+    preview: this.previewContent
   }
+  let headers = this.authService.setHeaders();
+  let ep = this.authService.prepEndpoint('http://localhost:3000/articles/edit/' + id);
+  return this.http.put(ep, article, {headers: headers})
+    .map(res => res.json())
+    .subscribe(data => {
+      if(data.success){
+      } else {
+        this.flashMessage.show('Something went wrong on the server', {cssClass: 'alert-danger', timeout: 5000})
+      }
+    },
+  err => {
+    console.log(err);
+  });
+}
 
   //opens a new tab with the article preview in it
   openWindow(id){

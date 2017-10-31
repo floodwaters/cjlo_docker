@@ -34,7 +34,6 @@ router.post('/save', passport.authenticate('jwt', {session: false}), (req, res, 
 //get charts
 router.post('/get-chart', (req, res, next) => {
   Chart.findOne({classification: req.body.classification})
-    .populate('entries')
     .then((chart, err) => {
       if (err){
         res.json({success: false, msg: err});

@@ -28,7 +28,9 @@ import {UserService} from './services/user.service';
 import {DateTimeService} from './services/date-time.service';
 import {EpisodeService} from './services/episode.service';
 import {NowPlayingService} from './services/now-playing.service';
-import {PlaylistAndChartsService} from './services/playlist-and-charts.service'
+import {PlaylistAndChartsService} from './services/playlist-and-charts.service';
+import {StaticPagesService} from './services/static-pages.service';
+import {AdService} from './services/ad.service';
 
 
 import {AuthGuard} from './guards/auth.guard';
@@ -73,6 +75,28 @@ import { ArchivedShowsComponent } from './components/archived-shows/archived-sho
 import { EpisodeComponent } from './components/episode/episode.component';
 import { EpisodeImportModalComponent } from './components/episode-import-modal/episode-import-modal.component';
 import { WeeklyCalendarComponent } from './components/weekly-calendar/weekly-calendar.component';
+import { FrontPageChartsComponent } from './components/front-page-charts/front-page-charts.component';
+import { Top30Component } from './components/top-30/top-30.component';
+import { AdsComponent } from './components/ads/ads.component';
+import { HipHopComponent } from './components/hip-hop/hip-hop.component';
+import { HipHopAdsComponent } from './components/hip-hop-ads/hip-hop-ads.component';
+import { RpmComponent } from './components/rpm/rpm.component';
+import { RpmAdsComponent } from './components/rpm-ads/rpm-ads.component';
+import { MetalComponent } from './components/metal/metal.component';
+import { MetalAdsComponent } from './components/metal-ads/metal-ads.component';
+import { WorldComponent } from './components/world/world.component';
+import { WorldAdsComponent } from './components/world-ads/world-ads.component';
+import { ChartComponent } from './components/chart/chart.component';
+import { StaticPagesComponent } from './components/static-pages/static-pages.component';
+import { NewStaticPageComponent } from './components/new-static-page/new-static-page.component';
+import { EditStaticPageComponent } from './components/edit-static-page/edit-static-page.component';
+import { StaticPagesPreviewComponent } from './components/static-pages-preview/static-pages-preview.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { StaticPageComponent } from './components/static-page/static-page.component';
+import { StaticPageReroutComponent } from './components/static-page-rerout/static-page-rerout.component';
+import { NewAdComponent } from './components/new-ad/new-ad.component';
+import { ManageAdsComponent } from './components/manage-ads/manage-ads.component';
+import { EditAdsComponent } from './components/edit-ads/edit-ads.component';
 
 
 const appRoutes: Routes =  [
@@ -101,8 +125,28 @@ const appRoutes: Routes =  [
   {path: 'new-chart', component: NewChartComponent, canActivate: [AuthGuard, ShowAdminGuard]},
   {path: 'shows', component: ShowsComponent},
   {path: 'old-shows', component: ArchivedShowsComponent},
-  {path: 'episode/:id', component: EpisodeComponent}
-
+  {path: 'episode/:id', component: EpisodeComponent},
+  {path: 'front-page-charts', component: FrontPageChartsComponent, canActivate: [AuthGuard, ShowAdminGuard]},
+  {path: 'top-30', component: Top30Component, canActivate: [AuthGuard, ShowAdminGuard]},
+  {path: 'ads', component: AdsComponent, canActivate: [AuthGuard, ShowAdminGuard]},
+  {path: 'hip-hop', component: HipHopComponent, canActivate: [AuthGuard, ShowAdminGuard]},
+  {path: 'hip-hop-ads', component: HipHopAdsComponent, canActivate: [AuthGuard, ShowAdminGuard]},
+  {path: 'rpm', component: RpmComponent, canActivate: [AuthGuard, ShowAdminGuard]},
+  {path: 'rpm-ads', component: RpmAdsComponent, canActivate: [AuthGuard, ShowAdminGuard]},
+  {path: 'metal', component: MetalComponent, canActivate: [AuthGuard, ShowAdminGuard]},
+  {path: 'metal-ads', component: MetalAdsComponent, canActivate: [AuthGuard, ShowAdminGuard]},
+  {path: 'world', component: WorldComponent, canActivate: [AuthGuard, ShowAdminGuard]},
+  {path: 'world-ads', component: WorldAdsComponent, canActivate: [AuthGuard, ShowAdminGuard]},
+  {path: 'charts', component: ChartComponent},
+  {path: 'static-page/:id', component: StaticPageComponent},
+  {path: 'static-pages', component: StaticPagesComponent, canActivate: [AuthGuard, AdminGuard]},
+  {path: 'new-static-page', component: NewStaticPageComponent, canActivate: [AuthGuard, AdminGuard]},
+  {path: 'static-pages/edit/:id', component: EditStaticPageComponent, canActivate: [AuthGuard, AdminGuard]},
+  {path: 'static-pages/preview/:id', component: StaticPagesPreviewComponent, canActivate: [AuthGuard]},
+  {path: 'static-page-rerout/:id', component: StaticPageReroutComponent},
+  {path: 'new-ad', component: NewAdComponent, canActivate: [AuthGuard, AdminGuard]},
+  {path: 'manage-ads', component: ManageAdsComponent, canActivate: [AuthGuard, AdminGuard]},
+  {path: 'ads/edit/:id', component: EditAdsComponent, canActivate: [AuthGuard, AdminGuard]}
 
 
 ]
@@ -144,7 +188,29 @@ const appRoutes: Routes =  [
     ArchivedShowsComponent,
     EpisodeComponent,
     EpisodeImportModalComponent,
-    WeeklyCalendarComponent
+    WeeklyCalendarComponent,
+    FrontPageChartsComponent,
+    Top30Component,
+    AdsComponent,
+    HipHopComponent,
+    HipHopAdsComponent,
+    RpmComponent,
+    RpmAdsComponent,
+    MetalComponent,
+    MetalAdsComponent,
+    WorldComponent,
+    WorldAdsComponent,
+    ChartComponent,
+    StaticPagesComponent,
+    NewStaticPageComponent,
+    EditStaticPageComponent,
+    StaticPagesPreviewComponent,
+    FooterComponent,
+    StaticPageComponent,
+    StaticPageReroutComponent,
+    NewAdComponent,
+    ManageAdsComponent,
+    EditAdsComponent
 
   ],
   imports: [
@@ -166,7 +232,26 @@ const appRoutes: Routes =  [
     ModalModule.forRoot(),
     BootstrapModalModule
   ],
-  providers: [AuthService, ShowService, PlaylistAndChartsService, NowPlayingService, EpisodeService, DateTimeService, UserService, ValidateService, GetRolesService, AuthGuard, DjGuard, AdminGuard, AuthorGuard, ShowAdminGuard, EditorGuard, DateToStringService],
+  providers: [
+    AuthService,
+    ShowService,
+    PlaylistAndChartsService,
+    NowPlayingService,
+    EpisodeService,
+    DateTimeService,
+    UserService,
+    ValidateService,
+    GetRolesService,
+    AuthGuard,
+    DjGuard,
+    AdminGuard,
+    AuthorGuard,
+    ShowAdminGuard,
+    EditorGuard,
+    DateToStringService,
+    StaticPagesService,
+    AdService],
+
   bootstrap: [AppComponent],
 
  entryComponents: [ EpisodeImportModalComponent ]

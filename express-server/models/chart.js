@@ -6,7 +6,7 @@ const chartSchema = mongoose.Schema({
 
   classification: {
     type: String,
-    enum: ['Top 30', 'Adds', 'Hip-Hop', 'Hip-Hop Adds', 'RPM', 'RPM Adds', 'Metal', 'Metal Adds', 'World', 'World-Adds']
+    enum: ['Top 30', 'Ads', 'Hip-Hop', 'Hip-Hop Ads', 'RPM', 'RPM Ads', 'Metal', 'Metal Ads', 'World', 'World Ads']
   },
 
   week: {
@@ -14,8 +14,7 @@ const chartSchema = mongoose.Schema({
   },
 
   entries: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Entry'
+
   }]
 
 });

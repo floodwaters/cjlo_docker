@@ -1,3 +1,23 @@
-<p>
-  home works!
-</p>
+<div class="row">
+  <div class="col-md-6 col-sm-6 col-xs-6 charts">
+    <h3 class="page-header chart-header" [routerLink]="['/charts']">Charts </h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Artist</th>
+          <th>Title</th>
+          <th>Label</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entry of this.chart?.entries; let i=index">
+          <td>{{i + 1}}</td>
+          <td>{{entry?.artist}}</td>
+          <td>{{entry?.title}}</td>
+          <td>{{entry?.label}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

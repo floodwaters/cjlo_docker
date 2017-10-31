@@ -74,7 +74,7 @@ router.put('/highlight/:id', passport.authenticate('jwt', {session:false}), (req
     });
 })
 
-//change spotlight staatus
+//change spotlight status
 router.put('/spotlight/:id', passport.authenticate('jwt', {session:false}), (req, res, next) => {
   Article.findOneAndUpdate({_id: req.params.id}, {$set: {"spotlight": req.body.spotlight}})
     .then((article, err) => {
@@ -237,8 +237,8 @@ router.post('/image1', imageUpload.single('file'), passport.authenticate('jwt', 
         console.log(req.body.articleId)
         res.json({success: true, msg: 'Image Uploaded!', path: 'public/article-images/' + rand + req.file.originalname})
       }
-    })
-})
+    });
+});
 
 //post image 2
 router.post('/image2', imageUpload.single('file'), passport.authenticate('jwt', {session: false}), (req, res, next) => {
@@ -257,8 +257,8 @@ router.post('/image2', imageUpload.single('file'), passport.authenticate('jwt', 
       } else {
         res.json({success: true, msg: 'Image Uploaded!', path: 'public/article-images/' + rand + req.file.originalname})
       }
-    })
-})
+    });
+});
 
 //post image 3
 router.post('/image3', imageUpload.single('file'), passport.authenticate('jwt', {session: false}), (req, res, next) => {
@@ -277,8 +277,8 @@ router.post('/image3', imageUpload.single('file'), passport.authenticate('jwt', 
       } else {
         res.json({success: true, msg: 'Image Uploaded!', path: 'public/article-images/' + rand + req.file.originalname})
       }
-    })
-})
+    });
+});
 
 //delete image 1
 router.post('/delete-image1', passport.authenticate('jwt', {session: false}), (req, res, next) => {
@@ -290,8 +290,8 @@ router.post('/delete-image1', passport.authenticate('jwt', {session: false}), (r
         fs.unlink(req.body.path)
         res.json({success: true, msg: 'Image has been deleted'})
       }
-    })
-})
+    });
+});
 
 //delete image 2
 router.post('/delete-image2', passport.authenticate('jwt', {session: false}), (req, res, next) => {
@@ -303,8 +303,8 @@ router.post('/delete-image2', passport.authenticate('jwt', {session: false}), (r
         fs.unlink(req.body.path)
         res.json({success: true, msg: 'Image has been deleted'})
       }
-    })
-})
+    });
+});
 
 //delete image 3
 router.post('/delete-image3', passport.authenticate('jwt', {session: false}), (req, res, next) => {
@@ -316,8 +316,8 @@ router.post('/delete-image3', passport.authenticate('jwt', {session: false}), (r
         fs.unlink(req.body.path)
         res.json({success: true, msg: 'Image has been deleted'})
       }
-    })
-})
+    });
+});
 
 //post article thumbnail
 router.post('/thumbnail', thumbnailUpload.single('file'), passport.authenticate('jwt', {session:false}), (req, res, next) => {

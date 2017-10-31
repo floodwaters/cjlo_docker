@@ -33,4 +33,22 @@ export class PlaylistAndChartsService {
 
   }
 
+  saveFrontChart(chart){
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/charts/save');
+    return this.http.post(ep,chart, {headers:headers})
+      .map(res => res.json())
+  }
+
+  getFrontChart(type){
+    let t = {
+      classification: type
+    }
+    
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/charts/get-chart');
+    return this.http.post(ep, t, {headers: headers})
+      .map(res => res.json())
+  }
+
 }
