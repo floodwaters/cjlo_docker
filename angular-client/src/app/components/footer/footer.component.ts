@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StaticPagesService } from '../../services/static-pages.service';
+import { AdService } from '../../services/ad.service';
 
 @Component({
   selector: 'app-footer',
@@ -8,10 +9,13 @@ import { StaticPagesService } from '../../services/static-pages.service';
 })
 export class FooterComponent implements OnInit {
 
+  path:string;
   pages:any;
+  bottomAd:any;
 
   constructor(
-    private sp: StaticPagesService
+    private sp: StaticPagesService,
+    private as: AdService
   ) { }
 
   ngOnInit() {
@@ -21,6 +25,28 @@ export class FooterComponent implements OnInit {
       console.log(err);
       return false;
     });
+
+    this.as.getAdBySlot('Bottom').subscribe(data => {
+      this.bottomAd = data;
+      this.path =  data.imagePath;
+    }, err => {
+      console.log(err);
+      return false;
+    })
+  }
+
+  increment(id) : void {
+
+    let url: string = '';
+      if (!/^http[s]?:\/\//.test(this.bottomAd.link)) {
+        url += 'http://';
+      }
+
+    url += this.bottomAd.link;
+    window.open(url, '_blank');
+    this.as.increment(id).subscribe(data => {
+
+    })
   }
 
 

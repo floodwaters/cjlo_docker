@@ -17,7 +17,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let ad of ads" [routerLink]="['/ads/edit', ad._id]">
+        <tr *ngFor="let ad of ads | orderBy: 'title'" [routerLink]="['/ads/edit', ad._id]">
           <td>{{ad?.title}}</td>
           <td>{{ad?.slot}}</td>
           <td>{{ad?.clicks}}</td>

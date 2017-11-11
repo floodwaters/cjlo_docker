@@ -3,6 +3,9 @@ import { Observable } from "rxjs";
 import { IntervalObservable } from "rxjs/observable/IntervalObservable";
 import { NowPlayingService } from '../../services/now-playing.service';
 
+declare var jquery:any;
+declare var $ :any;
+
 @Component({
   selector: 'app-now-playing',
   templateUrl: './now-playing.component.html',
@@ -10,7 +13,9 @@ import { NowPlayingService } from '../../services/now-playing.service';
 })
 export class NowPlayingComponent implements OnInit, OnDestroy {
 
+  private audio:any;
   tracks:any;
+  volume: number = 0.5;
   currentEpisode:any
   currentTrack:any = null;
   currentShow:any;
@@ -18,6 +23,8 @@ export class NowPlayingComponent implements OnInit, OnDestroy {
   display: boolean;
   timer: Observable<number>;
   interval: number;
+  playing: boolean = false;
+  src: string = 'http://rosetta.shoutca.st:8883/stream'
 
   constructor(
     private npService: NowPlayingService
@@ -26,6 +33,7 @@ export class NowPlayingComponent implements OnInit, OnDestroy {
     this.alive = true;
     this.interval = 2000;
     this.timer = Observable.timer(0, this.interval);
+    this.audio = new Audio();
    }
 
   ngOnInit() {
@@ -95,4 +103,33 @@ export class NowPlayingComponent implements OnInit, OnDestroy {
     return result
   }
 
+  play(){
+    this.audio.src = this.src;
+    this.audio.volume = this.volume;
+    this.audio.play();
+    this.playing = true;
+  }
+
+  pause(){
+    this.audio.pause();
+    this.playing = false;
+  }
+
+  changeVolume(e){
+    this.audio.volume = e;
+  }
+
+  live(){
+
+    this.src = 'http://rosetta.shoutca.st:8883/stream';
+    if($('.playlist-builder').is(':visible')) {
+      $('.playlist-builder').slideToggle();
+    }
+  }
+
+
+  toggleBuilder(){
+    this.src = encodeURI('http://localhost:3000/public/episodes/test/Track 1.wav');
+    $('.playlist-builder').slideToggle();
+  }
 }

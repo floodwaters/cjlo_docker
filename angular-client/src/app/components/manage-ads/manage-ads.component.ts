@@ -31,8 +31,8 @@ export class ManageAdsComponent implements OnInit {
   //makes request to api to delete an article
   deleteAd(id): Promise<void> {
     let headers = this.authService.setHeaders();
-    let ep = this.authService.prepEndpoint('http://localhost:3000/ads/delete/' + id);
-    return this.http.delete(ep, {headers:headers})
+    let ep = this.authService.prepEndpoint('http://localhost:3000/ads/delete-ad/' + id);
+    return this.http.post(ep, {headers:headers})
       .toPromise()
       .then(() => this.filterAds(id));
   }
@@ -55,9 +55,9 @@ export class ManageAdsComponent implements OnInit {
         .map(res => res.json())
         .subscribe(data => {
           if (data.success){
-            console.log("Ad is now active")
+            console.log("Ad is now active");
           } else {
-            console.log("Failed to change status")
+            console.log("Failed to change status");
           }
         });
     } else if (!e.target.checked){
@@ -71,9 +71,9 @@ export class ManageAdsComponent implements OnInit {
         .map(res => res.json())
         .subscribe(data => {
           if (data.success){
-            console.log("Ad is no longer active")
+            console.log("Ad is no longer active");
           } else {
-            console.log("Failed to change status")
+            console.log("Failed to change status");
           }
         });
     }

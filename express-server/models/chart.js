@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const config = require('../config/database');
-const Entry = require('./chart-entry');
 
 const chartSchema = mongoose.Schema({
 

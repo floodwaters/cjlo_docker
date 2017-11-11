@@ -38,6 +38,7 @@ const episodes = require('./routes/episodes');
 const plays = require('./routes/plays');
 const charts = require('./routes/charts');
 const staticPages = require('./routes/static-pages');
+const ads = require('./routes/ads');
 
 const app = express();
 
@@ -65,6 +66,7 @@ app.use('/episodes', episodes);
 app.use('/plays', plays);
 app.use('/charts', charts);
 app.use('/static-pages', staticPages);
+app.use('/ads', ads);
 
 
 require('./config/passport')(passport);

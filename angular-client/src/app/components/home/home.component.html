@@ -1,4 +1,5 @@
 <div class="row">
+
   <div class="col-md-6 col-sm-6 col-xs-6 charts">
     <h3 class="page-header chart-header" [routerLink]="['/charts']">Charts </h3>
     <table class="table">
@@ -11,13 +12,19 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let entry of this.chart?.entries; let i=index">
-          <td>{{i + 1}}</td>
-          <td>{{entry?.artist}}</td>
-          <td>{{entry?.title}}</td>
-          <td>{{entry?.label}}</td>
+        <tr *ngFor="let entry of this.chart?.entries; let i=index" >
+          <td *ngIf="i < 10">{{i + 1}}</td>
+          <td *ngIf="i < 10">{{entry?.artist}}</td>
+          <td *ngIf="i < 10">{{entry?.title}}</td>
+          <td *ngIf="i < 10">{{entry?.label}}</td>
         </tr>
       </tbody>
     </table>
   </div>
+
+
+  <div class="col-md-6 col-sm-6 col-xs-6 ad">
+    <a [href]="" (click)="increment(sideAd._id)"><img src="{{path}}" /></a>
+  </div>
+
 </div>

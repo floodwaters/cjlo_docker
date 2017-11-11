@@ -12,3 +12,8 @@
   margin-top: 20px;
   float: right;
 }
+
+.playlist-builder {
+  display: none;
+  width: 100%;
+}
