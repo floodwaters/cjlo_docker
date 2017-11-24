@@ -16,4 +16,46 @@
 .playlist-builder {
   display: none;
   width: 100%;
+
+}
+
+.shows {
+  height: 200px;
+  overflow-y: scroll;
+  padding-right: 17px;
+}
+
+.tag {
+  display: inline-block;
+  margin: 10px;
+  border: 2px solid black;
+  padding: 5px;
+  z-index: 1000;
+}
+
+.tag:hover {
+  cursor: pointer;;
+}
+
+.clicked {
+  background-color: black;
+  color: white;
+}
+
+.unclicked {
+  background-color: white;
+  color: black;
+}
+
+#progressBar {
+ border:1px solid #aaa;
+ color:#fff;
+ width:295px;
+ height:20px;
+ z-index: 0;
+}
+
+#progress {
+   display:inline-block;
+   background-color:#f4bf42;
 }

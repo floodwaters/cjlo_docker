@@ -20,11 +20,8 @@ router.post('/save', passport.authenticate('jwt', {session: false}), (req, res, 
     entries: req.body.entries
   });
 
-  newChart.save((err, chart) => {
-    if(err){
-      res.json({success: false, msg: 'Failed to save chart'});
-      console.log(err)
-    } else {
+  newChart.save((chart) => {
+    if (chart){
       res.json({success: true, msg: 'Chart saved!'})
     }
   });

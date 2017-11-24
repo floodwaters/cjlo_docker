@@ -3,7 +3,9 @@ const config = require('../config/database');
 const User = require('./user');
 
 
-const ShowSchema = mongoose.Schema({
+
+
+var ShowSchema = mongoose.Schema({
 
   name: {
     type: String,
@@ -86,6 +88,8 @@ const ShowSchema = mongoose.Schema({
     default: false
   }
 });
+
+
 
 //exports the model for the ShowSchema
 const Show = module.exports = mongoose.model('Show', ShowSchema);

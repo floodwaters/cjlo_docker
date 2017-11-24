@@ -113,4 +113,11 @@ export class EpisodeService {
     return this.http.get(ep, {headers: headers})
       .map(res => res.json());
   }
+
+  getEpisodeFromTag(tag){
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/episodes/get-from-tag/' + tag);
+    return this.http.get(ep, {headers: headers})
+      .map(res => res.json());
+  }
 }

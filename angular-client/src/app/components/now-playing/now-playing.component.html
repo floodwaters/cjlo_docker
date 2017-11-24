@@ -22,9 +22,33 @@
     <button class="btn btn-primary" (click)="live()" >Listen to CJLO live!</button>
     <button class="btn btn-primary" (click)="toggleBuilder()" >My Playlist</button>
 
+    <div *ngIf="!radio" id="progressBar" (click)="skip($event)"><span id="progress"></span></div>
+
+
   </div>
 </div>
 
 <div class="row playlist-builder">
-  <h3 class="page-header">My Playlist</h3>
+
+  <div class="col-md-7 col-xs-7 col-sm-7">
+    <h3 class="page-header">My Playlist</h3>
+
+    <div *ngFor="let show of showNames; let i=index">
+      <h4>{{show}}</h4>
+      {{this.ds.formatDate(episodeDates[i])}}
+      <span class="glyphicon glyphicon-remove pull-right" (click)="removeTrack(i)"></span>
+    </div>
+
+    <h3 class="page-header">Shows</h3>
+    <div class="shows">
+      <app-shows-for-playlist></app-shows-for-playlist>
+    </div>
+  </div>
+
+  <div class="col-md-5 col-xs-5 col-sm-5">
+    <h3 class="page-header">Add by genre</h3>
+    <div *ngFor="let tag of tags" id="{{tag}}" class="tag unclicked" (click)="addFromTag(tag)" (mousedown)="highlight($event)" (mouseup)="removeHighlight($event)">
+      <strong class="child">{{tag}}</strong>
+    </div>
+  </div>
 </div>

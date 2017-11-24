@@ -106,4 +106,18 @@ export class ShowService {
       .map(res => res.json());
   }
 
+  getForPlaylist(){
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/shows/get-for-playlist');
+    return this.http.get(ep, {headers: headers})
+      .map(res => res.json());
+  }
+
+  getUniqueTags(){
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/shows/get-tags');
+    return this.http.get(ep, {headers: headers})
+      .map(res => res.json());
+  }
+
 }

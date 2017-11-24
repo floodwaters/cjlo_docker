@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/database');
 const Episode = require('../models/episode');
 const Play = require('../models/play');
+const Show = require('../models/show');
 
 
 //create a new episode
@@ -253,8 +254,8 @@ router.get('/get-cancon/:id', passport.authenticate('jwt', {session: false}), (r
       res.send(result)
 
     }
-  })
-})
+  });
+});
 
 //gets the percentage of tracks per episode that were new
 router.get('/get-new/:id', passport.authenticate('jwt', {session: false}), (req, res, next) => {
@@ -277,7 +278,37 @@ router.get('/get-new/:id', passport.authenticate('jwt', {session: false}), (req,
       res.send(result)
 
     }
-  })
+  });
+});
+
+//returns 1 episode based on a tag
+router.get('/get-from-tag/:tag', (req, res, next) => {
+  Show.find({'tags': req.params.tag})
+    .then((shows, err) => {
+      if(err){
+        console.log(err);
+        res.json({success:false, msg: 'Could not find a show with the desired tag'})
+      } else {
+
+        let getRandomInt = (min, max) => {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+        }
+
+        var index = getRandomInt(0, shows.length);
+
+        Episode.findOne({'show': shows[index]._id})
+          .then((episode, err) => {
+            if (err){
+              console.log(err);
+              res.json({success:false, msg: 'Could not find an episode'});
+            } else {
+              res.send(episode);
+            }
+          })
+      }
+    })
 })
 
 module.exports = router;

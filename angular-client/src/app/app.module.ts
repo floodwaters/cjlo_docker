@@ -15,6 +15,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NguiDatetimePickerModule } from '@ngui/datetime-picker';
 import { ModalModule } from 'angular2-modal';
 import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
+
 
 
 
@@ -31,6 +33,7 @@ import {NowPlayingService} from './services/now-playing.service';
 import {PlaylistAndChartsService} from './services/playlist-and-charts.service';
 import {StaticPagesService} from './services/static-pages.service';
 import {AdService} from './services/ad.service';
+import {CookieService} from './services/cookie.service';
 
 
 import {AuthGuard} from './guards/auth.guard';
@@ -97,6 +100,8 @@ import { StaticPageReroutComponent } from './components/static-page-rerout/stati
 import { NewAdComponent } from './components/new-ad/new-ad.component';
 import { ManageAdsComponent } from './components/manage-ads/manage-ads.component';
 import { EditAdsComponent } from './components/edit-ads/edit-ads.component';
+import { ShowsForPlaylistComponent } from './components/shows-for-playlist/shows-for-playlist.component';
+import { EpisodesForPlaylistComponent } from './components/episodes-for-playlist/episodes-for-playlist.component';
 
 
 const appRoutes: Routes =  [
@@ -210,12 +215,15 @@ const appRoutes: Routes =  [
     StaticPageReroutComponent,
     NewAdComponent,
     ManageAdsComponent,
-    EditAdsComponent
+    EditAdsComponent,
+    ShowsForPlaylistComponent,
+    EpisodesForPlaylistComponent
 
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    AngularFontAwesomeModule,
     NguiDatetimePickerModule,
     ReactiveFormsModule,
     HttpModule,
@@ -250,6 +258,7 @@ const appRoutes: Routes =  [
     EditorGuard,
     DateToStringService,
     StaticPagesService,
+    CookieService,
     AdService],
 
   bootstrap: [AppComponent],

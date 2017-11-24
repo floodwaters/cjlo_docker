@@ -213,7 +213,7 @@ router.post('/images/thumbnail', thumbnailUpload.single('file'), passport.authen
         }
       });
   } else {
-    res.json({path: 'public/show-thumbnails/' + rand + req.file.origninalname})
+    res.json({path: 'public/show-thumbnails/' + rand + req.file.originalname})
   }
 
 });
@@ -254,7 +254,31 @@ router.get('/get-placeholder', (req, res, next) => {
   Show.findOne({placeholder: true})
     .then(show => {
       res.send(show)
-    })
+    });
+});
+
+//get active and archived shows
+router.get('/get-for-playlist', (req, res, next) => {
+  Show.find({ $or: [{onAir: true}, {archive: true}]}, (err, shows) => {
+    if(err){
+      console.log(err);
+      res.json({success: false, msg: "Could not retrieve shows"})
+    } else {
+      res.send(shows);
+    }
+  });
+});
+
+//get unique tags from the database
+router.get('/get-tags', (req, res, next) => {
+  Show.find().distinct('tags', (err, tags) => {
+    if(err){
+      console.log(err);
+      res.json({success: false, msg: 'Could not retrieve tags'});
+    } else {
+      res.send(tags);
+    }
+  })
 })
 
 
