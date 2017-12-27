@@ -84,7 +84,7 @@ router.get('/get-published', (req, res, next) => {
       } else {
         res.send(pages);
       }
-    })
+    });
 });
 
 //multer disk storage for images

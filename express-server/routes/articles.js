@@ -183,6 +183,18 @@ router.get('/get-unpublished', (req, res, next) => {
     });
 });
 
+//get the spotlight article
+router.get('/get-spotlight', (req, res, next) => {
+  Article.find({$and: [{status: 'published'}, {spotlight: true}]})
+    .exec((err, article) => {
+      if(err) {
+        console.log(err)
+      } else {
+        res.send(article)
+      }
+    });
+});
+
 //delete articles
 router.delete('/delete/:id', passport.authenticate('jwt', {session:false}), (req, res, next) => {
   Article.findByIdAndRemove({_id:req.params.id})
@@ -224,7 +236,7 @@ router.post('/image1', imageUpload.single('file'), passport.authenticate('jwt', 
   var rand = Math.floor(Math.random() * 200000).toString()
 
   Jimp.read(req.file.buffer, (err, image) => {
-    image.resize(450, 450);
+    image.resize(300, 300);
     image.write('./public/article-images/' + rand + req.file.originalname);
   });
 
@@ -245,7 +257,7 @@ router.post('/image2', imageUpload.single('file'), passport.authenticate('jwt', 
   var rand = Math.floor(Math.random() * 200000).toString()
 
   Jimp.read(req.file.buffer, (err, image) => {
-    image.resize(450, 450);
+    image.resize(300, 300);
     image.write('./public/article-images/' + rand + req.file.originalname);
   });
 
@@ -265,7 +277,7 @@ router.post('/image3', imageUpload.single('file'), passport.authenticate('jwt', 
   var rand = Math.floor(Math.random() * 200000).toString()
 
   Jimp.read(req.file.buffer, (err, image) => {
-    image.resize(450, 450);
+    image.resize(300, 300);
     image.write('./public/article-images/' + rand + req.file.originalname);
   });
 
@@ -335,6 +347,58 @@ router.post('/thumbnail', thumbnailUpload.single('file'), passport.authenticate(
       }
     });
 
+});
+
+//get highlighted articles for magazine
+router.get('/get-magazine', (req, res, next) => {
+  Article.find({highlighted: true, status: 'published', magazine: true})
+    .sort({created_on: -1})
+    .limit(5)
+    .then((articles) => {
+      res.send(articles);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
+
+//get highlighted articles for news and events
+router.get('/get-news-and-events', (req, res, next) => {
+  Article.find({highlighted: true, status: 'published', newsAndEvents: true})
+    .sort({created_on: -1})
+    .limit(5)
+    .then((articles) => {
+      res.send(articles);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
+
+//get highlighted articles for video
+router.get('/get-video', (req, res, next) => {
+  Article.find({highlighted: true, status: 'published', video: true})
+    .sort({created_on: -1})
+    .limit(5)
+    .then((articles) => {
+      res.send(articles);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
+
+//get highlighted articles for session
+router.get('/get-session', (req, res, next) => {
+  Article.find({highlighted: true, status: 'published', session: true})
+    .sort({created_on: -1})
+    .limit(5)
+    .then((articles) => {
+      res.send(articles);
+    })
+    .catch(err => {
+      console.log(err);
+    });
 });
 
 module.exports = router;

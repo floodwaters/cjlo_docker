@@ -67,6 +67,12 @@ const ArticleSchema = mongoose.Schema({
     default: false
   },
 
+  session: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+
   video: {
     type: Boolean,
     required: true,

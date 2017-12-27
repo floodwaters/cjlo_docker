@@ -102,6 +102,8 @@ import { ManageAdsComponent } from './components/manage-ads/manage-ads.component
 import { EditAdsComponent } from './components/edit-ads/edit-ads.component';
 import { ShowsForPlaylistComponent } from './components/shows-for-playlist/shows-for-playlist.component';
 import { EpisodesForPlaylistComponent } from './components/episodes-for-playlist/episodes-for-playlist.component';
+import { HomePageChartsComponent } from './components/home-page-charts/home-page-charts.component';
+import { ArticleHighlightComponent } from './components/article-highlight/article-highlight.component';
 
 
 const appRoutes: Routes =  [
@@ -217,7 +219,9 @@ const appRoutes: Routes =  [
     ManageAdsComponent,
     EditAdsComponent,
     ShowsForPlaylistComponent,
-    EpisodesForPlaylistComponent
+    EpisodesForPlaylistComponent,
+    HomePageChartsComponent,
+    ArticleHighlightComponent
 
   ],
   imports: [

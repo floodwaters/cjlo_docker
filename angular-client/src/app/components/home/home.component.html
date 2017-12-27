@@ -1,30 +1,48 @@
 <div class="row">
 
-  <div class="col-md-6 col-sm-6 col-xs-6 charts">
-    <h3 class="page-header chart-header" [routerLink]="['/charts']">Charts </h3>
-    <table class="table">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Artist</th>
-          <th>Title</th>
-          <th>Label</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let entry of this.chart?.entries; let i=index" >
-          <td *ngIf="i < 10">{{i + 1}}</td>
-          <td *ngIf="i < 10">{{entry?.artist}}</td>
-          <td *ngIf="i < 10">{{entry?.title}}</td>
-          <td *ngIf="i < 10">{{entry?.label}}</td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="col-md-9 col-sm-12 col-xs-12 spotlight">
+
+    <img class="spotlight-image" src="http://localhost:3000/{{spotlight?.image1Path}}" />
+
+    <h3 class="spotlight-title">{{spotlight?.title}}</h3>
+
+    <p class="spotlight-text fr-view" [innerHtml]="spotlight?.articleBody"></p>
+
+    <h4 class="read-more"><strong>READ MORE</strong></h4>
   </div>
 
-
-  <div class="col-md-6 col-sm-6 col-xs-6 ad">
+  <div class="col-md-3 col-sm-3 col-xs-3 ad">
     <a [href]="" (click)="increment(sideAd._id)"><img src="{{path}}" /></a>
   </div>
+
+</div>
+
+<div class="row">
+
+  <div class="col-md-8 col-sm-8 col-xs-8">
+    <ul class="article-tabs">
+      <li class="category" [ngClass]="{'activeArticle' : articleIndex == 1}" (click)="selectArticles('Magazine', 1)">Magazine</li>
+      <li class="category" [ngClass]="{'activeArticle' : articleIndex == 2}" (click)="selectArticles('News and Events', 2)">News and Events</li>
+      <li class="category" [ngClass]="{'activeArticle' : articleIndex == 3}" (click)="selectArticles('Video', 3)">Video</li>
+      <li class="category" [ngClass]="{'activeArticle' : articleIndex == 4}" (click)="selectArticles('Sessions', 4)">Sessions</li>
+    </ul>
+
+    <app-article-highlight [articleCategory]="articleCategory"></app-article-highlight>
+  </div>
+
+  <div class="col-md-4 col-sm-4 col-xs-4 charts">
+    <app-home-page-charts [chart]="chart"></app-home-page-charts>
+    <ul class="charts-list">
+      <li class="type" [ngClass]="{'active' : selectedIndex == 1}" (click)="select('Top 30', $event, 1)" >Stationwide</li>
+      <li class="type" [ngClass]="{'active' : selectedIndex == 2}" (click)="select('Hip-Hop', $event, 2)" >Hip Hop</li>
+      <li class="type" [ngClass]="{'active' : selectedIndex == 3}" (click)="select('RPM', $event, 3)" >RPM</li>
+      <li class="type" [ngClass]="{'active' : selectedIndex == 4}" (click)="select('Metal', $event, 4)" >Metal</li>
+      <li class="type" [ngClass]="{'active' : selectedIndex == 5}" (click)="select('World', $event, 5)" >World</li>
+      <li class="type" [routerLink]="['/charts']" >Full Charts</li>
+    </ul>
+  </div>
+
+
+
 
 </div>

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PlaylistAndChartsService } from '../../services/playlist-and-charts.service';
 import { AdService } from '../../services/ad.service';
-
+import {AuthService} from '../../services/auth.service';
+import {Http, Headers} from '@angular/http';
 
 @Component({
   selector: 'app-home',
@@ -10,23 +11,29 @@ import { AdService } from '../../services/ad.service';
 })
 export class HomeComponent implements OnInit {
 
-  chart:any;
+  chart:any = "Top 30";
   sideAd:any;
   path:string;
+  selectedIndex: number = 1;
+  spotlight: any;
+  articleIndex: number = 1;
+  articleCategory:string = "Magazine";
 
   constructor(
     private pc: PlaylistAndChartsService,
-    private as: AdService
+    private as: AdService,
+    private authService: AuthService,
+    private http: Http
   ) { }
 
   ngOnInit() {
 
-    this.pc.getFrontChart('Top 30').subscribe(data => {
-      this.chart = data;
+    this.getSpotlight().subscribe(data => {
+      this.spotlight = data[0];
     }, err => {
       console.log(err);
       return false;
-    });
+    })
 
     this.as.getAdBySlot('Side').subscribe(data => {
       this.sideAd = data;
@@ -49,6 +56,23 @@ export class HomeComponent implements OnInit {
     this.as.increment(id).subscribe(data => {
 
     })
+  }
+
+  select(string, e, n) : void {
+    this.chart = string;
+    this.selectedIndex = n;
+  }
+
+  selectArticles(string, n) : void {
+    this.articleCategory = string;
+    this.articleIndex = n;
+  }
+
+  getSpotlight(){
+    let headers = this.authService.setHeaders();
+    let ep = this.authService.prepEndpoint('http://localhost:3000/articles/get-spotlight');
+    return this.http.get(ep, {headers: headers})
+      .map(res => res.json());
   }
 
 }
