@@ -14,7 +14,9 @@ import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-u
 })
 export class NewArticleComponent implements OnInit {
 
-  title:String;
+  title:String
+  writer:String;
+  tagline:String;
   editorContent:String;
   editorContent2:String;
   editorContent3:String;
@@ -103,6 +105,8 @@ export class NewArticleComponent implements OnInit {
   createArticle(){
     let article = {
       title: this.title,
+      writer: this.writer,
+      tagline: this.tagline,
       articleBody: this.editorContent,
       articleBody2: this.editorContent2,
       articleBody3: this.editorContent3,
@@ -277,11 +281,15 @@ updateArticle(){
   let id = this.articleId
   let article = {
     title: this.title,
+    writer: this.writer,
+    tagline: this.tagline,
     articleBody: this.editorContent,
     articleBody2: this.editorContent2,
     articleBody3: this.editorContent3,
     preview: this.previewContent
   }
+
+  console.log(article);
   let headers = this.authService.setHeaders();
   let ep = this.authService.prepEndpoint('http://localhost:3000/articles/edit/' + id);
   return this.http.put(ep, article, {headers: headers})

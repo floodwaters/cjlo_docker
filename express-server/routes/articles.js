@@ -19,6 +19,8 @@ router.post('/create', passport.authenticate('jwt', {session: false}), (req, res
   let newArticle = new Article({
     title: req.body.title,
     author: req.user._id,
+    writer: req.body.writer,
+    tagline: req.body.tagline,
     articleBody: req.body.articleBody,
     articleBody2: req.body.articleBody2,
     articleBody3: req.body.articleBody3,
@@ -40,7 +42,7 @@ router.post('/create', passport.authenticate('jwt', {session: false}), (req, res
 //edit articles
 router.put('/edit/:id', passport.authenticate('jwt', {session:false}), (req, res, next) => {
   Article.findOneAndUpdate({_id: req.params.id},
-    {$set: {"title": req.body.title, "articleBody2": req.body.articleBody2, "articleBody3": req.body.articleBody3, "articleBody": req.body.articleBody, "preview": req.body.preview, "publish_on": req.body.publish_on, "unpublish_on": req.body.unpublish_on}})
+    {$set: {"title": req.body.title, "writer": req.body.writer, "tagline": req.body.tagline, "articleBody2": req.body.articleBody2, "articleBody3": req.body.articleBody3, "articleBody": req.body.articleBody, "preview": req.body.preview, "publish_on": req.body.publish_on, "unpublish_on": req.body.unpublish_on}})
     .then( (article, err) => {
       if(err){
         res.json({success: false, msg: 'Could not edit article'})
@@ -334,7 +336,7 @@ router.post('/delete-image3', passport.authenticate('jwt', {session: false}), (r
 //post article thumbnail
 router.post('/thumbnail', thumbnailUpload.single('file'), passport.authenticate('jwt', {session:false}), (req, res, next) => {
   Jimp.read(req.file.buffer, (err, image) => {
-    image.resize(150, 150);
+    image.resize(75, 75);
     image.write('./public/thumbnails/' + req.file.originalname)
   });
   let id = req.body.articleId;

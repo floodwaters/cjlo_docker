@@ -14,6 +14,14 @@ const ArticleSchema = mongoose.Schema({
     required: true
   },
 
+  writer: {
+    type: String
+  },
+
+  tagline: {
+    type: String
+  },
+
   articleBody: {
     type: String
   },

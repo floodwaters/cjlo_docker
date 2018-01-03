@@ -21,6 +21,8 @@ export class EditArticleComponent implements OnInit {
   id:number;
   article:any;
   title:String;
+  writer:String;
+  tagline:String;
   editorContent:String;
   editorContent2:String;
   editorContent3:String;
@@ -81,6 +83,8 @@ export class EditArticleComponent implements OnInit {
     this.getArticle(this.id).subscribe( data => {
       this.article = data;
       this.title = data.title;
+      this.writer = data.writer;
+      this.tagline = data.tagline;
       this.editorContent = data.articleBody;
       this.editorContent2 = data.articleBody2;
       this.editorContent3 = data.articleBody3;
@@ -218,6 +222,8 @@ export class EditArticleComponent implements OnInit {
     if (this.publish_on && this.unpublish_on) {
        article = {
         title: this.title,
+        writer: this.writer,
+        tagline: this.tagline,
         articleBody: this.editorContent,
         articleBody2: this.editorContent2,
         articleBody3: this.editorContent3,
@@ -228,6 +234,8 @@ export class EditArticleComponent implements OnInit {
     } else if (this.publish_on && !this.unpublish_on) {
        article = {
         title: this.title,
+        writer: this.writer,
+        tagline: this.tagline,
         articleBody: this.editorContent,
         articleBody2: this.editorContent2,
         articleBody3: this.editorContent3,
@@ -237,6 +245,8 @@ export class EditArticleComponent implements OnInit {
     } else if (!this.publish_on && this.unpublish_on) {
        article = {
         title: this.title,
+        writer: this.writer,
+        tagline: this.tagline,
         articleBody: this.editorContent,
         articleBody2: this.editorContent2,
         articleBody3: this.editorContent3,
@@ -246,6 +256,8 @@ export class EditArticleComponent implements OnInit {
     } else {
       article = {
         title: this.title,
+        writer: this.writer,
+        tagline: this.tagline,
         articleBody: this.editorContent,
         articleBody2: this.editorContent2,
         articleBody3: this.editorContent3,

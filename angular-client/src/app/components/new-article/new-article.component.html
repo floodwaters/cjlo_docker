@@ -13,6 +13,16 @@
       </div>
 
       <div class="form-group">
+        <label>Author</label>
+        <input type="text" [(ngModel)]="writer" name="writer" class="form-control"(ngModelChange)="keypress($event)">
+      </div>
+
+      <div class="form-group">
+        <label>Tagline</label>
+        <input type="text" [(ngModel)]="tagline" name="tagline" class="form-control"(ngModelChange)="keypress($event)">
+      </div>
+
+      <div class="form-group">
           <label>Thumbnail Image</label>
           <input type="file" class="form-control" name="file" ng2FileSelect [uploader]="uploader"/>
           <button type="button" (click)="this.uploadImage()">Upload Image</button>
@@ -91,7 +101,7 @@
 
 
       <button type="button" class="btn btn-primary" (click)="openWindow(articleId)">Preview Article</button>
-      <button type="button" class="btn btn-primary" (click)="keypress()">Save Article</button>
+      <button type="button" class="btn btn-primary" (click)="keypress($event)">Save Article</button>
       <input type="submit" class="btn btn-primary" value="Submit Article for Review">
     </form>
 

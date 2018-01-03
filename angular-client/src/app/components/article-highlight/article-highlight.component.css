@@ -1,0 +1,14 @@
+.highlight {
+  display: inline-block;
+  vertical-align: top;
+  width: 150px;
+  height: 300px;
+}
+
+.component {
+  display: block;
+}
+
+.image {
+  text-align: center;
+}
