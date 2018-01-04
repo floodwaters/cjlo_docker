@@ -1,9 +1,9 @@
 <div *ngFor="let article of articles" class="highlight">
-  <img class="component image" src="http://localhost:3000/{{article.thumbnailPath}}" />
+  <img class="component highlight-image" src="http://localhost:3000/{{article.thumbnailPath}}" />
 
   <h4 class="component"><strong>{{article?.title}}</strong></h4>
 
   <h5 class="component"><strong>{{article?.writer}}</strong></h5>
 
-  <p class="component">{{article?.preview}}</p>
+  <p class="component" [innerHtml]="article?.preview"></p>
 </div>

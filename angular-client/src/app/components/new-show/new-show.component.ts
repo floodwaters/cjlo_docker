@@ -28,10 +28,12 @@ export class NewShowComponent implements OnInit {
   descriptionContent:any;
   startDate:any;
   endDate:any;
-  timeSlots: IMultiSelectOption[];
-  days: IMultiSelectOption[];
+  startDays: IMultiSelectOption[];
+  endDays: IMultiSelectOption[];
   durations: Array<string> = ['1/2 hr', '1 hr', '2 hr', '3 hr'];
   types: Array<string> = ['Weekly', 'Bi-weekly', 'One-off'];
+  hours: Array<string> = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
+  minutes: Array<string> = ['00', '30'];
   djs: any;
   name: string;
   bPath: string;
@@ -68,8 +70,10 @@ export class NewShowComponent implements OnInit {
         this.djs = data;
       })
 
-    this.timeSlots = this.dateTime.makeIntoObjects(this.dateTime.times)
-    this.days = this.dateTime.makeIntoObjects(this.dateTime.days)
+    this.startDays = this.dateTime.makeIntoObjects(this.dateTime.days);
+
+    this.endDays = this.dateTime.makeIntoObjects(this.dateTime.days)
+
 
     //initializes the reactive form
     this.myForm = this._fb.group({
@@ -77,11 +81,14 @@ export class NewShowComponent implements OnInit {
       type: ['', [Validators.required]],
       duration: ['', [Validators.required]],
       djs: this._fb.array([this.initDj()]),
-      days: [[]],
-      time: ['', [Validators.required]],
-      timeSlots: [[], [Validators.required]],
+      startDays: [[]],
+      startHour: ['', [Validators.required]],
+      startMinute: ['', [Validators.required]],
+      endDays: [[]],
+      endHour: ['', [Validators.required]],
+      endMinute: ['', [Validators]],
+      timeString: ['', [Validators.required]],
       startDate: ['', [Validators.required]],
-      timeString: [''],
       endDate: [''],
       tags: [[]],
       placeholder: [false, [Validators.required]]
@@ -111,7 +118,7 @@ export class NewShowComponent implements OnInit {
 
   //uploads image to the server, then saves the path to the article to thumnbnailPath variable
   uploadThumbnail(){
-    
+
     this.uploader1.uploadAll();
     this.uploader1.onCompleteItem = (item:any, response:any, status:any, headers:any) => {
             let r = JSON.parse(response)
@@ -146,7 +153,7 @@ export class NewShowComponent implements OnInit {
       const show = {
         name: this.myForm.controls['name'].value,
         type: this.myForm.controls['type'].value,
-        timeString: this.myForm.controls['time'].value,
+        timeString: this.myForm.controls['timeString'].value,
         timeSlots: this.myForm.controls['timeSlots'].value,
         djs: this.myForm.controls['djs'].value,
         description: this.descriptionContent,

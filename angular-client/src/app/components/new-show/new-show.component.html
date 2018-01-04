@@ -79,29 +79,56 @@
       </div>
 
       <div class="form-group">
-        <label>Day: </label>
-      <ss-multiselect-dropdown [options]="days" formControlName="days"></ss-multiselect-dropdown>
-      </div>
-
-
-      <div class="form-group">
         <label>Time as a string: </label>
-        <input type="text" name="time" formControlName="time">
+        <input type="text" name="timeString" formControlName="timeString">
       </div>
 
-      <div class="form-group">
-        <label>Time Slots: </label>
-        <ss-multiselect-dropdown [options]="timeSlots" formControlName="timeSlots"></ss-multiselect-dropdown>
+      <div class="form-group start">
+        <label>Start Days:</label>
+        <ss-multiselect-dropdown [options]="days" formControlName="startDays"></ss-multiselect-dropdown>
+
+        <br />
+        <label>Start Hour:</label>
+        <select formControlName="startHour" name="startHour" class="ui fluid search selection dropdown">
+          <option selected="true"> -- select an option -- </option>
+          <option *ngFor="let hour of hours" [attr.value]="hour">{{hour}}</option>
+        </select>
+
+        <br />
+        <label>Start Minute:</label>
+        <select formControlName="startMinute" name="startMinute" class="ui fluid search selection dropdown">
+          <option selected="true"> -- select an option -- </option>
+          <option *ngFor="let minute of minutes" [attr.value]="minute">{{minute}}</option>
+        </select>
+      </div>
+
+      <div class="form-group end">
+        <label>End Days:</label>
+        <ss-multiselect-dropdown [options]="days" formControlName="endDays"></ss-multiselect-dropdown>
+
+        <br />
+        <label>End Hour:</label>
+        <select formControlName="startHour" name="startHour" class="ui fluid search selection dropdown">
+          <option selected="true"> -- select an option -- </option>
+          <option *ngFor="let hour of hours" [attr.value]="hour">{{hour}}</option>
+        </select>
+
+        <br />
+        <label>End Minute:</label>
+        <select formControlName="startMinute" name="startMinute" class="ui fluid search selection dropdown">
+          <option selected="true"> -- select an option -- </option>
+          <option *ngFor="let minute of minutes" [attr.value]="minute">{{minute}}</option>
+        </select>
       </div>
 
       <div class= "form-group">
         <label>Start Date</label>
-        <dp-date-picker name="startDate" formControlName="startDate"></dp-date-picker>
+        <input ngui-datetime-picker [is-draggable]="false" name="startDate" formControlName="startDate" />
       </div>
 
       <div class="form-group">
         <label>End Date</label>
-        <dp-date-picker name="endDate" formControlName="endDate"></dp-date-picker>
+        <input ngui-datetime-picker [is-draggable]="false" name="endDate" formControlName="endDate" />
       </div>
 
       <div class="form-group">

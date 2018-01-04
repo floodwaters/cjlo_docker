@@ -16,10 +16,6 @@ var ShowSchema = mongoose.Schema({
     type: String
   }],
 
-  timeslots: [{
-      type: Number
-  }],
-
   djs: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
@@ -38,13 +34,34 @@ var ShowSchema = mongoose.Schema({
     type: String
   },
 
-  days: [{
-      type: Number,
+  startDay: {
+    type: Number,
+    required: true
+  },
 
-  }],
+  startHour: {
+    type: Number,
+    required: true
+  },
 
-  time: {
-    type: String
+  startMinute: {
+    type: Number,
+    required: true
+  },
+
+  endDay: {
+    type: Number,
+    required: true
+  },
+
+  endHour: {
+    type: Number,
+    required: true
+  },
+
+  endMinute: {
+    type: Number,
+    required: true
   },
 
   startDate: {
