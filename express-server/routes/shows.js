@@ -14,19 +14,21 @@ const fileType = require('file-type');
 
 //create show
 router.post('/create', passport.authenticate('jwt', {session: false}), (req, res, next) => {
-  var timeSlots = req.body.timeSlots
   var Djs = req.body.djs
-  var Days = req.body.days
-
 
   let newShow = new Show({
     name: req.body.name,
-    timeslots: timeSlots,
     djs: Djs,
     description: req.body.description,
     startDate: req.body.startDate,
     endDate: req.body.endDate,
-    days: Days,
+    startDays: req.body.startDays,
+    startHour: req.body.startHour,
+    startMinute: req.body.startMinute,
+    endDays: req.body.endDays,
+    endHour: req.body.endHour,
+    endMinute: req.body.endMinute,
+    genre: req.body.genre,
     timeString: req.body.timeString,
     type: req.body.type,
     duration: req.body.duration,
@@ -49,27 +51,26 @@ router.post('/create', passport.authenticate('jwt', {session: false}), (req, res
 
 //edit a show in the database
 router.put('/edit/:id', passport.authenticate('jwt', {session: false}), (req, res, next) => {
-  var timeSlots = req.body.timeSlots;
   var Djs = req.body.djs;
-  var Days = req.body.days;
   var tags = req.body.tags;
-  console.log(tags)
 
   Show.findByIdAndUpdate({_id: req.params.id}, {$set: {
     'name': req.body.name,
-    'timeslots': timeSlots,
     'djs': Djs,
     'description': req.body.description,
     'startDate': req.body.startDate,
     'endDate': req.body.endDate,
-    'days': Days,
     'timeString': req.body.timeString,
     'type': req.body.type,
     'duration': req.body.duration,
     'tags': tags,
     'thumbnailPath': req.body.thumbnailPath,
     'bannerPath': req.body.bannerPath,
-    'placeholder': req.body.placeholder
+    'placeholder': req.body.placeholder,
+    'startDays': req.body.startDays,
+    'startHour': req.body.startHour,
+    'startMintue': req.body.startMinute,
+    'genre': req.body.genre
   }})
     .then((show, err) => {
       if(err) {
@@ -175,7 +176,7 @@ var thumbnailUpload = multer({storage: thumbnailStorage});
 router.post('/images/show-banner', upload.single('file'), passport.authenticate('jwt', {session: false}), (req, res, next) => {
   var rand = Math.floor(Math.random() * 200000).toString()
   Jimp.read(req.file.buffer, (err, image) => {
-    image.resize(1080, 1080);
+    image.resize(300, 300);
     image.write('./public/show-banners/' + rand + req.file.originalname);
   });
 

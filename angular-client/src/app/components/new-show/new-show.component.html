@@ -71,6 +71,14 @@
       </div>
 
       <div class="form-group">
+        <label>Genre: </label>
+        <select formControlName="genre" name="genre" class="ui fluid search selection dropdown">
+          <option selected="true"> -- select an option -- </option>
+          <option *ngFor="let genre of genres" [attr.value]="genre">{{genre}}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
         <label>Duration: </label>
         <select formControlName="duration" name="duration" class="ui fluid search selection dropdown">
           <option selected="true"> -- select an option -- </option>
@@ -108,14 +116,14 @@
 
         <br />
         <label>End Hour:</label>
-        <select formControlName="startHour" name="startHour" class="ui fluid search selection dropdown">
+        <select formControlName="endHour" name="endHour" class="ui fluid search selection dropdown">
           <option selected="true"> -- select an option -- </option>
           <option *ngFor="let hour of hours" [attr.value]="hour">{{hour}}</option>
         </select>
 
         <br />
         <label>End Minute:</label>
-        <select formControlName="startMinute" name="startMinute" class="ui fluid search selection dropdown">
+        <select formControlName="endMinute" name="endMinute" class="ui fluid search selection dropdown">
           <option selected="true"> -- select an option -- </option>
           <option *ngFor="let minute of minutes" [attr.value]="minute">{{minute}}</option>
         </select>
@@ -123,12 +131,12 @@
 
       <div class= "form-group">
         <label>Start Date</label>
-        <input ngui-datetime-picker [is-draggable]="false" name="startDate" formControlName="startDate" />
+        <input ngui-datetime-picker [is-draggable]="false" name="startDate" formControlName="startDate" /> <span class="req"><em>*not required</em></span>
       </div>
 
       <div class="form-group">
         <label>End Date</label>
-        <input ngui-datetime-picker [is-draggable]="false" name="endDate" formControlName="endDate" />
+        <input ngui-datetime-picker [is-draggable]="false" name="endDate" formControlName="endDate" /> <span class="req"><em>*not required</em></span>
       </div>
 
       <div class="form-group">

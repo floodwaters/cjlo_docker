@@ -34,10 +34,10 @@ var ShowSchema = mongoose.Schema({
     type: String
   },
 
-  startDay: {
+  startDays: [{
     type: Number,
     required: true
-  },
+  }],
 
   startHour: {
     type: Number,
@@ -49,10 +49,10 @@ var ShowSchema = mongoose.Schema({
     required: true
   },
 
-  endDay: {
+  endDays: [{
     type: Number,
     required: true
-  },
+  }],
 
   endHour: {
     type: Number,

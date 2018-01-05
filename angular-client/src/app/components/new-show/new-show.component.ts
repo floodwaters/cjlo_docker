@@ -28,8 +28,8 @@ export class NewShowComponent implements OnInit {
   descriptionContent:any;
   startDate:any;
   endDate:any;
-  startDays: IMultiSelectOption[];
-  endDays: IMultiSelectOption[];
+  days: IMultiSelectOption[];
+  genres: Array<string> = ['Alt-rock', 'RPM', 'Jazz', 'Metal', 'Hip-Hop', 'Metal', 'World', 'Talk', 'Specialty'];
   durations: Array<string> = ['1/2 hr', '1 hr', '2 hr', '3 hr'];
   types: Array<string> = ['Weekly', 'Bi-weekly', 'One-off'];
   hours: Array<string> = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
@@ -70,10 +70,7 @@ export class NewShowComponent implements OnInit {
         this.djs = data;
       })
 
-    this.startDays = this.dateTime.makeIntoObjects(this.dateTime.days);
-
-    this.endDays = this.dateTime.makeIntoObjects(this.dateTime.days)
-
+    this.days = this.dateTime.makeIntoObjects(this.dateTime.days);
 
     //initializes the reactive form
     this.myForm = this._fb.group({
@@ -81,12 +78,13 @@ export class NewShowComponent implements OnInit {
       type: ['', [Validators.required]],
       duration: ['', [Validators.required]],
       djs: this._fb.array([this.initDj()]),
-      startDays: [[]],
+      startDays: [[], [Validators.required]],
+      genre: [''],
       startHour: ['', [Validators.required]],
       startMinute: ['', [Validators.required]],
-      endDays: [[]],
+      endDays: [[], [Validators.required]],
       endHour: ['', [Validators.required]],
-      endMinute: ['', [Validators]],
+      endMinute: ['', [Validators.required]],
       timeString: ['', [Validators.required]],
       startDate: ['', [Validators.required]],
       endDate: [''],
@@ -154,12 +152,17 @@ export class NewShowComponent implements OnInit {
         name: this.myForm.controls['name'].value,
         type: this.myForm.controls['type'].value,
         timeString: this.myForm.controls['timeString'].value,
-        timeSlots: this.myForm.controls['timeSlots'].value,
         djs: this.myForm.controls['djs'].value,
         description: this.descriptionContent,
         startDate: this.myForm.controls['startDate'].value,
         endDate: this.myForm.controls['endDate'].value,
-        days: this.myForm.controls['days'].value,
+        startDays: this.myForm.controls['startDays'].value,
+        endDays: this.myForm.controls['endDays'].value,
+        startHour: this.myForm.controls['startHour'].value,
+        endHour: this.myForm.controls['endHour'].value,
+        startMinute: this.myForm.controls['startMinute'].value,
+        endMinute: this.myForm.controls['endMinute'].value,
+        genre: this.myForm.controls['genre'].value,
         duration: this.myForm.controls['duration'].value,
         placeholder: this.myForm.controls['placeholder'].value,
         tags: ta,
@@ -167,19 +170,26 @@ export class NewShowComponent implements OnInit {
         bannerPath: this.bPath
       }
 
-      let headers = this.authService.setHeaders();
-      let ep = this.authService.prepEndpoint('http://localhost:3000/shows/create');
-      return this.http.post(ep, show, {headers: headers})
-        .map(res => res.json())
-        .subscribe(data => {
-          if(data.success){
-            this.flashMessage.show("Show created successfully", {cssClass: 'alert-success', timeout: 5000})
-            this.router.navigate(['/manage-shows'])
-          } else {
-            this.flashMessage.show("Something went wrong on the server", {cssClass: 'alert-danger', timeout: 5000})
+      if (this.myForm.status == 'INVALID') {
+        alert('Please fill in all fields!');
+        console.log(this.myForm.value)
+      } else {
+        let headers = this.authService.setHeaders();
+        let ep = this.authService.prepEndpoint('http://localhost:3000/shows/create');
+        return this.http.post(ep, show, {headers: headers})
+          .map(res => res.json())
+          .subscribe(data => {
+            if(data.success){
+              this.flashMessage.show("Show created successfully", {cssClass: 'alert-success', timeout: 5000})
+              this.router.navigate(['/manage-shows'])
+            } else {
+              this.flashMessage.show("Something went wrong on the server", {cssClass: 'alert-danger', timeout: 5000})
 
-          }
-        });
+            }
+          });
+      }
+
+
     }
 
 }
