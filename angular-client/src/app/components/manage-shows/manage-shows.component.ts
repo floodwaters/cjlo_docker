@@ -41,22 +41,13 @@ export class ManageShowsComponent implements OnInit {
   //takes the days represented as an array of numbers and returns a string of weekdays as words
   displayDays(show){
     let str = '';
-    let len = show.days.length;
+    let len = show.startDays.length;
     for(let i = 0; i < len; i++) {
-      str = str + this.dateTime.days[show.days[i]] + ' ';
+      str = str + this.dateTime.days[show.startDays[i]] + ' ';
     }
     return str
   }
 
-  //takes the timeslots represented as an array of numbers and returns a string of times as a string
-  displaySlots(show){
-    let str = '';
-    let len = show.timeslots.length;
-    for(let i = 0; i < len; i++){
-      str = str + this.dateTime.times[show.timeslots[i]] + ' ';
-    }
-    return str
-  }
 
   //sets the on air status of a show
   onAir(e, show){

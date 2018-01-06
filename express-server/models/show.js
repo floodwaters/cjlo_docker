@@ -26,6 +26,11 @@ var ShowSchema = mongoose.Schema({
     required: true
   },
 
+  genre: {
+    type: String,
+    required: true
+  },
+
   thumbnailPath: {
     type: String
   },
@@ -40,12 +45,12 @@ var ShowSchema = mongoose.Schema({
   }],
 
   startHour: {
-    type: Number,
+    type: String,
     required: true
   },
 
   startMinute: {
-    type: Number,
+    type: String,
     required: true
   },
 
@@ -55,12 +60,12 @@ var ShowSchema = mongoose.Schema({
   }],
 
   endHour: {
-    type: Number,
+    type: String,
     required: true
   },
 
   endMinute: {
-    type: Number,
+    type: String,
     required: true
   },
 

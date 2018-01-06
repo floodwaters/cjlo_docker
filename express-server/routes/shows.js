@@ -54,6 +54,7 @@ router.put('/edit/:id', passport.authenticate('jwt', {session: false}), (req, re
   var Djs = req.body.djs;
   var tags = req.body.tags;
 
+
   Show.findByIdAndUpdate({_id: req.params.id}, {$set: {
     'name': req.body.name,
     'djs': Djs,
@@ -77,6 +78,8 @@ router.put('/edit/:id', passport.authenticate('jwt', {session: false}), (req, re
         console.log(err);
         res.json({success:false, msg: 'failed to edit show'})
       } else {
+        console.log(req.body.genre)
+
         res.json({success: true, msg: 'Show successfully edited'})
       }
     })

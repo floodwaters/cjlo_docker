@@ -23,7 +23,7 @@
         <tr *ngFor="let show of shows | orderBy: 'name'" [routerLink]="['/shows/edit', show._id]">
           <td>{{show?.name}}</td>
           <td>{{displayDays(show)}}</td>
-          <td>{{displaySlots(show)}}</td>
+          <td>{{show?.startHour}}:{{show?.startMinute}} - {{show?.endHour}}:{{show?.endMinute}}</td>
           <td><input type="checkbox" [(ngModel)]="show.onAir" name="{{show.name}}" (click)="onAir($event, show); $event.stopPropagation()">
           <td><input type="checkbox" [(ngModel)]="show.archive" name="archive - {{show.name}}" (click)="archive($event, show); $event.stopPropagation()">
 

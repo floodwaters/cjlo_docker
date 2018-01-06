@@ -31,10 +31,12 @@ export class EditShowComponent implements OnInit {
   bannerPath:string;
   bPath:string;
   djs:any;
-  timeSlots: IMultiSelectOption[];
   days: IMultiSelectOption[];
+  genres: Array<string> = ['Alt-rock', 'RPM', 'Jazz', 'Metal', 'Hip-Hop', 'Metal', 'World', 'Talk', 'Specialty'];
   types: Array<string> = ['Weekly', 'Bi-weekly', 'One-off'];
   durations: Array<string> = ['1/2 hr', '1 hr', '2 hr', '3 hr'];
+  hours: Array<string> = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
+  minutes: Array<string> = ['00', '30'];
   token: string = localStorage.getItem('token');
   public uploader1:FileUploader = new FileUploader({url:'http://localhost:3000/shows/images/thumbnail', authToken: this.token});
   public uploader2:FileUploader = new FileUploader({url:'http://localhost:3000/shows/images/show-banner', authToken: this.token});
@@ -61,7 +63,6 @@ export class EditShowComponent implements OnInit {
 
   ngOnInit() {
 
-    this.timeSlots = this.dateTime.makeIntoObjects(this.dateTime.times)
     this.days = this.dateTime.makeIntoObjects(this.dateTime.days)
 
 
@@ -97,15 +98,22 @@ export class EditShowComponent implements OnInit {
       type: ['', [Validators.required]],
       duration: ['', [Validators.required]],
       djs: this._fb.array([this.initDj()]),
-      days: [[]],
-      time: ['', [Validators.required]],
-      timeSlots: [[], [Validators.required]],
+      startDays: [[], [Validators.required]],
+      genre: ['', [Validators.required]],
+      startHour: ['', [Validators.required]],
+      startMinute: ['', [Validators.required]],
+      endDays: [[], [Validators.required]],
+      endHour: ['', [Validators.required]],
+      endMinute: ['', [Validators.required]],
+      timeString: ['', [Validators.required]],
       startDate: ['', [Validators.required]],
       endDate: [''],
       tags: [[]],
       placeholder: [false, [Validators.required]]
 
+
     });
+
 
 
 
@@ -138,9 +146,14 @@ export class EditShowComponent implements OnInit {
       name: show.name,
       type: show.type,
       duration: show.duration,
-      days: show.days,
-      time: show.timeString,
-      timeSlots: show.timeslots,
+      startDays: show.startDays,
+      startHour: show.startHour,
+      startMinute: show.startMinute,
+      endDays: show.endDays,
+      endHour: show.endHour,
+      endMinute: show.endMinute,
+      genre: show.genre,
+      timeString: show.timeString,
       placeholder: show.placeholder,
       startDate: moment(show.startDate),
       endDate: moment(show.endDate),
@@ -190,12 +203,16 @@ export class EditShowComponent implements OnInit {
       name: this.myForm.controls['name'].value,
       type: this.myForm.controls['type'].value,
       timeString: this.myForm.controls['time'].value,
-      timeSlots: this.myForm.controls['timeSlots'].value,
       djs: this.myForm.controls['djs'].value,
       description: this.descriptionContent,
       startDate: this.myForm.controls['startDate'].value,
       endDate: this.myForm.controls['endDate'].value,
-      days: this.myForm.controls['days'].value,
+      startDays: this.myForm.controls['startDays'].value,
+      startHour: this.myForm.controls['startHour'].value,
+      startMinute: this.myForm.controls['startMinute'].value,
+      endDays: this.myForm.controls['endDays'].value,
+      endHour: this.myForm.controls['endHour'].value,
+      endMinute: this.myForm.controls['endMinute'].value,
       duration: this.myForm.controls['duration'].value,
       tags: ta,
       thumbnailPath: this.tPath,
@@ -203,19 +220,25 @@ export class EditShowComponent implements OnInit {
       placeholder: this.myForm.controls['placeholder'].value
     }
 
-    let headers = this.authService.setHeaders();
-    let ep = this.authService.prepEndpoint('http://localhost:3000/shows/edit/' + this.id);
-    return this.http.put(ep, show, {headers: headers})
-      .map(res => res.json())
-      .subscribe(data => {
-        if(data.success){
-          this.flashMessage.show("Changes Saved", {cssClass: 'alert-success', timeout: 5000})
-          this.router.navigate(['/manage-shows'])
-        } else {
-          this.flashMessage.show("Something went wrong on the server", {cssClass: 'alert-danger', timeout: 5000})
 
-        }
-      });
+    if (this.myForm.status == 'INVALID') {
+      alert('Please fill in all fields!');
+      console.log(this.myForm.value)
+    } else {
+      let headers = this.authService.setHeaders();
+      let ep = this.authService.prepEndpoint('http://localhost:3000/shows/edit/' + this.id);
+      return this.http.put(ep, show, {headers: headers})
+        .map(res => res.json())
+        .subscribe(data => {
+          if(data.success){
+            this.flashMessage.show("Changes Saved", {cssClass: 'alert-success', timeout: 5000})
+            this.router.navigate(['/manage-shows'])
+          } else {
+            this.flashMessage.show("Something went wrong on the server", {cssClass: 'alert-danger', timeout: 5000})
+
+          }
+        });
+    }
   }
 
   //uploads image to the server, then saves the path to the article to thumnbnailPath variable
