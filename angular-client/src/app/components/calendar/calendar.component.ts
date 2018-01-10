@@ -42,18 +42,4 @@ export class CalendarComponent implements OnInit {
 
   }
 
-  toggleWeekly(){
-    this.weeklyView = !this.weeklyView
-  }
-
-  displayToggle(){
-    if (this.weeklyView){
-      return "See Daily View"
-    } else {
-      return "See Weekly View"
-    }
-  }
-
-
-
 }

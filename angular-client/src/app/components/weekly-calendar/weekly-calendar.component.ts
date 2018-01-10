@@ -18,7 +18,8 @@ export class WeeklyCalendarComponent implements OnInit {
   day6Shows:any;
   day7Shows:any;
   day8Shows:any;
-  day:number;
+  allShows:any;
+  weekDay:number;
   placeholder:any;
 
 
@@ -30,79 +31,21 @@ export class WeeklyCalendarComponent implements OnInit {
 
   ngOnInit() {
 
-    this.day = this.selectedDate.getDay();
+    this.weekDay = this.selectedDate.getDay();
 
     this.showService.getPlaceholder().subscribe(data => {
       this.placeholder = data;
     }, err => {
       console.log(err);
       return false;
-    })
-
-
-    this.showService.getShowsForDay(this.selectedDate.getDay()).subscribe(data => {
-      this.day1Shows = data;
-
-    },
-    err => {
-      console.log(err);
-      return false
     });
 
-    this.showService.getShowsForDay(this.dateTime.dateForImport(this.day, 1)).subscribe(data => {
-      this.day2Shows = data;
+    this.showService.getOnAir().subscribe(data => {
+      this.allShows = data;
     },
     err => {
       console.log(err);
-      return false
-    });
-
-    this.showService.getShowsForDay(this.dateTime.dateForImport(this.day, 2)).subscribe(data => {
-      this.day3Shows = data;
-    },
-    err => {
-      console.log(err);
-      return false
-    });
-
-    this.showService.getShowsForDay(this.dateTime.dateForImport(this.day, 3)).subscribe(data => {
-      this.day4Shows = data;
-    },
-    err => {
-      console.log(err);
-      return false
-    });
-
-    this.showService.getShowsForDay(this.dateTime.dateForImport(this.day, 4)).subscribe(data => {
-      this.day5Shows = data
-    },
-    err => {
-      console.log(err);
-      return false
-    });
-
-    this.showService.getShowsForDay(this.dateTime.dateForImport(this.day, 5)).subscribe(data => {
-      this.day6Shows = data;
-    },
-    err => {
-      console.log(err);
-      return false
-    });
-
-    this.showService.getShowsForDay(this.dateTime.dateForImport(this.day, 6)).subscribe(data => {
-      this.day7Shows = data;
-    },
-    err => {
-      console.log(err);
-      return false
-    });
-
-    this.showService.getShowsForDay(this.dateTime.dateForImport(this.day, 7)).subscribe(data => {
-      this.day8Shows = data;
-    },
-    err => {
-      console.log(err);
-      return false
+      return false;
     });
 
   }
@@ -114,15 +57,14 @@ export class WeeklyCalendarComponent implements OnInit {
     return "<h4><strong>" + day +"</strong></h4>"
   }
 
-  displaySlot(day, slot){
-    var showDay = this.getShowDay(day);
+  displaySlot(day, hour, minute){
 
-    let shows = this.getShowsInSlot(slot, showDay);
+    let shows = this.getShowsInSlot(day, hour, minute);
 
 
 
     if(shows){
-      if(this.checkPreviousSlot(slot, shows, showDay, day)){
+      if(this.checkPreviousSlot(hour, minute, day)){
         return null;
       } else {
         let s = this.findByType('One-off', shows, day);
@@ -175,28 +117,107 @@ export class WeeklyCalendarComponent implements OnInit {
 
   }
 
-  getShowsInSlot(slot, shows){
-    if(shows){
-      return shows.filter(el => el.timeslots.some(timeslot => timeslot === slot))
+  //return all shows that start at a given time, on a given day
+  getShowsInSlot(day:number, hour:string, minute:string){
+    let h = Number(hour);
+    let m = Number(minute);
+
+    if(this.allShows){
+      return this.allShows.filter(el => this.checkTime(el, day, h, m));
     }
+
+
   }
 
-  checkPreviousSlot(slot, shows, showDay, day){
-    var s = null
-    if(slot === 0){
-      s = this.getShowsInSlot(47, this.getShowDay(day - 1));
+  //returns true if a show starts at a given hour, day and minute
+  checkTime(show:any, day:number, hour:number, minute:number){
+    let d = this.getWeekDay(day);
+
+    let h = Number(show.startHour);
+    let m = Number(show.startMinute);
+
+
+    if ((show.startDays.some(el => el === d)) && (h === hour) && (m === minute)) {
+      return true;
     } else {
-      s = this.getShowsInSlot(slot - 1, showDay);
+      return false
     }
-    if(shows){
-      return shows.some((v) => {
-        return s.indexOf(v) >= 0;
-      })
+  }
+
+  // get a weekday index number from a weekday slot number
+  getWeekDay(day: number){
+    switch(day) {
+      case 0:
+        return this.weekDay;
+      case 1:
+        return this.dateTime.dateForImport(this.weekDay, 1);
+      case 2:
+        return this.dateTime.dateForImport(this.weekDay, 2);
+      case 3:
+        return this.dateTime.dateForImport(this.weekDay, 3);
+      case 4:
+        return this.dateTime.dateForImport(this.weekDay, 4);
+      case 5:
+        return this.dateTime.dateForImport(this.weekDay, 5);
+      case 6:
+        return this.dateTime.dateForImport(this.weekDay, 6);
     }
 
   }
 
-  getShowDay(day){
+  //check to see if show half an hour earlier than a given time is the same as the show at the given time
+  checkPreviousSlot(hour:string, minute:string, day:number){
+    let h = Number(hour);
+    let m = Number(minute);
+    let test = []
+
+    if (this.allShows){
+      test = this.allShows.filter(el => this.checkDifferentStart(el, day, h, m));
+      if (test.length > 0){
+        return true;
+      }
+    }
+
+
+
+  }
+
+  //check if there is a show that started at a different time, but that runs through the given time
+  checkDifferentStart(show:any, day:number, hour:number, minute:number){
+    let d = this.getWeekDay(day);
+    let cross = false;
+    let h = Number(show.startHour);
+    let hend = Number (show.endHour);
+    let m = Number(show.startMinute);
+    let mend = Number(show.endMinute);
+
+
+    if (show.startDays[0] != show.endDays[0]){
+      cross = true;
+    }
+    if(!this.checkTime(show, day, hour, minute) && (cross === false) && (show.startDays.some(el => el === d))){
+      if((h === hour) && (m != minute)){
+        return true;
+      } else if ((h < hour) && (hend > hour)) {
+        return true;
+      } else if ((hend === hour) && (mend > minute)){
+        return true;
+      } else {
+        return false;
+      }
+    } else if (!this.checkTime(show, day, hour, minute) && (cross === true) && (show.startDays.some(el => el === d - 1)) ) {
+      if ((hend === hour) && (mend != minute)) {
+        return true;
+      } else if ((hend > hour)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  //get shows for a day
+  getShowDay(day:number){
     if(day == 0){
       return this.day1Shows;
     } else if (day == 1){

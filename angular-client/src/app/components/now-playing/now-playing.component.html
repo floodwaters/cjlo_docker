@@ -33,6 +33,7 @@
   <div class="col-md-7 col-xs-7 col-sm-7">
     <h3 class="page-header">My Playlist</h3>
 
+    <button class="btn btn-primary" (click)="deletePlaylist()" >Clear Playlist</button>
     <div *ngFor="let show of showNames; let i=index">
       <h4>{{show}}</h4>
       {{this.ds.formatDate(episodeDates[i])}}

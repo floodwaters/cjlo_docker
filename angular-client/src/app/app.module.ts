@@ -64,7 +64,6 @@ import { NewShowComponent } from './components/new-show/new-show.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { ManageShowsComponent } from './components/manage-shows/manage-shows.component';
 import { EditShowComponent } from './components/edit-show/edit-show.component';
-import { CalendarDisplayComponent } from './components/calendar-display/calendar-display.component';
 import { ShowPageComponent } from './components/show-page/show-page.component';
 import { MyShowsComponent } from './components/my-shows/my-shows.component';
 import { ManageEpisodesComponent } from './components/manage-episodes/manage-episodes.component';
@@ -182,7 +181,6 @@ const appRoutes: Routes =  [
     CalendarComponent,
     ManageShowsComponent,
     EditShowComponent,
-    CalendarDisplayComponent,
     ShowPageComponent,
     MyShowsComponent,
     ManageEpisodesComponent,

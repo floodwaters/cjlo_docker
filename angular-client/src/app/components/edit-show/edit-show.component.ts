@@ -188,21 +188,26 @@ export class EditShowComponent implements OnInit {
 
   //saves show to the database
   showSubmit(){
-    let t = this.myForm.controls['tags'].value;
+
     var ta = []
-    let len = t.length
-    for(var i = 0; i < len; i++){
-      if (typeof t[i] === 'string') {
-        ta.push(t[i])
-      } else if (typeof t[i] === 'object'){
-        ta.push(t[i].value);
+
+    if(this.myForm.controls['tags'].value){
+      let t = this.myForm.controls['tags'].value;
+      let len = t.length
+      for(var i = 0; i < len; i++){
+        if (typeof t[i] === 'string') {
+          ta.push(t[i])
+        } else if (typeof t[i] === 'object'){
+          ta.push(t[i].value);
+        }
       }
     }
+
 
     const show = {
       name: this.myForm.controls['name'].value,
       type: this.myForm.controls['type'].value,
-      timeString: this.myForm.controls['time'].value,
+      timeString: this.myForm.controls['timeString'].value,
       djs: this.myForm.controls['djs'].value,
       description: this.descriptionContent,
       startDate: this.myForm.controls['startDate'].value,
@@ -223,7 +228,6 @@ export class EditShowComponent implements OnInit {
 
     if (this.myForm.status == 'INVALID') {
       alert('Please fill in all fields!');
-      console.log(this.myForm.value)
     } else {
       let headers = this.authService.setHeaders();
       let ep = this.authService.prepEndpoint('http://localhost:3000/shows/edit/' + this.id);

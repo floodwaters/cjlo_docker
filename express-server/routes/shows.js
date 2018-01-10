@@ -70,7 +70,10 @@ router.put('/edit/:id', passport.authenticate('jwt', {session: false}), (req, re
     'placeholder': req.body.placeholder,
     'startDays': req.body.startDays,
     'startHour': req.body.startHour,
-    'startMintue': req.body.startMinute,
+    'startMinute': req.body.startMinute,
+    'endDays': req.body.endDays,
+    'endHour': req.body.endHour,
+    'endMinute': req.body.endMinute,
     'genre': req.body.genre
   }})
     .then((show, err) => {
@@ -247,7 +250,7 @@ router.get('/get-by-user/:id', passport.authenticate('jwt', {session: false}), (
 
 //find shows that occur on a given day and are on the air
 router.post('/get-by-day', (req, res, next) => {
-  Show.find({days: req.body.day, onAir: true})
+  Show.find({startDays: req.body.day, onAir: true})
     .then(shows => {
       res.send(shows)
     });
