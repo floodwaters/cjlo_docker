@@ -1,0 +1,25 @@
+.upcoming-programming h3 {
+  text-align: center;
+  float: right;
+  margin-top: 0px;
+
+}
+
+.full-schedule {
+  padding-top: 10px;
+  text-align: right;
+  float: right;
+}
+
+.full-schedule:hover {
+  cursor: pointer;
+}
+
+.left-arrow {
+  display: inline-block;
+}
+
+.right-arrow {
+  display: inline-block;
+  float: right;
+}

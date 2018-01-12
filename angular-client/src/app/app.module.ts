@@ -103,6 +103,7 @@ import { ShowsForPlaylistComponent } from './components/shows-for-playlist/shows
 import { EpisodesForPlaylistComponent } from './components/episodes-for-playlist/episodes-for-playlist.component';
 import { HomePageChartsComponent } from './components/home-page-charts/home-page-charts.component';
 import { ArticleHighlightComponent } from './components/article-highlight/article-highlight.component';
+import { UpcomingProgrammingComponent } from './components/upcoming-programming/upcoming-programming.component';
 
 
 const appRoutes: Routes =  [
@@ -219,7 +220,8 @@ const appRoutes: Routes =  [
     ShowsForPlaylistComponent,
     EpisodesForPlaylistComponent,
     HomePageChartsComponent,
-    ArticleHighlightComponent
+    ArticleHighlightComponent,
+    UpcomingProgrammingComponent
 
   ],
   imports: [
