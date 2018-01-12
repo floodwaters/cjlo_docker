@@ -94,3 +94,81 @@ h5 {
 .back {
 	transform: rotateY(180deg);
 }
+
+.genres {
+  padding-top:80px;
+}
+
+.metal {
+  color:#0003d1;
+}
+
+.rpm {
+  color: #6994db;
+}
+
+.hip-hop {
+  color: #d10000;
+}
+
+.world {
+  color: #f94701;
+}
+
+.talk {
+  color: #a069db;
+}
+
+.specialty {
+  color: #f72249;
+}
+
+.jazz {
+  color: #db9534;
+}
+
+.alt-rock {
+  color: #38b53a;
+}
+
+.metal-tab {
+  background-color:#0003d1;
+}
+
+.rpm-tab {
+  background-color: #6994db;
+}
+
+.hip-hop-tab {
+  background-color: #d10000;
+}
+
+.world-tab {
+  background-color: #f94701;
+}
+
+.talk-tab {
+  background-color: #a069db;
+}
+
+.specialty-tab {
+  background-color: #f72249;
+}
+
+.jazz-tab {
+  background-color: #db9534;
+}
+
+.alt-rock-tab {
+  background-color: #38b53a;
+}
+
+.genres ul li {
+  font-size: 30px;
+  list-style: square;
+}
+
+.genres ul li p {
+  color: black;
+  font-size: 20px;
+}

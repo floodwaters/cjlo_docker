@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import {DateTimeService} from '../../services/date-time.service';
 import {ShowService} from '../../services/show.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-weekly-calendar',
@@ -26,7 +28,8 @@ export class WeeklyCalendarComponent implements OnInit {
 
   constructor(
     private dateTime:DateTimeService,
-    private showService:ShowService
+    private showService:ShowService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -285,7 +288,27 @@ export class WeeklyCalendarComponent implements OnInit {
     let duration = this.getDuration(show);
     let s = show[0]
 
-    return ['<div class="', duration, ' flipper','"><div class="title front">', s.name, '</div><div class="back">', s.description, '</div></div>'].join('');
+    let genre = "";
+
+    if (s.genre === "Metal") {
+      genre = "metal";
+    } else if (s.genre === "RPM") {
+      genre = "rpm";
+    } else if (s.genre === "Alt-rock") {
+      genre = "alt-rock";
+    } else if (s.genre === "Hip-Hop") {
+      genre = "hip-hop";
+    } else if (s.genre === "Jazz") {
+      genre = "jazz";
+    } else if (s.genre === "Specialty") {
+      genre = "specialty";
+    } else if (s.genre === "World") {
+      genre = "world";
+    } else if (s.genre === "Talk") {
+      genre = "talk";
+    }
+
+    return ['<div class="', duration, ' flipper','"><div class="title ', genre, '-tab front">', s.name, '</div><div class="back ', genre, '-tab">', s.description, '</div></div>'].join('');
 
 
   }
@@ -305,7 +328,7 @@ export class WeeklyCalendarComponent implements OnInit {
   //displays a placeholder show in a slot if no show is assigned to that slot
   displayPlaceholder(){
     if(this.placeholder){
-      return ['<div class="half-hour">', this.placeholder.name, '</div>'].join('');
+      return ['<div class="half-hour talk-tab">', this.placeholder.name, '</div>'].join('');
     }
   }
 
@@ -319,6 +342,41 @@ export class WeeklyCalendarComponent implements OnInit {
       return 'two-hour';
     } else if (dur === '3 hr') {
       return 'three-hour';
+    }
+  }
+
+  linkToShow(day, hour, minute){
+    let shows = this.getShowsInSlot(day, hour, minute);
+
+
+
+    if(shows){
+      if(this.checkPreviousSlot(hour, minute, day)){
+        return null;
+      } else {
+        let s = this.findByType('One-off', shows, day);
+        let w = this.findByType('Weekly', shows, day);
+        let b = this.findByType('Bi-weekly', shows, day);
+
+        if (s.length === 1){
+          this.router.navigate(['/show', s[0]._id]);
+        } else if ( s.length > 1 ) {
+          this.router.navigate(['/show', s[0]._id]);
+        } else if ((s.length === 0) && (w.length === 1)){
+          this.router.navigate(['/show', w[0]._id]);
+        } else if ((s.length === 0) && (w.length > 1)){
+          this.router.navigate(['/show', w[0]._id]);
+        } else if ((s.length === 0 ) && (w.length === 0) && (b.length > 0)){
+          let f = this.calculateBiWeekly(b, this.calculateDate(day))
+          if (f.length === 0) {
+            this.router.navigate(['/show', this.placeholder._id]);
+          } else {
+            this.router.navigate(['/show', f[0]._id]);
+          }
+        } else {
+          this.router.navigate(['/show', this.placeholder._id]);
+        }
+      }
     }
   }
 

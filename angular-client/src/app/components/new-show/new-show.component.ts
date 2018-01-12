@@ -29,7 +29,7 @@ export class NewShowComponent implements OnInit {
   startDate:any;
   endDate:any;
   days: IMultiSelectOption[];
-  genres: Array<string> = ['Alt-rock', 'RPM', 'Jazz', 'Metal', 'Hip-Hop', 'Metal', 'World', 'Talk', 'Specialty'];
+  genres: Array<string> = ['Alt-rock', 'RPM', 'Jazz', 'Metal', 'Hip-Hop', 'World', 'Talk', 'Specialty'];
   durations: Array<string> = ['1/2 hr', '1 hr', '2 hr', '3 hr'];
   types: Array<string> = ['Weekly', 'Bi-weekly', 'One-off'];
   hours: Array<string> = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
