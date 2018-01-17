@@ -96,28 +96,16 @@ export class WeeklyCalendarComponent implements OnInit {
     }
   }
 
-  calculateDate(day){
+  //returns a date object based on the selectedDate plus a given number
+  calculateDate(day: number){
 
     var d = new Date(this.selectedDate.valueOf());
 
     if(day == 0){
       return new Date(d);
-    } else if (day == 1){
-      return new Date(d.setDate(d.getDate() + 1));
-    } else if (day == 2){
-      return new Date(d.setDate(d.getDate() + 2));
-    } else if (day == 3){
-      return new Date(d.setDate(d.getDate() + 3));
-    } else if (day == 4){
-      return new Date(d.setDate(d.getDate() + 4));
-    } else if (day == 5){
-      return new Date(d.setDate(d.getDate() + 5));
-    } else if (day == 6){
-      return new Date(d.setDate(d.getDate() + 6));
-    } else if (day == 7){
-      return new Date(d.setDate(d.getDate() + 7));
+    } else {
+      return new Date(d.setDate(d.getDate() + day));
     }
-
   }
 
   //return all shows that start at a given time, on a given day
@@ -164,11 +152,12 @@ export class WeeklyCalendarComponent implements OnInit {
         return this.dateTime.dateForImport(this.weekDay, 5);
       case 6:
         return this.dateTime.dateForImport(this.weekDay, 6);
+      case 7:
+        return this.dateTime.dateForImport(this.weekDay, 7);
     }
 
   }
 
-  //check to see if show half an hour earlier than a given time is the same as the show at the given time
   checkPreviousSlot(hour:string, minute:string, day:number){
     let h = Number(hour);
     let m = Number(minute);

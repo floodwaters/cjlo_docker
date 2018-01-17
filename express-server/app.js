@@ -72,6 +72,7 @@ app.use('/ads', ads);
 require('./config/passport')(passport);
 
 const articleModel = require('./models/article');
+const showModel = require('./models/show');
 
 var cronJob = cron.job(" 00 00 */1 * * *", function(){
     let cut = Date.now();
@@ -103,7 +104,28 @@ var cronJob = cron.job(" 00 00 */1 * * *", function(){
 
     console.log('article cleanup completed');
 });
+
 cronJob.start();
+
+var showJob = cron.job(" 00 00 00 */1 * *", function(){
+    let cut = Date.now();
+    let query1 = {onAir: true, endDate: {$lt: cut}}
+
+    showModel.update(
+      query1,
+      { $set: {onAir: false}},
+      {multi: true},
+      (err, num) => {
+        if(err){
+          console.log(err);
+        }
+      }
+    );
+
+    console.log('show cleanup completed');
+});
+
+showJob.start()
 
 /**
  * Get port from environment and store in Express.
