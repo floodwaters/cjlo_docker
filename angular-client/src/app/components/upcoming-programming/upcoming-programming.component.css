@@ -16,10 +16,39 @@
 }
 
 .left-arrow {
+  width: 30px;
+  height: 100%;
   display: inline-block;
+  cursor: pointer;
 }
 
 .right-arrow {
+  height: 100%;
   display: inline-block;
   float: right;
+  cursor: pointer;
+}
+
+.show-container {
+  display: inline-block;
+}
+
+.upcoming-show {
+  display: inline-block;
+  height: 150px;
+  width: 100px;
+  vertical-align: top;
+  margin-left: 15px;
+  margin-right: 15px;
+  text-align: center;
+}
+
+.arrow {
+position: absolute;
+top: 50%;
+transform: translateY(-50%);
+}
+
+.programming-and-arrows-container {
+
 }
