@@ -20,6 +20,10 @@ export class UpcomingProgrammingComponent implements OnInit {
   fullArray: any;
   index: number;
   dayIndexArray: Array<number> = [];
+  lastDate: Date = new Date(Date.now());
+  firstDate: Date = new Date(Date.now());
+  tempDayArray: Array <number> = [];
+  prevShows: any;
 
   constructor(
     private dt: DateTimeService,
@@ -42,25 +46,27 @@ export class UpcomingProgrammingComponent implements OnInit {
   //gets shows from dataase and fills in the array of all shows for yesterday, today, and tomrorrow
   getShows(date){
 
-    var x = new Date(date);
+    this.tempDayArray = [];
+
     var y = new Date(date);
 
-    x.setDate(x.getDate() + 1);
     y.setDate(y.getDate() - 1);
 
-    this.showService.getShowsForDay(date.getDay()).subscribe(data => {
-      this.todayShows = data;
+    this.showService.getShowsForDay(date.getDay()).subscribe(data1 => {
+      this.todayShows = data1;
 
+      var ar = []
 
-      this.showService.getShowsForDay(y.getDay()).subscribe(data => {
-        this.yesterdayShows = data;
-        this.sortedYesterdayShows = this.sortShows(data);
-        this.sortBothShows();
-        this.firstShow();
-        this.fillInPlaceholders();
-        this.removeDuplicates();
-        this.populateDisplay(this.findStartSlot(date));
-
+      this.showService.getShowsForDay(y.getDay()).subscribe(data2 => {
+        this.yesterdayShows = data2;
+        this.sortedYesterdayShows = this.sortShows(data2);
+        ar = this.sortBothShows(date, this.todayShows);
+        ar = this.firstShow(date, ar, true);
+        ar = this.fillInPlaceholders(date, ar);
+        ar = this.removeDuplicates(ar);
+        this.populateDisplay(ar, this.findStartSlot(ar, date));
+        this.tempDayArray.forEach(el => {this.dayIndexArray.push(el)})
+        this.fullArray = ar;
       }, err => {
         console.log(err);
         return false
@@ -80,42 +86,100 @@ linkToShow(id){
   this.router.navigate(['/show', id]);
 }
 
+//gets shows for the following day and adds them to the array of current shows
+getTomorrowShows(date: Date){
+
+  this.tempDayArray = []
+
+  this.showService.getShowsForDay(date.getDay()).subscribe(data => {
+    let ar = []
+    this.tomorrowShows = data;
+
+    ar = this.sortBothShows(date, this.tomorrowShows);
+    ar = this.firstShow(date, ar, false);
+    ar = this.fillInPlaceholders(date, ar);
+    ar = this.removeDuplicates(ar);
+    ar.forEach(el => {this.fullArray.push(el)});
+    this.tempDayArray.forEach(el => {this.dayIndexArray.push(el)})
+    this.populateDisplay(this.fullArray, this.index + 1)
+
+  }, err => {
+    console.log(err);
+    return false
+  });
+}
+
+//gets shows for the previous day and adds them to the array of current shows
+getPreviousShows(date: Date){
+
+  this.tempDayArray = []
+
+  this.showService.getShowsForDay(date.getDay()).subscribe(data1 => {
+
+    this.yesterdayShows = data1;
+    this.sortedYesterdayShows = this.sortShows(this.yesterdayShows);
+
+    this.showService.getShowsForDay(date.getDay()).subscribe(data2 => {
+      let ar = []
+      this.todayShows = data2;
+
+      ar = this.sortBothShows(date, this.todayShows);
+      ar = this.firstShow(date, ar, true);
+      ar = this.fillInPlaceholders(date, ar);
+      ar = this.removeDuplicates(ar);
+      ar.reverse().forEach(el => {this.fullArray.unshift(el)});
+      this.index = ar.length;
+      this.tempDayArray.reverse().forEach(el => {this.dayIndexArray.unshift(el)})
+      this.populateDisplay(this.fullArray, this.index - 1)
+
+    }, err => {
+      console.log(err);
+      return false
+    });
+
+
+  }, err => {
+    console.log(err);
+    return false;
+  })
+
+
+}
+
 //increments the show for display up by 1
   upSlot() {
     this.displayShows = []
 
     if(this.index == this.fullArray.length - 6 ){
-      this.selectedDate.setDate(this.selectedDate.getDate() + 1);
-      this.selectedDate.setHours(0);
-      this.selectedDate.setMinutes(0);
-      this.getShows(this.selectedDate);
+      this.lastDate.setDate(this.lastDate.getDate() + 1);
+      this.getTomorrowShows(this.lastDate);
     } else {
-      this.populateDisplay(this.index + 1);
+        this.populateDisplay(this.fullArray, this.index + 1);
     }
   }
+
+
 
 //increments the show for display down by 1
   downSlot() {
     this.displayShows = [];
 
     if(this.index == 0 ){
-      this.selectedDate.setDate(this.selectedDate.getDate() - 1);
-      this.selectedDate.setHours(23);
-      this.selectedDate.setMinutes(30);
-      this.getShows(this.selectedDate);
+      this.firstDate.setDate(this.firstDate.getDate() - 1);
+      this.getPreviousShows(this.firstDate);
     } else {
-      this.populateDisplay(this.index - 1);
+        this.populateDisplay(this.fullArray, this.index - 1);
     }
   }
 
-  findStartSlot(date: Date){
+  findStartSlot(shows: Array<any>, date: Date){
 
     let hour = date.getHours();
     let minute = date.getMinutes();
     let day = date.getDay();
     let da = date.getDate();
 
-    return this.fullArray.findIndex(el => {
+    return shows.findIndex(el => {
       return ((Number(el.startHour) <= hour && Number(el.startMinute) <= minute) && this.roundDown(Number(el.endHour), Number(el.endMinute), minute, hour));
     })
 
@@ -133,12 +197,19 @@ linkToShow(id){
   }
 
   //takes an index number and populates the display array
-  populateDisplay(index: number){
+  populateDisplay(shows: Array<any>, index: number){
 
     this.index = index;
 
+    if(index > shows.length - 6){
+
+      this.lastDate.setDate(this.lastDate.getDate() + 1);
+      this.getTomorrowShows(this.lastDate);
+
+    }
+
     for(let i = 0; i < 6; i++){
-      this.displayShows.push(this.fullArray[index + i]);
+      this.displayShows.push(shows[index + i]);
     }
   }
 
@@ -168,30 +239,29 @@ linkToShow(id){
   }
 
   //creates array of shows for first and second day ordered by start timeslots
-  sortBothShows(){
+  sortBothShows(date: Date, shows: any){
     let ar = [];
     let day = [];
 
-    let ts = this.sortShows(this.todayShows);
+    let ts = this.sortShows(shows);
 
-    ts.forEach(el => { day.push(this.selectedDate.getDay()); ar.push(el)});
+    ts.forEach(el => { day.push(date.getDay()); ar.push(el)});
+    day.forEach(el => {this.tempDayArray.push(el)});
 
-    this.fullArray = ar;
+    return ar;
   }
 
   //if there is a show carrying over from the previous day, brings it in and puts it at the start of the array of today's shows
-  firstShow(){
-    let ar = this.fullArray;
+  firstShow(date: Date, showArray: Array<any>, bool: boolean){
+    let ar = showArray;
     let ys = this.sortedYesterdayShows;
-    let day = this.dayIndexArray;
+    let day = this.tempDayArray;
 
-    if(((Number(ar[0].startHour) > 0) || ((Number(ar[0].startMinute) > 0) && (Number(ar[0].startHour) === 0))) && this.checkLastShow()) {
+    if(((Number(ar[0].startHour) > 0) || ((Number(ar[0].startMinute) > 0) && (Number(ar[0].startHour) === 0))) && this.checkLastShow() && bool == true) {
       ar.unshift(ys[ys.length - 1]);
-      day.unshift(this.selectedDate.getDay() - 1)
+      day.unshift(date.getDay() - 1)
 
-      this.fullArray = ar;
-
-      this.dayIndexArray = day;
+      return ar;
 
     } else if (((Number(ar[0].startHour) > 0) || ((Number(ar[0].startMinute) > 0) && (Number(ar[0].startHour) === 0))) && !this.checkLastShow()) {
       let ph = this.placeholder;
@@ -201,18 +271,18 @@ linkToShow(id){
       ph.endHour = '00';
       ph.endMinute = '30';
 
-      day.unshift(this.selectedDate.getDay())
+      day.unshift(date.getDay());
       ar.unshift(ph);
 
-      this.fullArray = ar;
+      return ar;
     }
   }
 
   //fills in the placeholders for the day
-  fillInPlaceholders(){
-    let ar = this.fullArray;
+  fillInPlaceholders(date: Date, shows: Array<any>){
+    let ar = shows;
     var counter = 0;
-    let day = this.dayIndexArray;
+    let day = this.tempDayArray;
 
     let len = ar.length;
 
@@ -240,7 +310,7 @@ linkToShow(id){
 
           ar.splice(i + y + 1, 0, obj);
 
-          day.push(this.selectedDate.getDay())
+          day.push(date.getDay())
         }
       }
     }
@@ -266,12 +336,12 @@ linkToShow(id){
         ph.endMinute = this.stringify(d2.getMinutes());
 
         ar.push(ph);
-        day.push(this.selectedDate.getDay())
+        day.push(date.getDay())
+
 
       }
     }
-
-    this.fullArray = ar;
+    return ar;
   }
 
 
@@ -347,8 +417,8 @@ linkToShow(id){
   }
 
   //takes an array of shows and removes duplication caused by presence of one-off and bi-weekly shows
-  removeDuplicates(){
-    var ar = this.fullArray;
+  removeDuplicates(shows: Array<any>){
+    var ar = shows;
     let len = ar.length;
 
     for(let i = 0; i < len; i++){
@@ -359,20 +429,28 @@ linkToShow(id){
 
           if(this.calculateBiWeekly(ar[i], this.calculateDate(ar[i].startDate))){
             ar.splice(i + 1, 1);
+            this.tempDayArray.splice(i, 1)
+
           } else if ( this.calculateBiWeekly(ar[i + 1], this.calculateDate(ar[i + 1].startDate))){
             ar.splice(i, 1);
+            this.tempDayArray.splice(i, 1)
           }
 
         } else if ((ar[i].startHour === ar[i + 1].startHour && ar[i].startMinute === ar[i + 1].startMinute) && (ar[i].type == 'One-off' || ar[i + 1].type == 'One-off')){
 
           if(ar[i].type == 'One-off'){
             ar.splice(i + 1, 1);
+            this.tempDayArray.splice(i, 1)
+
           } else if (ar[i].type == 'One-off'){
             ar.splice(i, 1);
+            this.tempDayArray.splice(i, 1)
+
           }
         }
       }
     }
+    return ar;
   }
 
   calculateBiWeekly(show: any, date: Date){
