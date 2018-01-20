@@ -129,8 +129,8 @@ getPreviousShows(date: Date){
       ar = this.removeDuplicates(ar);
       ar.reverse().forEach(el => {this.fullArray.unshift(el)});
       this.index = ar.length;
-      this.tempDayArray.reverse().forEach(el => {this.dayIndexArray.unshift(el)})
-      this.populateDisplay(this.fullArray, this.index - 1)
+      this.tempDayArray.reverse().forEach(el => {this.dayIndexArray.unshift(el)});
+      this.populateDisplay(this.fullArray, this.index - 1);
 
     }, err => {
       console.log(err);
