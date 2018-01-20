@@ -13,6 +13,9 @@ COPY package.json /usr/src/app/angular
 # Install dependecies
 RUN npm install
 
+# Install Angular-cli
+RUN npm install -g angular-cli
+
 # Get all the code needed to run the app
 COPY . /usr/src/app/angular
 
