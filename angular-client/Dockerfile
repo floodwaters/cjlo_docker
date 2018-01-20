@@ -13,6 +13,9 @@ COPY package.json /usr/src/app/angular
 # Install dependecies
 RUN npm install
 
+# Get latest version of NPM
+RUN npm install npm@latest -g
+
 # Get all the code needed to run the app
 COPY . /usr/src/app/angular
 
