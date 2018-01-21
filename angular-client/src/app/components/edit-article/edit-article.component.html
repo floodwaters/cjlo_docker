@@ -98,12 +98,12 @@
 
       <div *ngIf="(this.article?.status == 'review' || this.article?.status == 'unpublished') && (this.rolesService.checkRole('editor') || this.rolesService.checkRole('admin'))" class="form-group">
         <label>Publication Date</label>
-        <dp-date-picker name="publish_on" [(ngModel)]="this.publish_on" (ngModelChange)="updateArticle()"></dp-date-picker>
+        <input ngui-datetime-picker [is-draggable]="false" name="publish_on" [(ngModel)]="this.publish_on" (ngModelChange)="updateArticle()" />
       </div>
 
       <div *ngIf="(this.article?.status == 'review' || this.article?.status == 'unpublished' || this.article?.status == 'published') && (this.rolesService.checkRole('editor') || this.rolesService.checkRole('admin'))" class="form-group">
         <label>Unpublish Date</label>
-        <dp-date-picker name="unpublish_on" [(ngModel)]="this.unpublish_on" (ngModelChange)="updateArticle()"></dp-date-picker>
+        <input ngui-datetime-picker [is-draggable]="false" [(ngModel)]="this.unpublish_on" (ngModelChange)="updateArticle()" />
       </div>
 
 

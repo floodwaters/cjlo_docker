@@ -1,4 +1,4 @@
-# Create image based on the official Node 7 image from dockerhub
+# Create image based on the official Node 8 image from dockerhub
 FROM node:8
 
 # Create a directory where our app will be placed
@@ -9,9 +9,6 @@ WORKDIR /usr/src/app/angular
 
 # Copy dependency definitions
 COPY package.json /usr/src/app/angular
-
-# Install Angular-cli
-RUN npm install @angular/cli
 
 # Install dependecies
 RUN npm install

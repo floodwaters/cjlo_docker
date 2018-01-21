@@ -8,7 +8,6 @@ import {DropdownModule} from "ngx-dropdown";
 import {Ng2PaginationModule} from 'ng2-pagination';
 import { FroalaEditorModule, FroalaViewModule } from 'angular2-froala-wysiwyg';
 import { FileSelectDirective } from 'ng2-file-upload';
-import {DpDatePickerModule} from 'ng2-date-picker';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import { TagInputModule } from 'ngx-chips';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -237,7 +236,6 @@ const appRoutes: Routes =  [
     FlashMessagesModule,
     DropdownModule,
     Ng2PaginationModule,
-    DpDatePickerModule,
     MultiselectDropdownModule,
     TagInputModule,
     BrowserAnimationsModule,

@@ -1,7 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import {EpisodeService} from '../../services/episode.service';
 import {DateToStringService} from '../../services/date-to-string.service';
-import { DialogRef, ModalComponent, CloseGuard } from 'angular2-modal';
+import { DialogRef, ModalComponent} from 'angular2-modal';
 import { BSModalContext } from 'angular2-modal/plugins/bootstrap';
 
 export class CustomModalContext extends BSModalContext {
@@ -15,7 +15,7 @@ export class CustomModalContext extends BSModalContext {
   templateUrl: './episode-import-modal.component.html',
   styleUrls: ['./episode-import-modal.component.css']
 })
-export class EpisodeImportModalComponent implements CloseGuard, OnInit, ModalComponent<CustomModalContext> {
+export class EpisodeImportModalComponent implements OnInit, ModalComponent<CustomModalContext> {
 
   context: CustomModalContext;
   episodes: any;

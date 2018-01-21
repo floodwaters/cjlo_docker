@@ -1,4 +1,4 @@
 module.exports = {
-  database: 'mongodb://localhost:27018/cjlo-docker',
+  database: 'mongodb://localhost:27017/cjlo-docker',
   secret: 'downwithcapitalism'
 }
