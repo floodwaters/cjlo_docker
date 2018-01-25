@@ -18,6 +18,10 @@
   float: right;
 }
 
+.arrow {
+  cursor: pointer;
+}
+
 
 #timeSlots {
   float: left;

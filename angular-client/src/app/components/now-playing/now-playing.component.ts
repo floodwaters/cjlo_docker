@@ -1,12 +1,14 @@
 import { Component, OnInit, OnDestroy, Renderer2} from '@angular/core';
 import { Observable } from "rxjs";
 import { IntervalObservable } from "rxjs/observable/IntervalObservable";
+import { AuthService } from '../../services/auth.service';
 import { NowPlayingService } from '../../services/now-playing.service';
 import { EpisodeService } from '../../services/episode.service';
 import { CookieService } from '../../services/cookie.service';
 import { ShowService } from '../../services/show.service';
 import { DateToStringService } from '../../services/date-to-string.service';
-import {Subscription} from 'rxjs/Subscription';
+import { Subscription } from 'rxjs/Subscription';
+import { Router } from '@angular/router';
 
 import * as $ from 'jquery';
 
@@ -41,6 +43,10 @@ export class NowPlayingComponent implements OnInit, OnDestroy {
   showNames:any;
   tags:any;
   isClicked:boolean = false;
+  twitter:string;
+  facebook:string;
+  youtube:string;
+  instagram:string;
 
   constructor(
     private npService: NowPlayingService,
@@ -48,13 +54,19 @@ export class NowPlayingComponent implements OnInit, OnDestroy {
     private cookie: CookieService,
     private episode: EpisodeService,
     private show: ShowService,
-    private ds: DateToStringService
+    private ds: DateToStringService,
+    private authService: AuthService,
+    private router: Router
   ) {
     this.display = false;
     this.alive = true;
     this.interval = 2000;
     this.timer = Observable.timer(0, this.interval);
     this.audio = new Audio();
+    this.twitter = 'https://twitter.com/CJLO1690AM';
+    this.youtube = 'https://www.youtube.com/channel/UCvmUC0Wr8pKsEJK-3M-NXlg';
+    this.facebook = 'https://www.facebook.com/cjlo1690am/';
+    this.instagram = 'https://www.instagram.com/cjlo1690am/';
    }
 
   ngOnInit() {
@@ -218,10 +230,18 @@ export class NowPlayingComponent implements OnInit, OnDestroy {
     this.audio.src = this.src;
     this.audio.volume = this.volume;
     if(!this.radio){
-      this.audio.src = encodeURI(this.readCookieArray());
-      this.audio.currentTime = this.getTimeFromCookie();
-      this.renderer.listen(this.audio, "timeupdate", () => { this.updateProgress()});
-      this.renderer.listen(this.audio, "ended", () => { this.onEnd()});
+
+      if(document.cookie) {
+
+        this.audio.src = encodeURI(this.readCookieArray());
+        this.audio.currentTime = this.getTimeFromCookie();
+        this.renderer.listen(this.audio, "timeupdate", () => { this.updateProgress()});
+        this.renderer.listen(this.audio, "ended", () => { this.onEnd()});
+
+      } else {
+        alert("You havent't made a playlist yet!!");
+        return;
+      }
 
     }
     this.audio.play();
@@ -577,6 +597,14 @@ addFromTag(tag){
         return false;
       });
     }
-  })
+  });
+}
+
+goTo(location){
+  window.location.href = location;
+}
+
+goHome(){
+  this.router.navigate(['/']);
 }
 }

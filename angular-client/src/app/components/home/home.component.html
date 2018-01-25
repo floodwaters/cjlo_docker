@@ -5,6 +5,7 @@
     <img class="spotlight-image" src="http://localhost:3000/{{spotlight?.image1Path}}" />
 
     <h3 class="spotlight-title">{{spotlight?.title}}</h3>
+    <span class="spotlight-author"><strong>{{spotlight?.writer.toUpperCase()}}</strong></span>
 
     <p class="spotlight-text fr-view" [innerHtml]="spotlight?.articleBody"></p>
 

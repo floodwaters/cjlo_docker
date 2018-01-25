@@ -1,6 +1,5 @@
 .main-wrapper {
   height: 150px;
-  border: solid 2px black;
 }
 
 .image-box {
@@ -16,9 +15,34 @@
 .playlist-builder {
   display: none;
   width: 100%;
+}
+
+.logo {
+  display: inline-block;
+  height: 100%;
+  cursor: pointer;
+}
+
+.socials {
+  display: inline-block;
+  height: 100%;
+  vertical-align: bottom;
+  margin-bottom: 55px;
 
 }
 
+.icon {
+  display: inline-block;
+  cursor: pointer;
+  color: black;
+}
+
+.front-logo-img {
+}
+
+.socials-home {
+  display: inline-block;
+}
 .shows {
   height: 200px;
   overflow-y: scroll;
@@ -58,4 +82,8 @@
 #progress {
    display:inline-block;
    background-color:#f4bf42;
+}
+
+.play-pause {
+  cursor: pointer;
 }

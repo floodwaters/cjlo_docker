@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DateTimeService } from '../../services/date-time.service';
+import { AuthService } from '../../services/auth.service';
 import { ShowService } from '../../services/show.service';
 import { Router } from '@angular/router';
 
@@ -28,7 +29,8 @@ export class UpcomingProgrammingComponent implements OnInit {
   constructor(
     private dt: DateTimeService,
     private router: Router,
-    private showService: ShowService
+    private showService: ShowService,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
@@ -257,13 +259,13 @@ getPreviousShows(date: Date){
     let ys = this.sortedYesterdayShows;
     let day = this.tempDayArray;
 
-    if(((Number(ar[0].startHour) > 0) || ((Number(ar[0].startMinute) > 0) && (Number(ar[0].startHour) === 0))) && this.checkLastShow() && bool == true) {
+    if(((Number(ar[0].startHour) > 0) || ((Number(ar[0].startMinute) > 0) && (Number(ar[0].startHour) === 0))) && this.checkLastShow(bool) && bool == true) {
       ar.unshift(ys[ys.length - 1]);
       day.unshift(date.getDay() - 1)
 
       return ar;
 
-    } else if (((Number(ar[0].startHour) > 0) || ((Number(ar[0].startMinute) > 0) && (Number(ar[0].startHour) === 0))) && !this.checkLastShow()) {
+    } else if (((Number(ar[0].startHour) > 0) || ((Number(ar[0].startMinute) > 0) && (Number(ar[0].startHour) === 0))) && !this.checkLastShow(bool)) {
       let ph = this.placeholder;
 
       ph.startHour = '00';
@@ -275,8 +277,41 @@ getPreviousShows(date: Date){
       ar.unshift(ph);
 
       return ar;
+    } else if (((Number(ar[0].startHour) > 0) || ((Number(ar[0].startMinute) > 0) && (Number(ar[0].startHour) === 0))) && this.checkLastShow(bool) && bool == false) {
+
+      let ph = this.placeholder
+      let x = this.fullArray[this.fullArray.length - 1]
+
+      ph.startHour = x.endHour;
+      ph.startMinute = x.endMinute;
+      ph.endHour = this.stringify(this.getEndHour(x));
+      ph.endMinute = this.getEndMinute(x);
+
+      day.unshift(date.getDay());
+      ar.unshift(ph);
+
+      return ar;
+
     }
   }
+
+  //takes a show and returns a value for it's hour that is 30 minutes later
+  getEndHour(show:any){
+    let h = Number(show.endHour);
+    let m = Number(show.endMinute);
+
+    return m < 30 ? h : h + 1;
+  }
+
+  //takes a show and returns a minute value that is 30 minutes later
+  getEndMinute(show:any){
+    let h = Number(show.endHour);
+    let m = Number(show.endMinute);
+
+    return m == 30 ? '00' : '30';
+  }
+
+
 
   //fills in the placeholders for the day
   fillInPlaceholders(date: Date, shows: Array<any>){
@@ -285,62 +320,68 @@ getPreviousShows(date: Date){
     let day = this.tempDayArray;
 
     let len = ar.length;
+    let z = len - 1;
 
     for (var i = 0; i < len; i++){
+      if(i < z){
 
-      if((ar[i].endHour != ar[i + 1].startHour) && (ar[i].endMinute != ar[i + 1].startMinute)){
-        counter = this.calculateDifference(ar[i], ar[i + 1]);
+        if((ar[i].endHour != ar[i + 1].startHour) && (ar[i].endMinute != ar[i + 1].startMinute)){
+          counter = this.calculateDifference(ar[i], ar[i + 1]);
 
 
-        for (var j = counter; j > 0; j--){
-          let y = counter - j;
-          let d = new Date();
+          for (var j = counter; j > 0; j--){
+            let y = counter - j;
+            let d = new Date();
 
-          var obj = Object.assign({}, this.placeholder);
-          d.setHours(Number(ar[i + y].endHour));
-          d.setMinutes(Number(ar[i + y].endMinute));
+            var obj = Object.assign({}, this.placeholder);
+            d.setHours(Number(ar[i + y].endHour));
+            d.setMinutes(Number(ar[i + y].endMinute));
 
-          let d2 = new Date(d);
-          d2.setMinutes(d2.getMinutes() + 30);
+            let d2 = new Date(d);
+            d2.setMinutes(d2.getMinutes() + 30);
 
-          obj.startHour = ar[i + y].endHour;
-          obj.startMinute = ar[i + y].endMinute;
-          obj.endHour =  this.stringify(d2.getHours());
-          obj.endMinute = this.stringify(d2.getMinutes());
+            obj.startHour = ar[i + y].endHour;
+            obj.startMinute = ar[i + y].endMinute;
+            obj.endHour =  this.stringify(d2.getHours());
+            obj.endMinute = this.stringify(d2.getMinutes());
 
-          ar.splice(i + y + 1, 0, obj);
+            ar.splice(i + y + 1, 0, obj);
 
-          day.push(date.getDay())
+            day.push(date.getDay())
+          }
+        }
+
+      } else {
+        if(!this.checkIfEndDay(ar[z])){
+          counter = this.endDayDifference(ar[z]) ;
+
+          for(var x = counter; x > 0; x--){
+            let y = counter - x;
+            let d = new Date();
+
+            var ph = Object.assign({}, this.placeholder);
+            d.setHours(Number(ar[z + y].endHour));
+            d.setMinutes(Number(ar[z + y].endMinute));
+
+            let d2 = new Date(d);
+            d2.setMinutes(d2.getMinutes() + 30);
+
+            ph.startHour = ar[z + y].endHour;
+            ph.startMinute = ar[z + y].endMinute;
+            ph.endHour =  this.stringify(d2.getHours());
+            ph.endMinute = this.stringify(d2.getMinutes());
+
+            ar.push(ph);
+            day.push(date.getDay())
+
+
+          }
         }
       }
+
     }
 
-    let z = ar.length - 1;
-    if(!this.checkIfEndDay(ar[z])){
-      counter = this.endDayDifference(ar[z]) ;
 
-      for(var x = counter; x > 0; x--){
-        let y = counter - x;
-        let d = new Date();
-
-        var ph = Object.assign({}, this.placeholder);
-        d.setHours(Number(ar[z + y].endHour));
-        d.setMinutes(Number(ar[z + y].endMinute));
-
-        let d2 = new Date(d);
-        d2.setMinutes(d2.getMinutes() + 30);
-
-        ph.startHour = ar[z + y].endHour;
-        ph.startMinute = ar[z + y].endMinute;
-        ph.endHour =  this.stringify(d2.getHours());
-        ph.endMinute = this.stringify(d2.getMinutes());
-
-        ar.push(ph);
-        day.push(date.getDay())
-
-
-      }
-    }
     return ar;
   }
 
@@ -404,8 +445,13 @@ getPreviousShows(date: Date){
   }
 
   //checks to see if the end time of the last show from the previous day is in the current day; returns true if it is
-  checkLastShow(){
-    let ys = this.sortedYesterdayShows;
+  checkLastShow(bool: boolean){
+    let ys = null;
+    if(bool){
+       ys = this.sortedYesterdayShows;
+    } else if (!bool){
+      ys = this.fullArray
+    }
     if(ys[ys.length - 1]){
       return Number(ys[ys.length - 1].endHour) < Number(ys[ys.length - 1].startHour) ? true : false;
 

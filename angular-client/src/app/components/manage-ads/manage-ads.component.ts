@@ -31,8 +31,9 @@ export class ManageAdsComponent implements OnInit {
   //makes request to api to delete an article
   deleteAd(id): Promise<void> {
     let headers = this.authService.setHeaders();
+    console.log(headers)
     let ep = this.authService.prepEndpoint('http://localhost:3000/ads/delete-ad/' + id);
-    return this.http.post(ep, {headers:headers})
+    return this.http.delete(ep, {headers: headers})
       .toPromise()
       .then(() => this.filterAds(id));
   }
@@ -50,8 +51,9 @@ export class ManageAdsComponent implements OnInit {
       }
 
       let headers = this.authService.setHeaders();
+      console.log(headers)
       let ep = this.authService.prepEndpoint('http://localhost:3000/ads/active/' + article._id);
-      return this.http.put(ep, active, {headers:headers})
+      return this.http.put(ep, active, {headers: headers})
         .map(res => res.json())
         .subscribe(data => {
           if (data.success){
@@ -67,7 +69,7 @@ export class ManageAdsComponent implements OnInit {
 
       let headers = this.authService.setHeaders();
       let ep = this.authService.prepEndpoint('http://localhost:3000/ads/active/' + article._id);
-      return this.http.put(ep, active, {headers:headers})
+      return this.http.put(ep, active, {headers: headers})
         .map(res => res.json())
         .subscribe(data => {
           if (data.success){

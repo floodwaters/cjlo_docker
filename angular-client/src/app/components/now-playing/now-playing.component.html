@@ -1,13 +1,30 @@
 <div class="row main-wrapper">
-  <div class="col-md-3 image-box">
-    <img class="show-image" src="http://localhost:3000/{{currentShow?.thumbnailPath}}">
+
+  <div class="col-md-5 socials-home">
+
+    <div class="logo">
+      <img class="front-logo-img" src="{{this.authService.returnIp()}}public/assets/main-logo.png" (click)="goHome()" />
+    </div>
+    
+    <div class="socials">
+      <i class="fa fa-facebook fa-2x icon" (click)="goTo(facebook)"></i>
+      <i class="fa fa-twitter fa-2x icon" (click)="goTo(twitter)"></i>
+      <i class="fa fa-youtube fa-2x icon" (click)="goTo(youtube)"></i>
+      <i class="fa fa-instagram fa-2x icon" (click)="goTo(instagram)"></i>
+    </div>
   </div>
-  <div class="col-md-3 now-playing">
+
+  <div class="col-md-2 image-box">
+    <img class="show-image" src="{{this.authService.returnIp()}}{{currentShow?.thumbnailPath}}">
+  </div>
+
+  <div class="col-md-2 now-playing">
+
     <h3 class="page-header">{{currentShow?.name}}</h3>
+
     <div *ngIf="currentTrack && (currentTrack.classification == 'Theme')">
       <p><strong>Now Playing:</strong> {{currentTrack?.artist}} - {{currentTrack?.title}}</p>
       <p>{{currentTrack?.album}} - {{currentTrack?.year}}</p>
-
     </div>
 
     <div *ngIf="currentTrack && (currentTrack.classification == 'Talk')">
@@ -16,8 +33,8 @@
   </div>
 
   <div class="col-md-3 buttons">
-    <button class="btn btn-primary" (click)="play()" *ngIf="!playing">Play</button>
-    <button class="btn btn-primary" (click)="pause()" *ngIf="playing">Pause</button>
+    <i class="fa fa-play fa-2x play-pause" (click)="play()" *ngIf="!playing"></i>
+    <i class="fa fa-pause fa-2x" (click)="pause()" *ngIf="playing"></i>
     <input type="range" [ngModel]="volume" (ngModelChange)="changeVolume($event)" step="0.01" min="0" max="1">
     <button class="btn btn-primary" (click)="live()" >Listen to CJLO live!</button>
     <button class="btn btn-primary" (click)="toggleBuilder()" >My Playlist</button>

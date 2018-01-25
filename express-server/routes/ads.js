@@ -72,7 +72,7 @@ router.post('/delete-image', passport.authenticate('jwt', {session: false}), (re
 });
 
 //delete an ad from the database
-router.post('/delete-ad/:id', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+router.delete('/delete-ad/:id', passport.authenticate('jwt', {session: false}), (req, res, next) => {
   Ad.findOne({_id: req.params.id})
     .then((ad) => {
       fs.unlink(ad.imagePath);

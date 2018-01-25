@@ -21,7 +21,7 @@
     <div class="show-container">
       <div *ngFor="let show of displayShows; let i = index" class="upcoming-show" (click)="linkToShow(show._id)">
         <div class="upcoming-image">
-          <img src="http://localhost:3000/{{show.thumbnailPath}}" />
+          <img src="{{this.authService.returnIp()}}{{show.thumbnailPath}}" />
           <span class="upcoming-name"><strong>{{show.name}}</strong></span>
           <br />
           <span>{{dayOfIndex(i)}}  {{show.startHour}}:{{show.startMinute}} - {{show.endHour}}:{{show.endMinute}}</span>

@@ -18,6 +18,15 @@ export class AuthService {
     this.isDev = true; // Change to false before deployment
   }
 
+  //returns IP if environment is production, localhost if it is development
+    returnIp(){
+      if(this.isDev){
+        return 'http://localhost:3000/'
+      } else {
+        return "http://34.198.177.246:3000/"
+      }
+    }
+
 //sends username and password to api for authentication
   authenticateUser(user){
     let headers = new Headers();
@@ -63,12 +72,17 @@ setHeaders(){
     localStorage.clear();
   }
 
-//changes url of al requests in production environment
-  prepEndpoint(ep){
-    if(this.isDev){
-      return ep;
-    } else {
-      return 'http://localhost:8080/'+ep;
+  //changes url of al requests in production environment
+    prepEndpoint(ep){
+      if(this.isDev){
+        return ep;
+      } else {
+
+      var delimiter = '/';
+      var start = 3;
+      var tokens = ep.split(delimiter).slice(start);
+      var result = tokens.join(delimiter);
+        return 'http://express-server:3000/'+ result;
+      }
     }
-  }
 }
